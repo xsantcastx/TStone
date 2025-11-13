@@ -151,7 +151,7 @@ export class DatosTecnicosPageComponent implements OnInit {
         'Productos abrasivos',
         'Cepillos metálicos',
         'Limpiadores con amoniaco'
-      }
+      ]
     }
   };
 

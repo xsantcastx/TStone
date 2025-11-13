@@ -30,36 +30,36 @@
             (click)="switchTab('categories')"
             [class.bg-ts-accent]="activeTab === 'categories'"
             [class.text-white]="activeTab === 'categories'"
-            [class.text-gray-600]="activeTab !== 'categories'"
+            [class.text-gray-900]="activeTab !== 'categories'"
             [class.hover:bg-gray-50]="activeTab !== 'categories'"
-            class="flex-1 px-6 py-4 text-sm font-medium transition-colors">
+            class="flex-1 px-6 py-4 text-sm font-semibold transition-colors">
             {{ 'admin.catalog.categories' | translate }} ({{ categories.length }})
           </button>
           <button
             (click)="switchTab('materials')"
             [class.bg-ts-accent]="activeTab === 'materials'"
             [class.text-white]="activeTab === 'materials'"
-            [class.text-gray-600]="activeTab !== 'materials'"
+            [class.text-gray-900]="activeTab !== 'materials'"
             [class.hover:bg-gray-50]="activeTab !== 'materials'"
-            class="flex-1 px-6 py-4 text-sm font-medium transition-colors border-l border-gray-200">
+            class="flex-1 px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200">
             {{ 'admin.catalog.materials' | translate }} ({{ materials.length }})
           </button>
           <button
             (click)="switchTab('families')"
             [class.bg-ts-accent]="activeTab === 'families'"
             [class.text-white]="activeTab === 'families'"
-            [class.text-gray-600]="activeTab !== 'families'"
+            [class.text-gray-900]="activeTab !== 'families'"
             [class.hover:bg-gray-50]="activeTab !== 'families'"
-            class="flex-1 px-6 py-4 text-sm font-medium transition-colors border-l border-gray-200">
+            class="flex-1 px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200">
             {{ 'admin.catalog.families' | translate }} ({{ families.length }})
           </button>
           <button
             (click)="switchTab('sizes')"
             [class.bg-ts-accent]="activeTab === 'sizes'"
             [class.text-white]="activeTab === 'sizes'"
-            [class.text-gray-600]="activeTab !== 'sizes'"
+            [class.text-gray-900]="activeTab !== 'sizes'"
             [class.hover:bg-gray-50]="activeTab !== 'sizes'"
-            class="flex-1 px-6 py-4 text-sm font-medium transition-colors border-l border-gray-200">
+            class="flex-1 px-6 py-4 text-sm font-semibold transition-colors border-l border-gray-200">
             {{ 'admin.catalog.sizes' | translate }} ({{ sizes.length }})
           </button>
         </nav>
