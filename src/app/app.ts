@@ -61,6 +61,21 @@ export class AppComponent implements OnInit {
     // Language is auto-initialized by LanguageService constructor
     // It auto-detects browser language and loads from localStorage
     
+    // Hide initial loader after app is ready
+    if (isPlatformBrowser(this.platformId)) {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        const loader = document.getElementById('app-initial-loader');
+        if (loader) {
+          loader.classList.add('hidden');
+          // Remove from DOM after transition completes
+          setTimeout(() => {
+            loader.remove();
+          }, 350); // Match the CSS transition duration
+        }
+      }, 100);
+    }
+    
     // Initialize page view tracking on route changes (browser only)
     if (isPlatformBrowser(this.platformId)) {
       this.analyticsService.initPageViewTracking();

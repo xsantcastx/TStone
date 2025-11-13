@@ -303,11 +303,7 @@ export class QuickAddProductComponent implements OnInit {
   onCoverImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      if (file.size > MEDIA_VALIDATION.MAX_SIZE) {
-        this.errorMessage = 'File too large (max 10MB)';
-        return;
-      }
-
+      // Removed size validation - optimization will handle large files
       this.selectedCoverFile = file;
       
       // Create preview
@@ -322,14 +318,10 @@ export class QuickAddProductComponent implements OnInit {
   onGalleryImagesSelected(event: any) {
     const files = Array.from(event.target.files) as File[];
     
+    // Removed size validation - optimization will handle large files
     files.forEach(file => {
-      if (file.size > MEDIA_VALIDATION.MAX_SIZE) {
-        this.errorMessage = 'Some files are too large (max 10MB)';
-        return;
-      }
-
       this.galleryFiles.push(file);
-
+      
       // Create preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -337,9 +329,7 @@ export class QuickAddProductComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     });
-  }
-
-  removeGalleryImage(index: number) {
+  }  removeGalleryImage(index: number) {
     this.galleryFiles.splice(index, 1);
     this.galleryPreviews.splice(index, 1);
   }
