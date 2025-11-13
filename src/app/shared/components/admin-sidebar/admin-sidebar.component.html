@@ -1,5 +1,5 @@
 <!-- Mobile Header -->
-<div class="lg:hidden fixed top-0 left-0 right-0 z-40 bg-ts-bg border-b border-gray-200">
+<div class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-ts-bg border-b border-gray-200">
   <div class="flex items-center justify-between px-4 py-3">
     <div class="flex items-center gap-3">
       <div class="w-8 h-8 bg-ts-accent rounded-full flex items-center justify-center">
@@ -25,12 +25,22 @@
   </div>
 </div>
 
+<!-- Mobile Menu Overlay -->
+@if (isMobileMenuOpen) {
+  <div 
+    class="lg:hidden fixed inset-0 bg-black/50 z-[45]"
+    (click)="closeMobileMenu()">
+  </div>
+}
+
 <!-- Sidebar -->
 <aside 
-  class="fixed left-0 top-0 h-full bg-ts-bg border-r border-gray-200 transition-transform duration-300 z-50"
+  class="fixed left-0 h-full bg-ts-bg border-r border-gray-200 transition-transform duration-300 lg:top-0 lg:translate-x-0 lg:z-30"
+  [class.top-16]="true"
   [class.translate-x-0]="isMobileMenuOpen"
   [class.-translate-x-full]="!isMobileMenuOpen"
-  [class.lg:translate-x-0]="true"
+  [class.z-50]="isMobileMenuOpen"
+  [class.z-0]="!isMobileMenuOpen"
   style="width: 280px;">
   
   <!-- Logo/Brand -->
