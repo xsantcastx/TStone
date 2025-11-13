@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,6 +14,8 @@ import { HomeHeroComponent } from '../../features/home/home-hero/home-hero.compo
 })
 export class HomePageComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
+  private dataService = inject(DataService);
+  private cdr = inject(ChangeDetectorRef);
   
   // Fallback data for immediate display and SSR
   productos12mm: Producto[] = [
@@ -56,10 +58,14 @@ export class HomePageComponent implements OnInit {
         if (productos12.length > 0) this.productos12mm = productos12.slice(0, 4);
         if (productos15.length > 0) this.productos15mm = productos15.slice(0, 3);
         if (productos20.length > 0) this.productos20mm = productos20.slice(0, 4);
+        
+        // Force change detection
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.log('Using fallback product data');
         // Fallback data is already set in component initialization
+        this.cdr.detectChanges();
       }
     });
   }

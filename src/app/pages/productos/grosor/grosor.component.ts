@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductsService } from '../../../services/products.service';
@@ -186,6 +186,7 @@ export class GrosorComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private route = inject(ActivatedRoute);
   private productsService = inject(ProductsService);
+  private cdr = inject(ChangeDetectorRef);
   
   grosor = '';
   productosFiltrados: Product[] = [];
@@ -213,11 +214,13 @@ export class GrosorComponent implements OnInit {
           .filter(p => p.status === 'published' && p.active !== false)
           .sort((a, b) => a.name.localeCompare(b.name));
         this.isLoading = false;
+        this.cdr.detectChanges(); // Force change detection
       },
       error: (error) => {
         console.error('Error loading products:', error);
         this.productosFiltrados = [];
         this.isLoading = false;
+        this.cdr.detectChanges(); // Force change detection
       }
     });
   }

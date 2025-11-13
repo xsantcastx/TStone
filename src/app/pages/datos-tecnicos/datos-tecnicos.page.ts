@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataService, DatosTecnicosData } from '../../core/services/data.service';
@@ -19,6 +19,8 @@ export class DatosTecnicosPageComponent implements OnInit {
   
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
+  private dataService = inject(DataService);
+  private cdr = inject(ChangeDetectorRef);
   
   acordeonesAbiertos: { [key: string]: boolean } = {
     especificaciones: true, // Start with specifications open
@@ -174,10 +176,12 @@ export class DatosTecnicosPageComponent implements OnInit {
           this.datosTecnicos = data;
         }
         this.isLoading = false;
+        this.cdr.detectChanges(); // Force change detection
       },
       error: () => {
         // Keep fallback data on error
         this.isLoading = false;
+        this.cdr.detectChanges(); // Force change detection
       }
     });
   }

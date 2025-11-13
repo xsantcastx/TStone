@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -41,6 +41,7 @@ export class ProductsAdminComponent implements OnInit {
   private materialService = inject(MaterialService);
   private storageService = inject(StorageService);
   private mediaService = inject(MediaService);
+  private cdr = inject(ChangeDetectorRef);
 
   products: Product[] = [];
   categories: Category[] = [];
@@ -201,17 +202,20 @@ export class ProductsAdminComponent implements OnInit {
         next: (products) => {
           this.products = products;
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading products:', error);
           this.errorMessage = 'admin.error_occurred';
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
     } catch (error) {
       console.error('Error loading products:', error);
       this.errorMessage = 'admin.error_occurred';
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 

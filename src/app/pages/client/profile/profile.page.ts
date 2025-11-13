@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -16,6 +16,7 @@ export class ProfilePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   profileForm: FormGroup;
   userProfile: UserProfile | null = null;
@@ -60,6 +61,7 @@ export class ProfilePageComponent implements OnInit {
       this.errorMessage = 'client.errors.load_profile_failed';
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges(); // Force change detection
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,6 +26,7 @@ export class DetalleComponent implements OnInit {
   private router = inject(Router);
   private titleService = inject(Title);
   private metaService = inject(Meta);
+  private cdr = inject(ChangeDetectorRef);
   
   producto: Product | undefined;
   productosRelacionados: Product[] = [];
@@ -88,9 +89,11 @@ export class DetalleComponent implements OnInit {
         }
         
         this.loading = false;
+        this.cdr.detectChanges(); // Force change detection
       } catch (error) {
         console.error('Error loading product:', error);
         this.loading = false;
+        this.cdr.detectChanges(); // Force change detection
         this.router.navigate(['/404']);
       }
     } else {

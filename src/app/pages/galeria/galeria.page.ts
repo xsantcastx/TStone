@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, PLATFORM_ID, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, PLATFORM_ID, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Firestore, collection, query, where, getDocs, QueryDocumentSnapshot } from '@angular/fire/firestore';
@@ -54,6 +54,7 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
   
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private firestore: Firestore
@@ -108,10 +109,12 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
       this.filtrarPorCategoria('todos');
       this.startCarousel();
       this.isLoading = false;
+      this.cdr.detectChanges(); // Force change detection
     } catch (error) {
       console.error('❌ Error loading gallery from Firebase:', error);
       this.allImages = [];
       this.isLoading = false;
+      this.cdr.detectChanges(); // Force change detection
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/
 export class UsersAdminComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   users: UserProfile[] = [];
   filteredUsers: UserProfile[] = [];
@@ -60,6 +61,7 @@ export class UsersAdminComponent implements OnInit {
       this.errorMessage = 'Failed to load users';
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 

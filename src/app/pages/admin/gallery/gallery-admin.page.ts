@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
@@ -28,6 +28,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
   private mediaService = inject(MediaService);
   private productsService = inject(ProductsService);
   private imageOptimization = inject(ImageOptimizationService);
+  private cdr = inject(ChangeDetectorRef);
 
   mediaList: Media[] = [];
   products: Product[] = [];
@@ -120,11 +121,13 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
       next: (mediaList) => {
         this.mediaList = mediaList;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading media:', error);
         this.errorMessage = 'Error loading media files';
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

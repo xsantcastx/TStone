@@ -1,13 +1,16 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { Auth, user } from '@angular/fire/auth';
-import { map, take } from 'rxjs/operators';
+import { map, take, filter } from 'rxjs/operators';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const auth = inject(Auth);
   const router = inject(Router);
 
+  // Wait for auth state to be initialized (skip initial null/undefined)
   return user(auth).pipe(
+    // Skip the initial null emission during Firebase Auth initialization
+    filter(currentUser => currentUser !== undefined),
     take(1),
     map(currentUser => {
       if (currentUser) {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,6 +21,7 @@ export class AdminDashboardComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private dashboardService = inject(AdminDashboardService);
+  private cdr = inject(ChangeDetectorRef);
 
   userProfile: UserProfile | null = null;
   stats: AdminDashboardSnapshot | null = null;
@@ -55,6 +56,7 @@ export class AdminDashboardComponent implements OnInit {
       console.error('Error loading dashboard stats:', error);
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -26,6 +26,7 @@ export class ProductosPageComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private materialService = inject(MaterialService);
   private cartService = inject(CartService);
+  private cdr = inject(ChangeDetectorRef);
   
   // Firestore products
   allProducts: Product[] = [];
@@ -61,6 +62,7 @@ export class ProductosPageComponent implements OnInit {
       this.categoryService.getActiveCategories().subscribe({
         next: (categories) => {
           this.categories = categories;
+          this.cdr.detectChanges();
         },
         error: (err) => console.error('Error loading categories:', err)
       });
@@ -68,6 +70,7 @@ export class ProductosPageComponent implements OnInit {
       this.materialService.getActiveMaterials().subscribe({
         next: (materials) => {
           this.materials = materials;
+          this.cdr.detectChanges();
         },
         error: (err) => console.error('Error loading materials:', err)
       });
@@ -93,10 +96,12 @@ export class ProductosPageComponent implements OnInit {
           this.applyFilters();
           
           this.isLoading = false;
+          this.cdr.detectChanges(); // Force change detection
         },
         error: (error) => {
           console.error('Error loading products:', error);
           this.isLoading = false;
+          this.cdr.detectChanges(); // Force change detection
         }
       });
     } catch (error) {
