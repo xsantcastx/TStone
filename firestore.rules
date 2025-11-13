@@ -71,11 +71,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Users - Users can read/write own data, Admins can read all
+    // Users - Users can read/write own data, Admins can read/write all
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
       allow create: if isSignedIn();
-      allow update: if isOwner(userId);
+      allow update: if isOwner(userId) || isAdmin();
       allow delete: if false;
     }
 

@@ -28,7 +28,7 @@ export class SettingsAdminComponent implements OnInit {
   successMessage = signal('');
   errorMessage = signal('');
   uploadProgress = signal<number>(0);
-  activeTab = signal<'hero' | 'site' | 'visual' | 'ecommerce' | 'business'>('hero');
+  activeTab = signal<'hero' | 'site' | 'maintenance' | 'visual' | 'ecommerce' | 'business'>('hero');
 
   ngOnInit(): void {
     // Check if user is admin

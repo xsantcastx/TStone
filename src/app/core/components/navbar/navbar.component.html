@@ -11,7 +11,7 @@
 
       <!-- Mobile hamburger -->
       <button 
-        class="md:hidden p-2 rounded-lg transition-colors"
+        class="lg:hidden p-2 rounded-lg transition-colors"
         [class.bg-white/10]="!scrolled"
         [class.bg-neutral-100]="scrolled"
         (click)="mobileOpen = !mobileOpen" 
@@ -22,7 +22,7 @@
       </button>
 
       <!-- Desktop navigation -->
-      <nav class="hidden md:flex items-center gap-8 font-sans text-sm">
+      <nav class="hidden lg:flex items-center gap-8 font-sans text-sm">
         <a routerLink="/" routerLinkActive="text-ts-accent" [routerLinkActiveOptions]="{exact: true}" 
            class="hover:text-ts-accent transition-colors">
           {{ 'nav.home' | translate }}
@@ -146,7 +146,7 @@
       </nav>
 
       <!-- Actions: Social, Language, Account, Cart -->
-      <div class="hidden md:flex items-center gap-4">
+      <div class="hidden lg:flex items-center gap-4">
         @if ((settings$ | async)?.socialMedia?.linkedin || (settings$ | async)?.socialMedia?.instagram || (settings$ | async)?.socialMedia?.facebook || (settings$ | async)?.socialMedia?.youtube) {
           <div class="flex items-center gap-2">
             @if ((settings$ | async)?.socialMedia?.linkedin) {
@@ -295,12 +295,12 @@
 
 <!-- Mobile overlay -->
 <div *ngIf="mobileOpen" 
-     class="md:hidden fixed inset-0 z-40 modal-overlay" 
+     class="lg:hidden fixed inset-0 z-40 modal-overlay" 
      (click)="closeMobile()"></div>
 
 <!-- Mobile drawer -->
 <aside *ngIf="mobileOpen" 
-       class="md:hidden fixed top-0 right-0 z-50 w-[84%] max-w-sm h-full
+       class="lg:hidden fixed top-0 right-0 z-50 w-[84%] max-w-sm h-full
               bg-white text-neutral-900 shadow-xl overflow-y-auto
               animate-in slide-in-from-right duration-300">
   

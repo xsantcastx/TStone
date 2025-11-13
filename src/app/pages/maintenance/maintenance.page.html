@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-gradient-to-br from-ts-paper via-white to-ts-bg flex items-center justify-center px-4 py-12">
+  <div class="max-w-2xl w-full">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-ts-accent/10 rounded-2xl mb-6">
+        <svg class="w-12 h-12 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" 
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-black mb-3">
+        Mantenimiento Programado
+      </h1>
+      <div class="w-24 h-1 bg-ts-accent mx-auto rounded-full"></div>
+    </div>
+
+    <!-- Main Message Card -->
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 mb-6">
+      <div class="text-center mb-8">
+        <p class="text-lg text-gray-700 leading-relaxed">
+          {{ maintenanceMessage }}
+        </p>
+      </div>
+
+      <!-- Status Indicator -->
+      <div class="flex items-center justify-center gap-3 mb-8">
+        <div class="relative">
+          <div class="w-3 h-3 bg-ts-accent rounded-full animate-ping absolute"></div>
+          <div class="w-3 h-3 bg-ts-accent rounded-full relative"></div>
+        </div>
+        <span class="text-sm font-medium text-gray-600">
+          Sistema en mantenimiento
+        </span>
+      </div>
+
+      <!-- Expected Return -->
+      <div class="bg-ts-bg/30 rounded-xl p-6 mb-8 border border-ts-accent/10">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-black mb-1">Tiempo estimado</h3>
+            <p class="text-sm text-gray-600">
+              Estaremos de vuelta en aproximadamente 2 horas. Gracias por tu paciencia.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Options -->
+      <div class="border-t border-gray-100 pt-6">
+        <p class="text-sm text-gray-600 text-center mb-4">
+          ¿Necesitas ayuda urgente? Contáctanos:
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <!-- Email -->
+          <a 
+            [href]="'mailto:' + contactEmail"
+            class="flex items-center justify-center gap-2 px-5 py-3 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 transition-all font-medium shadow-sm hover:shadow-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>{{ contactEmail }}</span>
+          </a>
+
+          <!-- Phone -->
+          <a 
+            [href]="'tel:' + contactPhone"
+            class="flex items-center justify-center gap-2 px-5 py-3 bg-white border-2 border-ts-accent text-ts-accent rounded-xl hover:bg-ts-accent/5 transition-all font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+            </svg>
+            <span>{{ contactPhone }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="text-center">
+      <p class="text-sm text-gray-500">
+        © 2025 TopStone. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</div>

@@ -37,6 +37,10 @@ export interface AppSettings {
   address?: string;
   socialMedia?: SocialMedia;
   
+  // Maintenance Mode
+  maintenanceMode?: boolean;
+  maintenanceMessage?: string;
+  
   // Visual Settings
   logoUrl?: string;
   faviconUrl?: string;
@@ -74,6 +78,8 @@ const DEFAULT_SETTINGS: AppSettings = {
     linkedin: '',
     youtube: ''
   },
+  maintenanceMode: false,
+  maintenanceMessage: 'Estamos realizando tareas de mantenimiento programado. Por favor, vuelve pronto o contacta con nuestro equipo de soporte si necesitas ayuda.',
   logoUrl: 'assets/topstone-logotype-horizontal.svg',
   faviconUrl: '',
   primaryColor: '#1a1a1a',

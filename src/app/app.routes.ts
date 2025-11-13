@@ -121,6 +121,12 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     title: 'TopStone | Database Seeder'
   },
+  // Maintenance Page
+  {
+    path: 'maintenance',
+    loadComponent: () => import('./pages/maintenance/maintenance.page').then(m => m.MaintenancePage),
+    title: 'TopStone | Mantenimiento'
+  },
   {
     path: '404',
     loadComponent: () => import('./pages/not-found/not-found.page').then(m => m.NotFoundPageComponent),
