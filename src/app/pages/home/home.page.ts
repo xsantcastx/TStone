@@ -38,8 +38,6 @@ export class HomePageComponent implements OnInit {
     { nombre: 'Crystal Clear', slug: 'crystal-clear-20', grosor: '20mm', medida: '160x320cm', cover: 'assets/Modern/image9.jpeg' }
   ];
 
-  constructor(private dataService: DataService) {}
-
   ngOnInit() {
     // Only load from service if in browser (not during SSR)
     if (isPlatformBrowser(this.platformId)) {

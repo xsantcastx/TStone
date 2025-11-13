@@ -151,11 +151,9 @@ export class DatosTecnicosPageComponent implements OnInit {
         'Productos abrasivos',
         'Cepillos metálicos',
         'Limpiadores con amoniaco'
-      ]
+      }
     }
   };
-
-  constructor(private dataService: DataService) {}
 
   ngOnInit() {
     // Load fallback data immediately
