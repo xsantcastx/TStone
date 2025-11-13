@@ -10,6 +10,7 @@ import { CategoryService } from '../../../services/category.service';
 import { MaterialService } from '../../../services/material.service';
 import { StorageService } from '../../../services/storage.service';
 import { MediaService } from '../../../services/media.service';
+import { ImageOptimizationService } from '../../../services/image-optimization.service';
 import { Product } from '../../../models/product';
 import { Category, Material } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
@@ -32,6 +33,7 @@ export class QuickAddProductComponent implements OnInit {
   private materialService = inject(MaterialService);
   private storageService = inject(StorageService);
   private mediaService = inject(MediaService);
+  private imageOptimization = inject(ImageOptimizationService);
 
   categories: Category[] = [];
   materials: Material[] = [];
@@ -464,13 +466,24 @@ export class QuickAddProductComponent implements OnInit {
         throw new Error('User not authenticated');
       }
 
+      // Optimize image before upload
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.85,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Product image optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+
       const category = this.categories.find(c => c.id === this.productForm.get('categoryId')?.value);
       const grosor = category?.slug || '12mm';
       const slug = this.productForm.get('slug')?.value || 'temp';
 
       // Upload to storage
       const downloadURL = await new Promise<string>((resolve, reject) => {
-        this.storageService.uploadProductImage(file, slug, grosor).subscribe({
+        this.storageService.uploadProductImage(optimizedFile, slug, grosor).subscribe({
           next: (progress) => {
             if (progress.downloadURL) {
               resolve(progress.downloadURL);
@@ -481,18 +494,18 @@ export class QuickAddProductComponent implements OnInit {
       });
 
       // Get image dimensions
-      const dimensions = await this.mediaService.getImageDimensions(file);
+      const dimensions = await this.mediaService.getImageDimensions(optimizedFile);
 
       // Create media document
-      const storagePath = `productos/${grosor}/${slug}/${file.name}`;
+      const storagePath = `productos/${grosor}/${slug}/${optimizedFile.name}`;
       const mediaInput: MediaCreateInput = {
         url: downloadURL,
-        filename: file.name,
+        filename: optimizedFile.name,
         storagePath: storagePath,
         width: dimensions.width,
         height: dimensions.height,
-        size: file.size,
-        mimeType: file.type,
+        size: optimizedFile.size,
+        mimeType: optimizedFile.type,
         uploadedBy: user.uid,
         tags: [type, 'product'],
         relatedEntityType: 'product',

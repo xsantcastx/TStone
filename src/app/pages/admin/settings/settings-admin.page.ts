@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { SettingsService, HeroImage, AppSettings } from '../../../services/settings.service';
 import { AuthService } from '../../../services/auth.service';
+import { ImageOptimizationService } from '../../../services/image-optimization.service';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 
 @Component({
@@ -20,6 +21,7 @@ export class SettingsAdminComponent implements OnInit {
   private storage = inject(Storage);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private imageOptimization = inject(ImageOptimizationService);
 
   settings = signal<AppSettings | null>(null);
   heroImages = signal<HeroImage[]>([]);
@@ -71,12 +73,25 @@ export class SettingsAdminComponent implements OnInit {
     try {
       this.uploadProgress.set(0);
       
+      // Optimize image
+      this.successMessage.set('Optimizando imagen...');
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.85,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Hero image optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+      
       // Upload to Firebase Storage
+      this.successMessage.set('Subiendo imagen...');
       const timestamp = Date.now();
-      const filename = `hero-${timestamp}-${file.name}`;
+      const filename = `hero-${timestamp}-${optimizedFile.name}`;
       const storageRef = ref(this.storage, `hero-images/${filename}`);
       
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
 
       // Update hero image
@@ -87,7 +102,7 @@ export class SettingsAdminComponent implements OnInit {
       };
       this.heroImages.set(images);
       
-      this.successMessage.set('Imagen subida correctamente');
+      this.successMessage.set(`Imagen subida correctamente (${reduction}% más pequeña)`);
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -225,11 +240,24 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
-      const filename = `logo-${Date.now()}-${file.name}`;
+      // Optimize image
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 512,
+        maxHeight: 512,
+        quality: 0.9,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Logo optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+      
+      const filename = `logo-${Date.now()}-${optimizedFile.name}`;
       const storageRef = ref(this.storage, `site-assets/${filename}`);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
       this.updateSetting('logoUrl', url);
+      this.successMessage.set(`Logo actualizado (${reduction}% más pequeño)`);
+      setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading logo:', error);
       this.errorMessage.set('Error al subir el logo');
@@ -247,11 +275,24 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
-      const filename = `favicon-${Date.now()}-${file.name}`;
+      // Optimize favicon
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 256,
+        maxHeight: 256,
+        quality: 0.9,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Favicon optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+      
+      const filename = `favicon-${Date.now()}-${optimizedFile.name}`;
       const storageRef = ref(this.storage, `site-assets/${filename}`);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
       this.updateSetting('faviconUrl', url);
+      this.successMessage.set(`Favicon actualizado (${reduction}% más pequeño)`);
+      setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading favicon:', error);
       this.errorMessage.set('Error al subir el favicon');

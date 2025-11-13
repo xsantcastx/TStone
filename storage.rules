@@ -56,6 +56,13 @@ service firebase.storage {
       allow delete: if isAdmin();
     }
     
+    // Datos tecnicos images (acabados, bordes, fachada) - Admin can write, everyone can read
+    match /datos-tecnicos/{folder}/{imageName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
+    }
+    
     // User profile images - Users can manage their own
     match /users/{userId}/{imageName} {
       allow read: if true;

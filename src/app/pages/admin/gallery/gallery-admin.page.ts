@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { MediaService } from '../../../services/media.service';
 import { ProductsService } from '../../../services/products.service';
+import { ImageOptimizationService } from '../../../services/image-optimization.service';
 import { Product } from '../../../models/product';
 import { Media, MediaTag, GALLERY_TAGS, MediaCreateInput } from '../../../models/media';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
@@ -26,6 +27,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private mediaService = inject(MediaService);
   private productsService = inject(ProductsService);
+  private imageOptimization = inject(ImageOptimizationService);
 
   mediaList: Media[] = [];
   products: Product[] = [];
@@ -402,8 +404,19 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
         const file = this.selectedFiles[i];
         
         try {
+          // Optimize image before upload
+          const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+            maxWidth: 1920,
+            maxHeight: 1080,
+            quality: 0.85,
+            outputFormat: 'webp'
+          });
+          
+          const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+          console.log(`Gallery image optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+          
           // Validate image dimensions
-          const validation = await this.mediaService.validateImageDimensions(file, 1600, 1200);
+          const validation = await this.mediaService.validateImageDimensions(optimizedFile, 1600, 1200);
           
           if (!validation.valid && !validation.width) {
             console.warn(`Skipping ${file.name}: ${validation.error}`);
@@ -417,12 +430,12 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
             : sharedAltText;
 
           const mediaInput: Omit<MediaCreateInput, 'url'> = {
-            filename: file.name,
-            storagePath: `gallery/${Date.now()}_${file.name}`,
+            filename: optimizedFile.name,
+            storagePath: `gallery/${Date.now()}_${optimizedFile.name}`,
             width: validation.width || 0,
             height: validation.height || 0,
-            size: file.size,
-            mimeType: file.type,
+            size: optimizedFile.size,
+            mimeType: optimizedFile.type,
             uploadedBy: currentUser.uid,
             tags: tags as string[],
             altText: altText,
@@ -432,7 +445,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
 
           // Upload file
           await this.mediaService.uploadMediaFile(
-            file,
+            optimizedFile,
             mediaInput,
             (progress) => {
               // Calculate overall progress
@@ -443,7 +456,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
           );
 
           this.uploadedCount++;
-          console.log(`✅ Uploaded ${this.uploadedCount}/${this.totalToUpload}: ${file.name}`);
+          console.log(`✅ Uploaded ${this.uploadedCount}/${this.totalToUpload}: ${file.name} (${reduction}% smaller)`);
         } catch (error) {
           console.error(`Error uploading ${file.name}:`, error);
           this.uploadedCount++;

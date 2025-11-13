@@ -71,6 +71,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Content (datos tecnicos, galeria, etc.) - Public read, Admin write
+    match /content/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Users - Users can read/write own data, Admins can read/write all
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();

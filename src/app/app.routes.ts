@@ -98,6 +98,12 @@ export const routes: Routes = [
     title: 'TopStone | Catálogo Master'
   },
   {
+    path: 'admin/datos-tecnicos',
+    loadComponent: () => import('./pages/admin/datos-tecnicos/datos-tecnicos-admin.page').then(m => m.DatosTecnicosAdminComponent),
+    canActivate: [adminGuard],
+    title: 'TopStone | Gestión de Datos Técnicos'
+  },
+  {
     path: 'admin/orders',
     loadComponent: () => import('./pages/admin/orders/orders-admin.page').then(m => m.OrdersAdminComponent),
     canActivate: [adminGuard],

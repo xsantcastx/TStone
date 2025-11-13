@@ -1,0 +1,650 @@
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-gradient-to-b from-ts-paper to-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-serif font-bold text-black mb-2">Gestión de Datos Técnicos</h1>
+      <p class="text-gray-600">Administra toda la información técnica del sitio</p>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (successMessage()) {
+      <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
+        <svg class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-sm text-green-700 font-medium">{{ successMessage() }}</p>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-sm text-red-700 font-medium">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <!-- Main Content Card -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+      
+      <!-- Tabs -->
+      <div class="flex gap-2 mb-6 border-b border-gray-200 overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0">
+        <button
+          (click)="activeTab.set('specs')"
+          [class.border-ts-accent]="activeTab() === 'specs'"
+          [class.text-white]="activeTab() === 'specs'"
+          [class.bg-ts-accent]="activeTab() === 'specs'"
+          [class.text-black]="activeTab() !== 'specs'"
+          [class.bg-white]="activeTab() !== 'specs'"
+          [class.border-gray-300]="activeTab() !== 'specs'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Especificaciones
+        </button>
+        <button
+          (click)="activeTab.set('acabados')"
+          [class.border-ts-accent]="activeTab() === 'acabados'"
+          [class.text-white]="activeTab() === 'acabados'"
+          [class.bg-ts-accent]="activeTab() === 'acabados'"
+          [class.text-black]="activeTab() !== 'acabados'"
+          [class.bg-white]="activeTab() !== 'acabados'"
+          [class.border-gray-300]="activeTab() !== 'acabados'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Acabados
+        </button>
+        <button
+          (click)="activeTab.set('fichas')"
+          [class.border-ts-accent]="activeTab() === 'fichas'"
+          [class.text-white]="activeTab() === 'fichas'"
+          [class.bg-ts-accent]="activeTab() === 'fichas'"
+          [class.text-black]="activeTab() !== 'fichas'"
+          [class.bg-white]="activeTab() !== 'fichas'"
+          [class.border-gray-300]="activeTab() !== 'fichas'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Fichas Técnicas
+        </button>
+        <button
+          (click)="activeTab.set('packing')"
+          [class.border-ts-accent]="activeTab() === 'packing'"
+          [class.text-white]="activeTab() === 'packing'"
+          [class.bg-ts-accent]="activeTab() === 'packing'"
+          [class.text-black]="activeTab() !== 'packing'"
+          [class.bg-white]="activeTab() !== 'packing'"
+          [class.border-gray-300]="activeTab() !== 'packing'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Embalaje
+        </button>
+        <button
+          (click)="activeTab.set('bordes')"
+          [class.border-ts-accent]="activeTab() === 'bordes'"
+          [class.text-white]="activeTab() === 'bordes'"
+          [class.bg-ts-accent]="activeTab() === 'bordes'"
+          [class.text-black]="activeTab() !== 'bordes'"
+          [class.bg-white]="activeTab() !== 'bordes'"
+          [class.border-gray-300]="activeTab() !== 'bordes'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Bordes
+        </button>
+        <button
+          (click)="activeTab.set('fachada')"
+          [class.border-ts-accent]="activeTab() === 'fachada'"
+          [class.text-white]="activeTab() === 'fachada'"
+          [class.bg-ts-accent]="activeTab() === 'fachada'"
+          [class.text-black]="activeTab() !== 'fachada'"
+          [class.bg-white]="activeTab() !== 'fachada'"
+          [class.border-gray-300]="activeTab() !== 'fachada'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Fachada
+        </button>
+        <button
+          (click)="activeTab.set('mantenimiento')"
+          [class.border-ts-accent]="activeTab() === 'mantenimiento'"
+          [class.text-white]="activeTab() === 'mantenimiento'"
+          [class.bg-ts-accent]="activeTab() === 'mantenimiento'"
+          [class.text-black]="activeTab() !== 'mantenimiento'"
+          [class.bg-white]="activeTab() !== 'mantenimiento'"
+          [class.border-gray-300]="activeTab() !== 'mantenimiento'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Mantenimiento
+        </button>
+      </div>
+
+      <!-- Especificaciones Tab -->
+      @if (activeTab() === 'specs') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Especificaciones Técnicas</h2>
+          </div>
+
+          <!-- Add New Spec -->
+          <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+            <h3 class="font-medium text-black mb-3">Añadir Especificación</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                [(ngModel)]="editingSpec.key"
+                placeholder="Clave (ej: absorcionAgua)"
+                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+              <input
+                type="text"
+                [(ngModel)]="editingSpec.value"
+                placeholder="Valor (ej: ≤ 0,5%)"
+                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+            </div>
+            <button
+              (click)="addSpec()"
+              [disabled]="!editingSpec.key || !editingSpec.value"
+              class="mt-3 px-4 py-2 bg-ts-accent text-white rounded-lg hover:bg-ts-accent/90 disabled:opacity-50 disabled:cursor-not-allowed">
+              Añadir
+            </button>
+          </div>
+
+          <!-- Specs List -->
+          <div class="space-y-3">
+            @for (spec of getSpecEntries(); track spec.key) {
+              <div class="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg">
+                <div class="flex-1 grid md:grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-sm text-gray-600 font-medium">Clave</label>
+                    <p class="text-black">{{ spec.key }}</p>
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-600 font-medium">Valor</label>
+                    <input
+                      type="text"
+                      [value]="spec.value"
+                      (input)="updateSpec(spec.key, $any($event.target).value)"
+                      class="w-full px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                </div>
+                <button
+                  (click)="removeSpec(spec.key)"
+                  class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay especificaciones configuradas</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Acabados Tab -->
+      @if (activeTab() === 'acabados') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Acabados de Superficie</h2>
+            <button
+              (click)="addAcabado()"
+              class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Añadir Acabado
+            </button>
+          </div>
+
+          <div class="space-y-6">
+            @for (acabado of datosTecnicos().acabadosSuperficie; track $index) {
+              <div class="p-4 border border-gray-200 rounded-xl bg-gray-50">
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      [value]="acabado.nombre"
+                      (input)="updateAcabado($index, 'nombre', $any($event.target).value)"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Imagen</label>
+                    <div class="flex gap-2">
+                      <input
+                        type="file"
+                        (change)="uploadAcabadoImage($event, $index)"
+                        accept="image/*"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm">
+                      @if (acabado.imagen) {
+                        <img [src]="acabado.imagen" alt="Preview" class="w-16 h-16 object-cover rounded-lg">
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-black mb-1">Descripción</label>
+                  <textarea
+                    [value]="acabado.descripcion"
+                    (input)="updateAcabado($index, 'descripcion', $any($event.target).value)"
+                    rows="2"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+                </div>
+                <button
+                  (click)="removeAcabado($index)"
+                  class="text-red-600 hover:text-red-700 text-sm font-medium">
+                  Eliminar Acabado
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay acabados configurados</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Fichas Tab -->
+      @if (activeTab() === 'fichas') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Fichas Técnicas</h2>
+            <button
+              (click)="addFicha()"
+              class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Añadir Ficha
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            @for (ficha of datosTecnicos().fichasTecnicas; track $index) {
+              <div class="p-4 border border-gray-200 rounded-xl bg-gray-50">
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      [value]="ficha.nombre"
+                      (input)="updateFicha($index, 'nombre', $any($event.target).value)"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">URL</label>
+                    <input
+                      type="text"
+                      [value]="ficha.url"
+                      (input)="updateFicha($index, 'url', $any($event.target).value)"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Tamaño</label>
+                    <input
+                      type="text"
+                      [value]="ficha.tamano"
+                      (input)="updateFicha($index, 'tamano', $any($event.target).value)"
+                      placeholder="ej: 1.8MB"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Descripción</label>
+                    <input
+                      type="text"
+                      [value]="ficha.descripcion"
+                      (input)="updateFicha($index, 'descripcion', $any($event.target).value)"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                </div>
+                <button
+                  (click)="removeFicha($index)"
+                  class="mt-3 text-red-600 hover:text-red-700 text-sm font-medium">
+                  Eliminar Ficha
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay fichas técnicas configuradas</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Packing Tab -->
+      @if (activeTab() === 'packing') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Información de Embalaje</h2>
+            <button
+              (click)="addPacking()"
+              class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Añadir Embalaje
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            @for (pack of datosTecnicos().packing; track $index) {
+              <div class="p-4 border border-gray-200 rounded-xl bg-gray-50">
+                <div class="grid md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Grosor</label>
+                    <input
+                      type="text"
+                      [value]="pack.grosor"
+                      (input)="updatePacking($index, 'grosor', $any($event.target).value)"
+                      placeholder="ej: 12mm"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Piezas por Pallet</label>
+                    <input
+                      type="number"
+                      [value]="pack.piezasPorPallet"
+                      (input)="updatePacking($index, 'piezasPorPallet', toNumber($any($event.target).value))"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Peso Aprox.</label>
+                    <input
+                      type="text"
+                      [value]="pack.pesoAprox"
+                      (input)="updatePacking($index, 'pesoAprox', $any($event.target).value)"
+                      placeholder="ej: ~350kg"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Dimensiones Pallet</label>
+                    <input
+                      type="text"
+                      [value]="pack.dimensionesPallet"
+                      (input)="updatePacking($index, 'dimensionesPallet', $any($event.target).value)"
+                      placeholder="ej: 165 x 325 x 45 cm"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Volumen</label>
+                    <input
+                      type="text"
+                      [value]="pack.volumen"
+                      (input)="updatePacking($index, 'volumen', $any($event.target).value)"
+                      placeholder="ej: 2,4 m³"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                </div>
+                <button
+                  (click)="removePacking($index)"
+                  class="mt-3 text-red-600 hover:text-red-700 text-sm font-medium">
+                  Eliminar Embalaje
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay información de embalaje configurada</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Bordes Tab -->
+      @if (activeTab() === 'bordes') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Acabados de Bordes</h2>
+            <button
+              (click)="addBorde()"
+              class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Añadir Borde
+            </button>
+          </div>
+
+          <div class="space-y-6">
+            @for (borde of datosTecnicos().acabadosBordes; track $index) {
+              <div class="p-4 border border-gray-200 rounded-xl bg-gray-50">
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      [value]="borde.nombre"
+                      (input)="updateBorde($index, 'nombre', $any($event.target).value)"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Imagen</label>
+                    <div class="flex gap-2">
+                      <input
+                        type="file"
+                        (change)="uploadBordeImage($event, $index)"
+                        accept="image/*"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm">
+                      @if (borde.imagen) {
+                        <img [src]="borde.imagen" alt="Preview" class="w-16 h-16 object-cover rounded-lg">
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-black mb-1">Descripción</label>
+                  <textarea
+                    [value]="borde.descripcion"
+                    (input)="updateBorde($index, 'descripcion', $any($event.target).value)"
+                    rows="2"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+                </div>
+                <button
+                  (click)="removeBorde($index)"
+                  class="text-red-600 hover:text-red-700 text-sm font-medium">
+                  Eliminar Borde
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay bordes configurados</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Fachada Tab -->
+      @if (activeTab() === 'fachada') {
+        <div>
+          <h2 class="text-xl font-serif font-bold text-black mb-6">Fijaciones para Fachada</h2>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Descripción</label>
+              <textarea
+                [value]="datosTecnicos().fijacionesFachada.descripcion"
+                (input)="updateFijacion('descripcion', $any($event.target).value)"
+                rows="3"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Imagen</label>
+              <div class="flex gap-4 items-start">
+                <input
+                  type="file"
+                  (change)="uploadFachadaImage($event)"
+                  accept="image/*"
+                  class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                @if (datosTecnicos().fijacionesFachada.imagen) {
+                  <img 
+                    [src]="datosTecnicos().fijacionesFachada.imagen" 
+                    alt="Fachada" 
+                    class="w-32 h-32 object-cover rounded-lg">
+                }
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Ventajas</label>
+              <div class="mb-3 flex gap-2">
+                <input
+                  type="text"
+                  [(ngModel)]="editingVentaja"
+                  placeholder="Nueva ventaja..."
+                  class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                <button
+                  (click)="addVentaja()"
+                  [disabled]="!editingVentaja.trim()"
+                  class="px-4 py-2 bg-ts-accent text-white rounded-lg hover:bg-ts-accent/90 disabled:opacity-50">
+                  Añadir
+                </button>
+              </div>
+
+              <div class="space-y-2">
+                @for (ventaja of datosTecnicos().fijacionesFachada.ventajas; track $index) {
+                  <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <svg class="w-5 h-5 text-ts-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="flex-1 text-black">{{ ventaja }}</span>
+                    <button
+                      (click)="removeVentaja($index)"
+                      class="p-1 text-red-600 hover:bg-red-50 rounded">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                }
+                @empty {
+                  <p class="text-center text-gray-500 py-4">No hay ventajas configuradas</p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Mantenimiento Tab -->
+      @if (activeTab() === 'mantenimiento') {
+        <div>
+          <h2 class="text-xl font-serif font-bold text-black mb-6">Información de Mantenimiento</h2>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Instrucciones de Limpieza</label>
+              <textarea
+                [value]="datosTecnicos().mantenimiento.limpieza"
+                (input)="updateMantenimiento('limpieza', $any($event.target).value)"
+                rows="2"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Frecuencia</label>
+              <textarea
+                [value]="datosTecnicos().mantenimiento.frecuencia"
+                (input)="updateMantenimiento('frecuencia', $any($event.target).value)"
+                rows="2"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Productos Recomendados</label>
+              <div class="mb-3 flex gap-2">
+                <input
+                  type="text"
+                  [(ngModel)]="editingProducto"
+                  placeholder="Nuevo producto..."
+                  class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                <button
+                  (click)="addProducto()"
+                  [disabled]="!editingProducto.trim()"
+                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50">
+                  Añadir
+                </button>
+              </div>
+
+              <div class="space-y-2">
+                @for (producto of datosTecnicos().mantenimiento.productos; track $index) {
+                  <div class="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="flex-1 text-black">{{ producto }}</span>
+                    <button
+                      (click)="removeProducto($index)"
+                      class="p-1 text-red-600 hover:bg-red-50 rounded">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                }
+                @empty {
+                  <p class="text-center text-gray-500 py-4">No hay productos configurados</p>
+                }
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-black mb-2">Productos a Evitar</label>
+              <div class="mb-3 flex gap-2">
+                <input
+                  type="text"
+                  [(ngModel)]="editingEvitar"
+                  placeholder="Nuevo producto a evitar..."
+                  class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                <button
+                  (click)="addEvitar()"
+                  [disabled]="!editingEvitar.trim()"
+                  class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50">
+                  Añadir
+                </button>
+              </div>
+
+              <div class="space-y-2">
+                @for (evitar of datosTecnicos().mantenimiento.evitar; track $index) {
+                  <div class="flex items-center gap-2 p-3 bg-red-50 rounded-lg border border-red-200">
+                    <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    <span class="flex-1 text-black">{{ evitar }}</span>
+                    <button
+                      (click)="removeEvitar($index)"
+                      class="p-1 text-red-600 hover:bg-red-100 rounded">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                }
+                @empty {
+                  <p class="text-center text-gray-500 py-4">No hay productos a evitar configurados</p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Save Button (Fixed Bottom) -->
+    <div class="mt-6 flex justify-end">
+      <button
+        (click)="saveDatosTecnicos()"
+        [disabled]="isSaving()"
+        class="px-8 py-3 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 transition-colors font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+        @if (isSaving()) {
+          <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Guardando...
+        } @else {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+          </svg>
+          Guardar Cambios
+        }
+      </button>
+    </div>
+
+  </div>
+</div>
