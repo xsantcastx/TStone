@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { CartService } from '../../../services/cart.service';
 import { AuthService } from '../../../services/auth.service';
 import { ProductFirestoreService, FirestoreProduct } from '../../../services/product-firestore.service';
+import { SettingsService } from '../../../services/settings.service';
 import { LanguageSelectorComponent } from '../../../shared/components/language-selector/language-selector.component';
 import { CartButtonComponent } from '../../../shared/components/cart-button/cart-button.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,6 +25,7 @@ export class NavbarComponent implements OnInit {
   private readonly cartService = inject(CartService);
   private readonly authService = inject(AuthService);
   private readonly productService = inject(ProductFirestoreService);
+  private readonly settingsService = inject(SettingsService);
   
   scrolled = false;
   mobileOpen = false;
@@ -34,6 +36,9 @@ export class NavbarComponent implements OnInit {
   // Auth state
   user$ = this.authService.user$;
   userProfile$ = this.authService.userProfile$;
+  
+  // Settings state
+  settings$ = this.settingsService.settings$;
   
   // Mega menu state and controls
   private hideTimer: any;

@@ -8,11 +8,12 @@ import {
   AdminDashboardService,
   AdminDashboardSnapshot
 } from '../../../services/admin-dashboard.service';
+import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, AdminSidebarComponent],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'
 })

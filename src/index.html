@@ -39,10 +39,54 @@
   
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    #app-initial-loader {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    #app-initial-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #app-initial-loader img {
+      width: clamp(96px, 15vw, 160px);
+      height: clamp(96px, 15vw, 160px);
+      object-fit: contain;
+      filter: drop-shadow(0 12px 32px rgba(200, 169, 107, 0.4));
+      animation: logoBreath 2.4s ease-in-out infinite;
+    }
+
+    @keyframes logoBreath {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.85;
+      }
+    }
+  </style>
 </head>
 <body class="body-dark">
   <!-- Skip link for accessibility -->
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+  
+  <!-- Initial Loading Screen (Instagram-style) -->
+  <div id="app-initial-loader">
+    <img src="/assets/topstone-mark-dark.svg" alt="TopStone" width="128" height="128">
+  </div>
+  
   <app-root></app-root>
 </body>
 </html>

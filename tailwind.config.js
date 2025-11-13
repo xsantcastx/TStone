@@ -12,6 +12,7 @@ module.exports = {
           ink: "var(--ts-ink)",
           'ink-soft': "var(--ts-ink-soft)",
           accent: "var(--ts-accent)",
+          primary: "var(--ts-primary)",
           line: "var(--ts-line)",
           paper: "var(--ts-paper)"
         }

@@ -42,6 +42,20 @@ service firebase.storage {
       allow delete: if isAdmin();
     }
     
+    // Hero images - Admin can write, everyone can read
+    match /hero-images/{imageName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
+    }
+    
+    // Site assets (logo, favicon) - Admin can write, everyone can read
+    match /site-assets/{imageName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
+    }
+    
     // User profile images - Users can manage their own
     match /users/{userId}/{imageName} {
       allow read: if true;

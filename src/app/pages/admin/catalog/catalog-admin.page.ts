@@ -8,13 +8,14 @@ import { CategoryService } from '../../../services/category.service';
 import { MaterialService } from '../../../services/material.service';
 import { SizeGroupService } from '../../../services/size-group.service';
 import { Category, Material, Family, SizeGroup } from '../../../models/catalog';
+import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 
 type TabType = 'categories' | 'materials' | 'families' | 'sizes';
 
 @Component({
   selector: 'app-catalog-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, AdminSidebarComponent],
   templateUrl: './catalog-admin.page.html',
   styleUrl: './catalog-admin.page.scss'
 })

@@ -1,8 +1,11 @@
 import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { EmailService } from '../../services/email.service';
 import { AnalyticsService } from '../../services/analytics.service';
+import { SettingsService } from '../../services/settings.service';
+import { map } from 'rxjs/operators';
 
 interface ContactFormData {
   nombre: string;
@@ -23,6 +26,13 @@ interface ContactFormData {
 export class ContactoPageComponent {
   private platformId = inject(PLATFORM_ID);
   private analyticsService = inject(AnalyticsService);
+  private settingsService = inject(SettingsService);
+  private sanitizer = inject(DomSanitizer);
+  
+  settings$ = this.settingsService.settings$;
+  googleMapsUrl$ = this.settings$.pipe(
+    map(settings => settings?.googleMapsUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(settings.googleMapsUrl) : null)
+  );
   
   contactForm: FormGroup;
   isSubmitting = false;

@@ -1,9 +1,19 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, PLATFORM_ID, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { CategoriaGaleria, GaleriaItem } from '../../core/services/data.service';
-import { Firestore, collection, query, where, orderBy, getDocs, QueryDocumentSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { Media } from '../../models/media';
+
+interface Tag {
+  id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  order?: number;
+  active: boolean;
+}
 
 @Component({
   selector: 'app-galeria-page',
@@ -12,13 +22,35 @@ import { Media } from '../../models/media';
   templateUrl: './galeria.page.html',
   styleUrl: './galeria.page.scss'
 })
-export class GaleriaPageComponent implements OnInit {
-  categorias: CategoriaGaleria[] = [];
+export class GaleriaPageComponent implements OnInit, OnDestroy {
   categoriaActiva = 'todos';
-  itemsVisible: GaleriaItem[] = [];
-  modalItem: GaleriaItem | null = null;
-  modalIndex = 0;
+  
+  // Instagram-style properties
+  allImages: Media[] = [];
+  filteredImages: Media[] = [];
+  displayedImages: Media[] = [];
+  imagesPerPage = 15;
+  currentPage = 0;
+  hasMoreImages = true;
+  isLoadingMore = false;
   isLoading = true;
+  
+  // Scroll optimization
+  private scrollTimeout: any;
+  private lastScrollTime = 0;
+  private scrollThrottle = 150; // ms
+  
+  // Lightbox for single image
+  selectedImage: Media | null = null;
+  selectedImageIndex = 0;
+  
+  // Hero carousel properties
+  heroSlides: Media[] = [];
+  currentSlideIndex = 0;
+  private carouselInterval: any;
+  
+  // Available tags
+  availableTags: Tag[] = [];
   
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
@@ -28,7 +60,6 @@ export class GaleriaPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Load gallery from Firestore only
     if (this.isBrowser) {
       this.loadGaleriaFromFirebase();
     } else {
@@ -38,11 +69,9 @@ export class GaleriaPageComponent implements OnInit {
 
   private async loadGaleriaFromFirebase() {
     try {
-      // Load all gallery media from Media collection (relatedEntityType='gallery')
       const mediaQuery = query(
         collection(this.firestore, 'media'),
         where('relatedEntityType', '==', 'gallery')
-        // Note: orderBy removed to avoid index requirement - sorting in memory instead
       );
       
       const snapshot = await getDocs(mediaQuery);
@@ -52,7 +81,6 @@ export class GaleriaPageComponent implements OnInit {
           ...doc.data() as Omit<Media, 'id'>
         }))
         .sort((a, b) => {
-          // Sort by uploadedAt descending (newest first) in memory
           const dateA = a.uploadedAt instanceof Date ? a.uploadedAt : (a.uploadedAt as any).toDate();
           const dateB = b.uploadedAt instanceof Date ? b.uploadedAt : (b.uploadedAt as any).toDate();
           return dateB.getTime() - dateA.getTime();
@@ -60,153 +88,199 @@ export class GaleriaPageComponent implements OnInit {
       
       console.log('📸 Gallery loaded from Firestore:', mediaItems.length, 'images');
       
-      if (mediaItems.length > 0) {
-        // Group media by tags (using tags as categories)
-        this.categorias = this.groupMediaByTags(mediaItems);
-        this.filtrarPorCategoria(this.categoriaActiva);
-      } else {
-        console.log('ℹ️ No gallery images found in Firestore');
-        this.categorias = [];
-        this.itemsVisible = [];
-      }
+      this.allImages = mediaItems;
+      this.heroSlides = mediaItems.slice(0, 5);
+      
+      // Extract available tags from images
+      const tagSet = new Set<string>();
+      mediaItems.forEach(img => {
+        if (img.tags && img.tags.length > 0) {
+          img.tags.forEach(tag => tagSet.add(tag));
+        }
+      });
+      
+      this.availableTags = Array.from(tagSet).map(slug => ({
+        slug,
+        name: this.getTagDisplayName(slug),
+        active: true
+      }));
+      
+      this.filtrarPorCategoria('todos');
+      this.startCarousel();
       this.isLoading = false;
     } catch (error) {
       console.error('❌ Error loading gallery from Firebase:', error);
-      this.categorias = [];
-      this.itemsVisible = [];
+      this.allImages = [];
       this.isLoading = false;
     }
   }
 
-  // Group media by tags - Map to category structure
-  private groupMediaByTags(mediaItems: Media[]): CategoriaGaleria[] {
-    // Tag to category mapping
-    const tagToCategoryMap: Record<string, { slug: string, titulo: string }> = {
-      'kitchen': { slug: 'cocinas', titulo: 'Cocinas' },
-      'bathroom': { slug: 'banos', titulo: 'Baños' },
-      'facade': { slug: 'fachadas', titulo: 'Fachadas' },
-      'industrial': { slug: 'industria', titulo: 'Industria' },
-      'other': { slug: 'otros', titulo: 'Otros' }
+  private getTagDisplayName(slug: string): string {
+    const tagMap: Record<string, string> = {
+      'kitchen': 'Cocinas',
+      'bathroom': 'Baños',
+      'facade': 'Fachadas',
+      'industrial': 'Industria',
+      'other': 'Otros'
     };
-
-    // Group images by their first tag
-    const categoriesMap = new Map<string, GaleriaItem[]>();
-
-    mediaItems.forEach(media => {
-      if (!media.tags || media.tags.length === 0) return;
-
-      const firstTag = media.tags[0]; // Use first tag as category
-      const category = tagToCategoryMap[firstTag];
-      
-      if (!category) return; // Skip if unknown tag
-
-      if (!categoriesMap.has(category.slug)) {
-        categoriesMap.set(category.slug, []);
-      }
-
-      categoriesMap.get(category.slug)!.push({
-        src: media.url,
-        alt: media.altText || media.caption || 'Proyecto TStone',
-        producto: media.filename,
-        proyecto: '',
-        ubicacion: ''
-      });
-    });
-
-    // Convert map to array of categories
-    return Array.from(categoriesMap.entries()).map(([slug, items]) => {
-      const categoryInfo = Object.values(tagToCategoryMap).find(cat => cat.slug === slug);
-      return {
-        slug,
-        titulo: categoryInfo?.titulo || slug,
-        items
-      };
-    });
+    return tagMap[slug] || slug.charAt(0).toUpperCase() + slug.slice(1);
   }
 
-  filtrarPorCategoria(categoria: string) {
-    this.categoriaActiva = categoria;
+  startCarousel(): void {
+    if (!this.isBrowser) return;
     
-    if (categoria === 'todos') {
-      this.itemsVisible = this.categorias.flatMap(cat => cat.items);
+    this.carouselInterval = setInterval(() => {
+      this.nextSlide();
+    }, 5000);
+  }
+
+  nextSlide(): void {
+    if (this.heroSlides.length === 0) return;
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.heroSlides.length;
+  }
+
+  prevSlide(): void {
+    if (this.heroSlides.length === 0) return;
+    this.currentSlideIndex = (this.currentSlideIndex - 1 + this.heroSlides.length) % this.heroSlides.length;
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlideIndex = index;
+  }
+
+  getAvailableTags(): Tag[] {
+    return this.availableTags.filter(tag => tag.active);
+  }
+
+  filtrarPorCategoria(tagSlug: string) {
+    this.categoriaActiva = tagSlug;
+    
+    if (tagSlug === 'todos') {
+      this.filteredImages = [...this.allImages];
     } else {
-      const categoriaEncontrada = this.categorias.find(cat => cat.slug === categoria);
-      this.itemsVisible = categoriaEncontrada ? categoriaEncontrada.items : [];
+      this.filteredImages = this.allImages.filter(image => 
+        image.tags && image.tags.includes(tagSlug)
+      );
     }
     
-    // Reset modal if open
-    if (this.modalItem) {
+    this.currentPage = 0;
+    this.displayedImages = [];
+    this.hasMoreImages = true;
+    this.loadMoreImages();
+    
+    if (this.selectedImage) {
       this.cerrarModal();
     }
   }
 
-  abrirModal(item: GaleriaItem, index: number) {
-    this.modalItem = item;
-    this.modalIndex = index;
+  loadMoreImages() {
+    if (this.isLoadingMore || !this.hasMoreImages) return;
     
-    // Prevent body scroll when modal is open
+    this.isLoadingMore = true;
+    
+    setTimeout(() => {
+      const startIndex = this.currentPage * this.imagesPerPage;
+      const endIndex = startIndex + this.imagesPerPage;
+      const newImages = this.filteredImages.slice(startIndex, endIndex);
+      
+      this.displayedImages = [...this.displayedImages, ...newImages];
+      this.currentPage++;
+      this.hasMoreImages = endIndex < this.filteredImages.length;
+      this.isLoadingMore = false;
+      
+      console.log('[Gallery] Loaded page', this.currentPage, '- Total displayed:', this.displayedImages.length);
+    }, 300);
+  }
+
+  @HostListener('window:scroll')
+  onScroll() {
+    if (!this.isBrowser) return;
+    
+    const now = Date.now();
+    if (now - this.lastScrollTime < this.scrollThrottle) {
+      if (this.scrollTimeout) clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = setTimeout(() => this.checkScrollPosition(), this.scrollThrottle);
+      return;
+    }
+    
+    this.lastScrollTime = now;
+    this.checkScrollPosition();
+  }
+
+  private checkScrollPosition() {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = document.documentElement.scrollHeight - 800;
+    
+    if (scrollPosition >= threshold && !this.isLoadingMore && this.hasMoreImages) {
+      this.loadMoreImages();
+    }
+  }
+
+  getImageCountByTag(tagSlug: string): number {
+    if (tagSlug === 'todos') {
+      return this.allImages.length;
+    }
+    return this.allImages.filter(image => image.tags && image.tags.includes(tagSlug)).length;
+  }
+
+  abrirImagen(image: Media, index: number) {
+    this.selectedImage = image;
+    this.selectedImageIndex = index;
+    
     if (this.isBrowser) {
       document.body.style.overflow = 'hidden';
     }
   }
 
   cerrarModal() {
-    this.modalItem = null;
+    this.selectedImage = null;
+    this.selectedImageIndex = 0;
     
-    // Restore body scroll
     if (this.isBrowser) {
       document.body.style.overflow = '';
     }
   }
 
-  anterior() {
-    if (this.modalIndex > 0) {
-      this.modalIndex--;
-      this.modalItem = this.itemsVisible[this.modalIndex];
+  anteriorImagen() {
+    if (this.selectedImageIndex > 0) {
+      this.selectedImageIndex--;
+      this.selectedImage = this.displayedImages[this.selectedImageIndex];
     }
   }
 
-  siguiente() {
-    if (this.modalIndex < this.itemsVisible.length - 1) {
-      this.modalIndex++;
-      this.modalItem = this.itemsVisible[this.modalIndex];
+  siguienteImagen() {
+    if (this.selectedImageIndex < this.displayedImages.length - 1) {
+      this.selectedImageIndex++;
+      this.selectedImage = this.displayedImages[this.selectedImageIndex];
     }
   }
 
-  // Keyboard navigation
   onKeydown(event: KeyboardEvent) {
-    if (!this.modalItem) return;
+    if (!this.selectedImage) return;
     
     switch (event.key) {
       case 'Escape':
         this.cerrarModal();
         break;
       case 'ArrowLeft':
-        this.anterior();
+        this.anteriorImagen();
         break;
       case 'ArrowRight':
-        this.siguiente();
+        this.siguienteImagen();
         break;
     }
   }
 
-  // Get total items count
-  getTotalItems(): number {
-    return this.itemsVisible.length;
+  getTotalImages(): number {
+    return this.filteredImages.length;
   }
 
-  // Get category item count
-  getCategoryCount(slug: string): number {
-    if (slug === 'todos') {
-      return this.categorias.flatMap(cat => cat.items).length;
+  ngOnDestroy() {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
     }
-    const categoria = this.categorias.find(cat => cat.slug === slug);
-    return categoria ? categoria.items.length : 0;
-  }
-
-  // Get category title
-  getCategoryTitle(slug: string): string {
-    const categoria = this.categorias.find(cat => cat.slug === slug);
-    return categoria ? categoria.titulo : slug;
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
   }
 }

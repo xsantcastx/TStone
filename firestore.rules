@@ -65,6 +65,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Settings - Public read, Admin write
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Users - Users can read/write own data, Admins can read all
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
@@ -74,24 +80,23 @@ service cloud.firestore {
     }
 
     // Orders - Users can create and read own orders, Admins can read/update all
+    // Also allow anonymous cart submissions
     match /orders/{orderId} {
       allow read: if isAdmin() || 
                     (isSignedIn() && resource.data.userId == request.auth.uid);
-      allow create: if isSignedIn() && 
-                      request.resource.data.userId == request.auth.uid;
+      allow create: if (isSignedIn() && request.resource.data.userId == request.auth.uid) ||
+                      (request.resource.data.keys().hasAll(['customerEmail', 'items', 'status']) && 
+                       request.resource.data.source == 'cart');
       allow update: if isAdmin();
       allow delete: if isAdmin();
     }
 
-    // Mail collection for contact form (Brevo integration)
+    // Mail collection for contact form and cart emails (Brevo integration)
     match /mail/{document} {
-      allow create: if request.auth == null 
-        && resource == null
-        && request.resource.data.keys().hasAll(['to', 'message'])
+      allow create: if request.resource.data.keys().hasAll(['to', 'message'])
         && request.resource.data.to is list
         && request.resource.data.to.size() <= 3
-        && request.resource.data.message.keys().hasAll(['subject', 'html'])
-        && request.resource.data.to[0] in ['ventas@tstone.com', 'info@tstone.com', 'xsantcastx@xsantcastx.com'];
+        && request.resource.data.message.keys().hasAll(['subject', 'html']);
       
       allow read: if false;
       allow update, delete: if false;

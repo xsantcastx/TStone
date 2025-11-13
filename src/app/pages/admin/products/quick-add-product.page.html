@@ -1,0 +1,481 @@
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-neutral-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    @if (successMessage) {
+      <div class="mb-6 p-4 bg-green-100 border border-green-300 rounded-xl flex items-start gap-3">
+        <svg class="w-5 h-5 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+          <p class="text-sm font-medium text-green-900">{{ successMessage }}</p>
+        </div>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="mb-6 p-4 bg-red-100 border border-red-300 rounded-xl flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="flex-1">
+          <p class="text-sm font-medium text-red-900">{{ errorMessage }}</p>
+          <button (click)="errorMessage = ''" class="mt-2 text-xs text-red-600 hover:text-red-800 underline">
+            Dismiss
+          </button>
+        </div>
+      </div>
+    }
+
+    <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Main Column -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Title & Description -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Title *</label>
+              <input 
+                type="text" 
+                formControlName="title" 
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900 placeholder-neutral-400"
+                placeholder="Product title">
+              @if (productForm.get('title')?.invalid && productForm.get('title')?.touched) {
+                <p class="mt-1 text-xs text-red-600">Title is required (min 3 characters)</p>
+              }
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Description</label>
+              <textarea 
+                formControlName="description" 
+                rows="5"
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900 placeholder-neutral-400 resize-none"
+                placeholder="Enter product description..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">Media</h3>
+          
+          <!-- Cover Image -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-neutral-700 mb-2">Cover Image *</label>
+            @if (coverPreview) {
+              <div class="relative inline-block">
+                <img [src]="coverPreview" alt="Cover" class="w-32 h-32 object-cover rounded-lg border border-neutral-200">
+                <button 
+                  type="button"
+                  (click)="removeCoverImage()"
+                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+            } @else {
+              <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-ts-accent transition-colors">
+                <svg class="w-8 h-8 text-neutral-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span class="text-sm text-neutral-500">Upload cover image</span>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  (change)="onCoverImageSelected($event)" 
+                  class="hidden">
+              </label>
+            }
+          </div>
+
+          <!-- Gallery Images -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-neutral-700 mb-2">Gallery Images</label>
+            <div class="grid grid-cols-3 gap-3 mb-3">
+              @for (preview of galleryPreviews; track $index) {
+                <div class="relative">
+                  <img [src]="preview" alt="Gallery" class="w-full h-24 object-cover rounded-lg border border-neutral-200">
+                  <button 
+                    type="button"
+                    (click)="removeGalleryImage($index)"
+                    class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              }
+              
+              <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-ts-accent transition-colors">
+                <svg class="w-6 h-6 text-neutral-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span class="text-xs text-neutral-500">Add more images</span>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  multiple
+                  (change)="onGalleryImagesSelected($event)" 
+                  class="hidden">
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pricing & Inventory -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">Price</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Price *</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">$</span>
+                <input 
+                  type="number" 
+                  formControlName="price" 
+                  step="0.01"
+                  class="w-full pl-8 pr-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                  placeholder="0.00">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Stock *</label>
+              <input 
+                type="number" 
+                formControlName="stock" 
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">Technical Specifications</h3>
+          
+          <!-- Built-in specs -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Size *</label>
+              <input 
+                type="text" 
+                formControlName="size" 
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                placeholder="160×320cm">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Finish</label>
+              <input 
+                type="text" 
+                formControlName="finish" 
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                placeholder="Pulido">
+            </div>
+          </div>
+
+          <!-- Custom specs -->
+          @if (getCurrentSpecs().length > 0) {
+            <div class="mb-4 space-y-2">
+              <p class="text-xs font-semibold text-neutral-700 mb-2">Custom Specifications:</p>
+              @for (spec of getCurrentSpecs(); track spec.key) {
+                <div class="flex items-center justify-between p-2 bg-neutral-50 rounded border border-neutral-200">
+                  <div>
+                    <span class="text-sm font-medium text-neutral-700">{{ formatSpecLabel(spec.key) }}:</span>
+                    <span class="text-sm text-neutral-600 ml-2">{{ spec.value }}</span>
+                  </div>
+                  <button 
+                    type="button"
+                    (click)="removeSpec(spec.key)"
+                    class="text-red-500 hover:text-red-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Add spec form -->
+          <div>
+            <p class="text-xs font-semibold text-neutral-700 mb-3">Add New Specification:</p>
+            
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <input
+                type="text"
+                [(ngModel)]="newSpecKey"
+                [ngModelOptions]="{standalone: true}"
+                (keyup.enter)="addSpec()"
+                placeholder="Spec name (e.g., thickness)"
+                class="px-3 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900 text-sm">
+              <input
+                type="text"
+                [(ngModel)]="newSpecValue"
+                [ngModelOptions]="{standalone: true}"
+                (keyup.enter)="addSpec()"
+                placeholder="Value (e.g., 12mm)"
+                class="px-3 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900 text-sm">
+            </div>
+            
+            <button 
+              type="button"
+              (click)="addSpec()"
+              class="w-full px-4 py-2 bg-ts-accent/10 hover:bg-ts-accent/20 text-ts-accent border border-ts-accent/30 rounded-lg text-sm transition-colors">
+              Add Specification
+            </button>
+
+            <!-- Quick templates -->
+            <div class="mt-3">
+              <p class="text-xs text-neutral-500 mb-2">Quick templates:</p>
+              <div class="flex flex-wrap gap-2">
+                @for (template of getSurfaceSpecTemplates(); track template.key) {
+                  <button 
+                    type="button"
+                    (click)="applySpecTemplate(template)"
+                    class="px-2 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 border border-neutral-200 rounded text-xs transition-colors">
+                    {{ template.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">SEO & Search Preview</h3>
+          
+          <!-- Google Preview -->
+          <div class="mb-6 p-4 bg-neutral-50 border border-neutral-200 rounded-lg">
+            <p class="text-xs text-neutral-500 mb-2">Search engine preview:</p>
+            <p class="text-xs text-green-700 mb-1">{{ seoPreviewUrl }}</p>
+            <h4 class="text-lg font-normal hover:underline cursor-pointer mb-1.5 leading-snug text-blue-700">
+              {{ seoPreviewTitle }}
+            </h4>
+            <p class="text-sm leading-relaxed line-clamp-2 text-neutral-700">
+              {{ seoPreviewDescription }}
+            </p>
+          </div>
+
+          <!-- SEO Fields -->
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">
+                Meta Title
+                <span class="text-xs font-normal text-neutral-500 ml-2">(Optional)</span>
+              </label>
+              <input 
+                type="text" 
+                formControlName="metaTitle" 
+                class="w-full px-4 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900 placeholder-neutral-400"
+                placeholder="Defaults to product title">
+              <p class="mt-1.5 text-xs text-neutral-500">How your product appears in search results</p>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">
+                Meta Description
+                <span class="text-xs font-normal text-neutral-500 ml-2">(Optional)</span>
+              </label>
+              <textarea 
+                formControlName="metaDescription" 
+                rows="3"
+                class="w-full px-4 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900 placeholder-neutral-400 resize-none"
+                placeholder="Defaults to product description"></textarea>
+              <p class="mt-1.5 text-xs text-neutral-500">A brief summary to appear in search engines (150-160 characters recommended)</p>
+            </div>
+
+            <!-- Auto-generated URL slug info -->
+            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div class="flex items-start gap-2">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <p class="text-sm font-medium text-blue-900 mb-1">URL automatically generated</p>
+                  <p class="text-xs text-blue-700">The product URL is created from your title: <span class="font-mono text-blue-900">{{ productForm.get('slug')?.value || 'auto-generated-from-title' }}</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Column -->
+      <div class="lg:col-span-1 space-y-6">
+        
+        <!-- Status & Publishing -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">Status</h3>
+          <select 
+            formControlName="status" 
+            class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900">
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Product Organization -->
+        <div class="bg-white border border-neutral-200 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">Product Organization</h3>
+          
+          <div class="space-y-4">
+            <!-- Category -->
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Category (Thickness) *</label>
+              <select 
+                formControlName="categoryId" 
+                (change)="onCategorySelectChange($event)"
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900">
+                <option value="">Select category</option>
+                @for (category of categories; track category.id) {
+                  <option [value]="category.id">{{ category.name }}</option>
+                }
+                <option value="__new__">+ Create New Category</option>
+              </select>
+              @if (showNewCategoryInput) {
+                <div class="mt-2">
+                  <input 
+                    type="text" 
+                    [(ngModel)]="newCategoryName"
+                    [ngModelOptions]="{standalone: true}"
+                    (keyup.enter)="createNewCategory()"
+                    class="w-full px-4 py-2 bg-white border border-ts-accent/50 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                    placeholder="Enter new category name">
+                  <div class="flex gap-2 mt-2">
+                    <button 
+                      type="button"
+                      (click)="createNewCategory()"
+                      class="flex-1 px-3 py-1.5 bg-ts-accent/10 hover:bg-ts-accent/20 text-ts-accent border border-ts-accent/30 rounded-lg text-sm transition-colors">
+                      Add
+                    </button>
+                    <button 
+                      type="button"
+                      (click)="cancelNewCategory()"
+                      class="flex-1 px-3 py-1.5 bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-300 rounded-lg text-sm transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              }
+              @if (productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched) {
+                <p class="mt-1 text-xs text-red-600">Category is required</p>
+              }
+            </div>
+
+            <!-- Material -->
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Material *</label>
+              <select 
+                formControlName="materialId" 
+                (change)="onMaterialSelectChange($event)"
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900">
+                <option value="">Select material</option>
+                @for (material of filteredMaterials; track material.id) {
+                  <option [value]="material.id">{{ material.name }}</option>
+                }
+                <option value="__new__">+ Create New Material</option>
+              </select>
+              @if (showNewMaterialInput) {
+                <div class="mt-2">
+                  <input 
+                    type="text" 
+                    [(ngModel)]="newMaterialName"
+                    [ngModelOptions]="{standalone: true}"
+                    (keyup.enter)="createNewMaterial()"
+                    class="w-full px-4 py-2 bg-white border border-ts-accent/50 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                    placeholder="Enter new material name">
+                  <div class="flex gap-2 mt-2">
+                    <button 
+                      type="button"
+                      (click)="createNewMaterial()"
+                      class="flex-1 px-3 py-1.5 bg-ts-accent/10 hover:bg-ts-accent/20 text-ts-accent border border-ts-accent/30 rounded-lg text-sm transition-colors">
+                      Add
+                    </button>
+                    <button 
+                      type="button"
+                      (click)="cancelNewMaterial()"
+                      class="flex-1 px-3 py-1.5 bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-300 rounded-lg text-sm transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              }
+              @if (productForm.get('materialId')?.invalid && productForm.get('materialId')?.touched) {
+                <p class="mt-1 text-xs text-red-600">Material is required</p>
+              }
+            </div>
+
+            <!-- SKU -->
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">SKU</label>
+              <input 
+                type="text" 
+                formControlName="sku" 
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                placeholder="Auto-generated">
+            </div>
+
+            <!-- Usage -->
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 mb-2">Usage / Applications</label>
+              <input 
+                type="text" 
+                formControlName="usage" 
+                class="w-full px-4 py-2 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-ts-accent text-neutral-900"
+                placeholder="Cocinas, Baños, Fachadas">
+              <p class="mt-1 text-xs text-neutral-500">Comma-separated</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="sticky top-6 space-y-3">
+          @if (isUploading) {
+            <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-ts-accent"></div>
+                <div class="flex-1">
+                  <p class="text-sm text-neutral-900">Uploading images...</p>
+                  <div class="mt-2 w-full bg-neutral-200 rounded-full h-2">
+                    <div class="bg-ts-accent h-2 rounded-full transition-all" [style.width.%]="uploadProgress"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <button 
+            type="submit"
+            [disabled]="isSaving || productForm.invalid"
+            class="w-full px-6 py-3 bg-ts-accent hover:bg-ts-accent-dark text-white font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl">
+            @if (isSaving) {
+              <span class="flex items-center justify-center gap-2">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Saving...
+              </span>
+            } @else {
+              {{ isEditMode ? 'Update Product' : 'Create Product' }}
+            }
+          </button>
+
+          <button 
+            type="button"
+            (click)="cancel()"
+            [disabled]="isSaving"
+            class="w-full px-6 py-3 bg-white hover:bg-neutral-50 text-neutral-700 border border-neutral-300 font-medium rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -4,6 +4,11 @@
 
 // Premium Technical Data Styles
 
+// Force black text on navigation buttons
+button.text-black {
+  color: #000 !important;
+}
+
 .animate-fade-up {
   animation: fadeUp 0.8s ease-out forwards;
   opacity: 0;

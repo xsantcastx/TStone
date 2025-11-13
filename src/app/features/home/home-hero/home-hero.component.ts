@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { SettingsService, HeroImage } from '../../../services/settings.service';
 
 @Component({
   selector: 'app-home-hero',
@@ -11,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
     <section class="relative h-[70vh] min-h-[500px] overflow-hidden">
       <!-- Animated background images -->
       <div class="absolute inset-0">
-        @for (image of heroImages; track image.src; let i = $index) {
+        @for (image of heroImages; track image.url; let i = $index) {
           <div 
             class="absolute inset-0 transition-opacity duration-1000"
             [class.opacity-100]="currentImageIndex === i"
@@ -19,7 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
           >
             <div class="w-full h-full animate-ken-burns">
               <img 
-                [src]="image.src" 
+                [src]="image.url" 
                 [alt]="image.alt"
                 class="w-full h-full object-cover"
                 loading="eager"
@@ -55,7 +56,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <!-- Image indicators -->
         <div class="mt-8 flex gap-2">
-          @for (image of heroImages; track image.src; let i = $index) {
+          @for (image of heroImages; track image.url; let i = $index) {
             <button
               (click)="setCurrentImage(i)"
               class="w-2 h-2 rounded-full transition-all"
@@ -117,18 +118,18 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class HomeHeroComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
+  private settingsService = inject(SettingsService);
   
-  heroImages = [
-    { src: 'assets/hero.jpg', alt: 'TopStone - Luxury Surfaces' },
-    { src: 'assets/hero2.jpg', alt: 'TopStone - Modern Design' },
-    { src: 'assets/Bathroom.jpeg', alt: 'TopStone - Bathroom Applications' },
-    { src: 'assets/Bathroom2.jpeg', alt: 'TopStone - Premium Quality' }
-  ];
-
+  heroImages: HeroImage[] = [];
   currentImageIndex = 0;
   private interval: any;
 
   ngOnInit(): void {
+    // Load hero images from settings
+    this.settingsService.settings$.subscribe(settings => {
+      this.heroImages = settings.heroImages || [];
+    });
+
     if (isPlatformBrowser(this.platformId)) {
       this.startImageRotation();
     }

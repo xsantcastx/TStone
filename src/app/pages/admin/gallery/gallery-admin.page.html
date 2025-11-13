@@ -1,27 +1,6 @@
-<div class="min-h-screen bg-gradient-to-b from-ts-paper to-white">
-  
-  <!-- Admin Header -->
-  <div class="bg-ts-bg text-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <a routerLink="/admin" class="hover:opacity-80 transition-opacity">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-          </a>
-          <h1 class="text-xl font-bold">{{ 'admin.gallery' | translate }}</h1>
-        </div>
-        <div class="flex items-center gap-4">
-          <a routerLink="/admin" class="text-sm hover:text-white/80">{{ 'admin.title' | translate }}</a>
-          <button (click)="logout()" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-xl transition-all">
-            {{ 'client.logout' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+<app-admin-sidebar></app-admin-sidebar>
 
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-gradient-to-b from-ts-paper to-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
     <!-- Success/Error Messages -->
@@ -224,33 +203,67 @@
             </div>
           }
 
-          <!-- Preview -->
-          @if (previewUrl) {
-            <div class="rounded-2xl overflow-hidden border border-gray-200">
-              <img [src]="previewUrl" alt="Preview" class="w-full h-64 object-cover">
-            </div>
-          }
-
           <!-- File Upload -->
           <div>
             <label for="imageFile" class="block text-sm font-medium text-gray-700 mb-2">
               {{ 'admin.image_file' | translate }}
+              @if (selectedFiles.length > 0) {
+                <span class="ml-2 text-ts-accent">({{ selectedFiles.length }} file{{ selectedFiles.length !== 1 ? 's' : '' }} selected)</span>
+              }
             </label>
             <input
               type="file"
               id="imageFile"
               (change)="onCoverSelected($event)"
               accept="image/*"
+              multiple
               class="w-full px-4 py-3 border border-dashed border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent bg-gray-50">
             <p class="mt-2 text-xs text-gray-500">
-              Recommended: 1600x1200px or larger. Max 10MB. Smaller images are allowed but may appear pixelated.
+              Recommended: 1600x1200px or larger. Max 10MB per file. Select multiple files for bulk upload.
             </p>
           </div>
+
+          <!-- Selected Files Preview -->
+          @if (filePreviews.length > 0) {
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-gray-700">Selected Images ({{ filePreviews.length }})</p>
+                @if (filePreviews.length > 1) {
+                  <p class="text-xs text-gray-500">Alt text and tags will be applied to all images</p>
+                }
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-96 overflow-y-auto p-3 bg-gray-50 rounded-xl border border-gray-200">
+                @for (preview of filePreviews; track preview.url; let i = $index) {
+                  <div class="relative group rounded-lg overflow-hidden border border-gray-200 bg-white">
+                    <div class="w-full h-32 bg-gray-100 flex items-center justify-center">
+                      <img [src]="preview.url" [alt]="preview.file.name" class="max-w-full max-h-full object-contain">
+                    </div>
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center">
+                      <button
+                        type="button"
+                        (click)="removeImage(i)"
+                        class="opacity-0 group-hover:opacity-100 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="p-2 bg-white border-t border-gray-200">
+                      <p class="text-xs text-gray-600 truncate" [title]="preview.file.name">{{ preview.file.name }}</p>
+                      <p class="text-xs text-gray-400">{{ (preview.file.size / 1024 / 1024).toFixed(2) }} MB</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
 
           <!-- Alt Text -->
           <div>
             <label for="altText" class="block text-sm font-medium text-gray-900 mb-2">
-              Alt Text
+              Alt Text @if (filePreviews.length > 1) {
+                <span class="text-xs text-gray-500 font-normal">(will be applied to all {{ filePreviews.length }} images with numbering)</span>
+              }
             </label>
             <input
               type="text"
@@ -258,13 +271,22 @@
               formControlName="altText"
               placeholder="Describe the image for accessibility..."
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent placeholder:text-gray-400 text-gray-900">
-            <p class="mt-2 text-xs text-gray-600">Brief description of the image content</p>
+            <p class="mt-2 text-xs text-gray-600">
+              @if (filePreviews.length > 1) {
+                For bulk uploads, each image will be numbered (e.g., "Kitchen design (1/5)", "Kitchen design (2/5)")
+              } @else {
+                Brief description of the image content
+              }
+            </p>
           </div>
 
           <!-- Tags -->
           <div>
             <label class="block text-sm font-medium text-gray-900 mb-2">
               Tags *
+              @if (filePreviews.length > 1) {
+                <span class="text-xs text-gray-500 font-normal">(will be applied to all {{ filePreviews.length }} images)</span>
+              }
             </label>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
               @for (tag of availableTags; track tag) {
@@ -309,7 +331,9 @@
           @if (isUploading && uploadProgress > 0) {
             <div class="space-y-2">
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-700 font-medium">Uploading...</span>
+                <span class="text-gray-700 font-medium">
+                  Uploading {{ uploadedCount }}/{{ totalToUpload }} images...
+                </span>
                 <span class="text-ts-accent font-semibold">{{ uploadProgress }}%</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
@@ -318,6 +342,9 @@
                   [style.width.%]="uploadProgress">
                 </div>
               </div>
+              @if (totalToUpload > 1) {
+                <p class="text-xs text-gray-600">Please wait while all images are being uploaded...</p>
+              }
             </div>
           }
 
@@ -325,16 +352,16 @@
           <div class="flex gap-4 pt-4">
             <button
               type="submit"
-              [disabled]="isSaving"
+              [disabled]="isSaving || filePreviews.length === 0"
               class="flex-1 py-3 px-6 bg-ts-accent text-white rounded-xl font-semibold hover:bg-ts-accent/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
               @if (isSaving) {
                 <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span class="text-white">Uploading...</span>
+                <span class="text-white">Uploading {{ uploadedCount }}/{{ totalToUpload }}...</span>
               } @else {
-                <span class="text-white">Upload Image</span>
+                <span class="text-white">Upload {{ filePreviews.length > 1 ? filePreviews.length + ' Images' : 'Image' }}</span>
               }
             </button>
             <button
