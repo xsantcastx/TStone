@@ -1,0 +1,583 @@
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-gradient-to-b from-ts-paper to-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Success/Error Messages -->
+    @if (successMessage()) {
+      <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
+        <svg class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-sm text-green-700 font-medium">{{ successMessage() }}</p>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-sm text-red-700 font-medium">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <!-- Hero Images Section -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 mb-6">
+      
+      <!-- Tabs -->
+      <div class="flex gap-2 mb-6 border-b border-gray-200 overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0">
+        <button
+          (click)="activeTab.set('hero')"
+          [class.border-ts-accent]="activeTab() === 'hero'"
+          [class.text-white]="activeTab() === 'hero'"
+          [class.bg-ts-accent]="activeTab() === 'hero'"
+          [class.text-black]="activeTab() !== 'hero'"
+          [class.bg-white]="activeTab() !== 'hero'"
+          [class.border-gray-300]="activeTab() !== 'hero'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm sm:text-base">
+          Imágenes Hero
+        </button>
+        <button
+          (click)="activeTab.set('site')"
+          [class.border-ts-accent]="activeTab() === 'site'"
+          [class.text-white]="activeTab() === 'site'"
+          [class.bg-ts-accent]="activeTab() === 'site'"
+          [class.text-black]="activeTab() !== 'site'"
+          [class.bg-white]="activeTab() !== 'site'"
+          [class.border-gray-300]="activeTab() !== 'site'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm sm:text-base">
+          Información del Sitio
+        </button>
+        <button
+          (click)="activeTab.set('visual')"
+          [class.border-ts-accent]="activeTab() === 'visual'"
+          [class.text-white]="activeTab() === 'visual'"
+          [class.bg-ts-accent]="activeTab() === 'visual'"
+          [class.text-black]="activeTab() !== 'visual'"
+          [class.bg-white]="activeTab() !== 'visual'"
+          [class.border-gray-300]="activeTab() !== 'visual'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm sm:text-base">
+          Configuración Visual
+        </button>
+        <button
+          (click)="activeTab.set('ecommerce')"
+          [class.border-ts-accent]="activeTab() === 'ecommerce'"
+          [class.text-white]="activeTab() === 'ecommerce'"
+          [class.bg-ts-accent]="activeTab() === 'ecommerce'"
+          [class.text-black]="activeTab() !== 'ecommerce'"
+          [class.bg-white]="activeTab() !== 'ecommerce'"
+          [class.border-gray-300]="activeTab() !== 'ecommerce'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm sm:text-base">
+          E-commerce
+        </button>
+        <button
+          (click)="activeTab.set('business')"
+          [class.border-ts-accent]="activeTab() === 'business'"
+          [class.text-white]="activeTab() === 'business'"
+          [class.bg-ts-accent]="activeTab() === 'business'"
+          [class.text-black]="activeTab() !== 'business'"
+          [class.bg-white]="activeTab() !== 'business'"
+          [class.border-gray-300]="activeTab() !== 'business'"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm sm:text-base">
+          Negocio
+        </button>
+      </div>
+
+      <!-- Hero Images Tab -->
+      @if (activeTab() === 'hero') {
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-serif font-bold text-black">Imágenes del Hero</h2>
+          <p class="text-sm text-black mt-1">Gestiona las imágenes que aparecen en la página principal</p>
+        </div>
+        <button
+          (click)="addHeroImage()"
+          class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 transition-colors font-medium flex items-center gap-2 justify-center sm:justify-start">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Añadir Imagen
+        </button>
+      </div>
+
+      <!-- Hero Images List -->
+      <div class="space-y-4">
+        @for (image of heroImages(); track image.order; let i = $index) {
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-ts-accent/30 transition-colors">
+            <div class="grid grid-cols-1 md:grid-cols-[200px_1fr_auto] gap-4 items-start">
+              <!-- Image Preview -->
+              <div class="relative w-full">
+                @if (image.url) {
+                  <img [src]="image.url" [alt]="image.alt" class="w-full h-32 object-cover rounded-lg">
+                } @else {
+                  <div class="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                }
+                
+                <label class="mt-2 block">
+                  <span class="sr-only">Seleccionar imagen</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    (change)="onImageSelected($event, i)"
+                    class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-ts-accent/10 file:text-ts-accent hover:file:bg-ts-accent/20 cursor-pointer">
+                </label>
+              </div>
+
+              <!-- Image Details -->
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-bold text-black mb-1">
+                    Texto Alternativo
+                  </label>
+                  <input
+                    type="text"
+                    [value]="image.alt"
+                    (input)="updateAltText(i, $any($event.target).value)"
+                    placeholder="Describe la imagen..."
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black font-medium">
+                </div>
+                <div class="text-xs text-black font-medium">
+                  Orden: {{ i + 1 }} de {{ heroImages().length }}
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex flex-col gap-2">
+                <button
+                  (click)="moveImageUp(i)"
+                  [disabled]="i === 0"
+                  class="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  title="Mover arriba">
+                  <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                  </svg>
+                </button>
+                <button
+                  (click)="moveImageDown(i)"
+                  [disabled]="i === heroImages().length - 1"
+                  class="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  title="Mover abajo">
+                  <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <button
+                  (click)="removeHeroImage(i)"
+                  class="p-2 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                  title="Eliminar">
+                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (heroImages().length === 0) {
+          <div class="text-center py-12 text-black">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <p class="font-medium">No hay imágenes configuradas</p>
+            <p class="text-sm mt-1">Añade imágenes para el hero de la página principal</p>
+          </div>
+        }
+      </div>
+      }
+
+      <!-- Site Information Tab -->
+      @if (activeTab() === 'site' && settings()) {
+      <div>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-black mb-6">Información del Sitio</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Site Name -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">
+              Nombre del Sitio
+            </label>
+            <input
+              type="text"
+              [value]="settings()?.siteName"
+              (input)="updateSetting('siteName', $any($event.target).value)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+
+          <!-- Site Tagline -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">
+              Eslogan
+            </label>
+            <input
+              type="text"
+              [value]="settings()?.siteTagline"
+              (input)="updateSetting('siteTagline', $any($event.target).value)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+
+          <!-- Contact Email -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">
+              Email de Contacto
+            </label>
+            <input
+              type="email"
+              [value]="settings()?.contactEmail"
+              (input)="updateSetting('contactEmail', $any($event.target).value)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+
+          <!-- Contact Phone -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">
+              Teléfono de Contacto
+            </label>
+            <input
+              type="tel"
+              [value]="settings()?.contactPhone"
+              (input)="updateSetting('contactPhone', $any($event.target).value)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+
+          <!-- Address -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-bold text-black mb-2">
+              Dirección
+            </label>
+            <textarea
+              [value]="settings()?.address"
+              (input)="updateSetting('address', $any($event.target).value)"
+              rows="2"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black"></textarea>
+          </div>
+
+          <!-- Social Media -->
+          <div class="md:col-span-2">
+            <h3 class="text-lg font-bold text-black mb-4">Redes Sociales</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-black mb-1">Facebook</label>
+                <input
+                  type="url"
+                  [value]="settings()?.socialMedia?.facebook"
+                  (input)="updateSocialMedia('facebook', $any($event.target).value)"
+                  (blur)="formatSocialMediaUrl('facebook', $any($event.target).value)"
+                  placeholder="https://facebook.com/..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-black mb-1">Instagram</label>
+                <input
+                  type="url"
+                  [value]="settings()?.socialMedia?.instagram"
+                  (input)="updateSocialMedia('instagram', $any($event.target).value)"
+                  (blur)="formatSocialMediaUrl('instagram', $any($event.target).value)"
+                  placeholder="https://instagram.com/..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-black mb-1">LinkedIn</label>
+                <input
+                  type="url"
+                  [value]="settings()?.socialMedia?.linkedin"
+                  (input)="updateSocialMedia('linkedin', $any($event.target).value)"
+                  (blur)="formatSocialMediaUrl('linkedin', $any($event.target).value)"
+                  placeholder="https://linkedin.com/..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-black mb-1">YouTube</label>
+                <input
+                  type="url"
+                  [value]="settings()?.socialMedia?.youtube"
+                  (input)="updateSocialMedia('youtube', $any($event.target).value)"
+                  (blur)="formatSocialMediaUrl('youtube', $any($event.target).value)"
+                  placeholder="https://youtube.com/..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Visual Settings Tab -->
+      @if (activeTab() === 'visual' && settings()) {
+      <div>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-black mb-6">Configuración Visual</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Logo -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Logo</label>
+            @if (settings()?.logoUrl) {
+              <img [src]="settings()?.logoUrl" alt="Logo" class="h-16 mb-2 object-contain">
+            }
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onLogoSelected($event)"
+              class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-ts-accent/10 file:text-ts-accent hover:file:bg-ts-accent/20 cursor-pointer">
+          </div>
+
+          <!-- Favicon -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Favicon</label>
+            @if (settings()?.faviconUrl) {
+              <img [src]="settings()?.faviconUrl" alt="Favicon" class="h-8 mb-2">
+            }
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onFaviconSelected($event)"
+              class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-ts-accent/10 file:text-ts-accent hover:file:bg-ts-accent/20 cursor-pointer">
+          </div>
+
+          <!-- Primary Color -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Color Primario</label>
+            <div class="flex gap-2">
+              <input
+                type="color"
+                [value]="settings()?.primaryColor"
+                (input)="updateSetting('primaryColor', $any($event.target).value)"
+                class="h-10 w-20 rounded cursor-pointer">
+              <input
+                type="text"
+                [value]="settings()?.primaryColor"
+                (input)="updateSetting('primaryColor', $any($event.target).value)"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+            </div>
+          </div>
+
+          <!-- Accent Color -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Color Acento</label>
+            <div class="flex gap-2">
+              <input
+                type="color"
+                [value]="settings()?.accentColor"
+                (input)="updateSetting('accentColor', $any($event.target).value)"
+                class="h-10 w-20 rounded cursor-pointer">
+              <input
+                type="text"
+                [value]="settings()?.accentColor"
+                (input)="updateSetting('accentColor', $any($event.target).value)"
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+            </div>
+          </div>
+
+          <!-- Footer Text -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-bold text-black mb-2">Texto del Footer</label>
+            <input
+              type="text"
+              [value]="settings()?.footerText"
+              (input)="updateSetting('footerText', $any($event.target).value)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- E-commerce Settings Tab -->
+      @if (activeTab() === 'ecommerce' && settings()) {
+      <div>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-black mb-6">Configuración de E-commerce</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Currency -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Moneda</label>
+            <input
+              type="text"
+              [value]="settings()?.currency"
+              (input)="updateSetting('currency', $any($event.target).value)"
+              placeholder="€"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+
+          <!-- Tax Rate -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Tasa de IVA (%)</label>
+            <input
+              type="number"
+              [value]="settings()?.taxRate"
+              (input)="updateSetting('taxRate', +$any($event.target).value)"
+              min="0"
+              max="100"
+              step="0.1"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+
+          <!-- Show Prices -->
+          <div>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                [checked]="settings()?.showPrices"
+                (change)="updateSetting('showPrices', $any($event.target).checked)"
+                class="w-5 h-5 text-ts-accent border-gray-300 rounded focus:ring-ts-accent">
+              <span class="text-sm font-bold text-black">Mostrar precios en el sitio</span>
+            </label>
+          </div>
+
+          <!-- Minimum Order Amount -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Monto Mínimo de Pedido</label>
+            <input
+              type="number"
+              [value]="settings()?.minOrderAmount"
+              (input)="updateSetting('minOrderAmount', +$any($event.target).value)"
+              min="0"
+              step="0.01"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Business Tab -->
+      @if (activeTab() === 'business') {
+      <div>
+        <h2 class="text-xl sm:text-2xl font-bold text-black mb-6">Configuración del Negocio</h2>
+
+        <div class="space-y-6">
+          <!-- Business Hours -->
+          <div>
+            <h3 class="text-lg font-bold text-black mb-4">Horarios de Atención</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Lunes</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.monday"
+                  (input)="updateBusinessHours('monday', $any($event.target).value)"
+                  placeholder="9:00 - 18:00"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Martes</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.tuesday"
+                  (input)="updateBusinessHours('tuesday', $any($event.target).value)"
+                  placeholder="9:00 - 18:00"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Miércoles</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.wednesday"
+                  (input)="updateBusinessHours('wednesday', $any($event.target).value)"
+                  placeholder="9:00 - 18:00"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Jueves</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.thursday"
+                  (input)="updateBusinessHours('thursday', $any($event.target).value)"
+                  placeholder="9:00 - 18:00"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Viernes</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.friday"
+                  (input)="updateBusinessHours('friday', $any($event.target).value)"
+                  placeholder="9:00 - 18:00"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Sábado</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.saturday"
+                  (input)="updateBusinessHours('saturday', $any($event.target).value)"
+                  placeholder="10:00 - 14:00"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+              <div>
+                <label class="block text-sm font-bold text-black mb-1">Domingo</label>
+                <input
+                  type="text"
+                  [value]="settings()?.businessHours?.sunday"
+                  (input)="updateBusinessHours('sunday', $any($event.target).value)"
+                  placeholder="Cerrado"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Page Settings -->
+          <div class="pt-6 border-t border-gray-200">
+            <h3 class="text-lg font-bold text-black mb-4">Configuración de Página de Contacto</h3>
+            <div class="space-y-4">
+              <!-- Show Sample Button -->
+              <div>
+                <label class="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    [checked]="settings()?.showSampleButton"
+                    (change)="updateSetting('showSampleButton', $any($event.target).checked)"
+                    class="w-5 h-5 text-ts-accent border-gray-300 rounded focus:ring-ts-accent">
+                  <span class="text-sm font-bold text-black">Mostrar botón "Solicitar muestras"</span>
+                </label>
+              </div>
+
+              <!-- Google Maps URL -->
+              <div>
+                <label class="block text-sm font-bold text-black mb-2">
+                  URL de Google Maps (iframe embed)
+                </label>
+                <textarea
+                  [value]="settings()?.googleMapsUrl"
+                  (input)="updateSetting('googleMapsUrl', $any($event.target).value)"
+                  rows="3"
+                  placeholder="https://www.google.com/maps/embed?pb=..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black"></textarea>
+                <p class="mt-1 text-sm text-gray-600">
+                  <strong>Solo la URL:</strong> Copia el código iframe de Google Maps (Compartir → Insertar un mapa), 
+                  luego pega <strong>únicamente</strong> el valor de <code class="bg-gray-200 px-1 rounded">src="..."</code> 
+                  (solo la URL entre comillas, sin &lt;iframe&gt;)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Save Button -->
+      <div class="mt-6 flex justify-end">
+        <button
+          (click)="saveSettings()"
+          [disabled]="isSaving()"
+          class="px-6 py-3 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+          @if (isSaving()) {
+            <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Guardando...
+          } @else {
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Guardar Cambios
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -70,6 +70,24 @@
   overflow: hidden;
 }
 
+// Force solid white background for products mega menu
+#mega-products {
+  background: #ffffff !important;
+  opacity: 1 !important;
+}
+
+// Also target the parent wrapper
+#mega-products::before {
+  content: none !important;
+}
+
+// Remove any backdrop filters
+div:has(> #mega-products) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 .mega-panel h4 {
   color: var(--primary);
 }

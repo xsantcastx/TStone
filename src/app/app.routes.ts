@@ -80,6 +80,12 @@ export const routes: Routes = [
     title: 'TopStone | Gestión de Productos'
   },
   {
+    path: 'admin/products/quick-add',
+    loadComponent: () => import('./pages/admin/products/quick-add-product.page').then(m => m.QuickAddProductComponent),
+    canActivate: [adminGuard],
+    title: 'TopStone | Quick Add Product'
+  },
+  {
     path: 'admin/gallery',
     loadComponent: () => import('./pages/admin/gallery/gallery-admin.page').then(m => m.GalleryAdminComponent),
     canActivate: [adminGuard],
@@ -96,6 +102,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/orders/orders-admin.page').then(m => m.OrdersAdminComponent),
     canActivate: [adminGuard],
     title: 'TopStone | Gestión de Pedidos'
+  },
+  {
+    path: 'admin/settings',
+    loadComponent: () => import('./pages/admin/settings/settings-admin.page').then(m => m.SettingsAdminComponent),
+    canActivate: [adminGuard],
+    title: 'TopStone | Configuración'
   },
   {
     path: 'admin/users',

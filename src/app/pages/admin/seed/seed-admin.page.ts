@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { SeedService } from '../../../services/seed.service';
 import { MigrationService } from '../../../services/migration.service';
 import { AuthService } from '../../../services/auth.service';
+import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 
 @Component({
   selector: 'app-seed-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, AdminSidebarComponent],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 py-12 px-4">
       <div class="max-w-2xl mx-auto">
@@ -92,7 +93,8 @@ import { AuthService } from '../../../services/auth.service';
       </div>
     </div>
   `,
-  styles: []
+  templateUrl: './seed-admin.page.html',
+  styleUrl: './seed-admin.page.scss'
 })
 export class SeedAdminComponent {
   private seedService = inject(SeedService);
@@ -105,9 +107,17 @@ export class SeedAdminComponent {
   message = '';
   messageType: 'success' | 'error' | 'info' = 'info';
   logs: string[] = [];
+  consoleMessages: string[] = [];
+  seedCompleted = false;
+  seedError = '';
 
   async ngOnInit() {
     await this.checkAdminAccess();
+  }
+
+  clearLogs() {
+    this.consoleMessages = [];
+    this.logs = [];
   }
 
   private async checkAdminAccess() {
@@ -130,11 +140,16 @@ export class SeedAdminComponent {
     this.isSeeding = true;
     this.message = '';
     this.logs = [];
+    this.consoleMessages = [];
+    this.seedCompleted = false;
+    this.seedError = '';
 
     // Override console.log to capture logs
     const originalLog = console.log;
     console.log = (...args: any[]) => {
-      this.logs.push(args.join(' '));
+      const msg = args.join(' ');
+      this.logs.push(msg);
+      this.consoleMessages.push(msg);
       originalLog(...args);
     };
 
@@ -146,10 +161,12 @@ export class SeedAdminComponent {
 
       this.message = '✅ Seed completed successfully! Check console for details.';
       this.messageType = 'success';
+      this.seedCompleted = true;
     } catch (error: any) {
       console.error('Seed error:', error);
       this.message = `❌ Error: ${error.message || 'Seed failed'}`;
       this.messageType = 'error';
+      this.seedError = error.message || 'Seed failed';
     } finally {
       this.isSeeding = false;
       // Restore console.log
@@ -163,16 +180,21 @@ export class SeedAdminComponent {
     this.isMigrating = true;
     this.message = '';
     this.logs = [];
+    this.consoleMessages = [];
 
     // Override console.log to capture logs
     const originalLog = console.log;
     const originalWarn = console.warn;
     console.log = (...args: any[]) => {
-      this.logs.push(args.join(' '));
+      const msg = args.join(' ');
+      this.logs.push(msg);
+      this.consoleMessages.push(msg);
       originalLog(...args);
     };
     console.warn = (...args: any[]) => {
-      this.logs.push(`⚠️ ${args.join(' ')}`);
+      const msg = `⚠️ ${args.join(' ')}`;
+      this.logs.push(msg);
+      this.consoleMessages.push(msg);
       originalWarn(...args);
     };
 

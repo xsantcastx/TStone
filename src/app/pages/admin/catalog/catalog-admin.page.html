@@ -1,32 +1,6 @@
-<div class="min-h-screen bg-gradient-to-b from-ts-paper to-white">
-  
-  <!-- Header -->
-  <div class="bg-ts-bg text-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <a href="/admin" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-          </a>
-          <div>
-            <h1 class="text-xl font-bold">{{ 'admin.catalog.title' | translate }}</h1>
-            <p class="text-sm text-white/70">{{ 'admin.catalog.subtitle' | translate }}</p>
-          </div>
-        </div>
-        <button
-          (click)="logout()"
-          class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-xl transition-all duration-300 flex items-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-          </svg>
-          {{ 'client.logout' | translate }}
-        </button>
-      </div>
-    </div>
-  </div>
+<app-admin-sidebar></app-admin-sidebar>
 
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-gradient-to-b from-ts-paper to-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
     <!-- Success/Error Messages -->

@@ -50,7 +50,11 @@ a:hover {
 }
 
 @layer base {
-  :root { --ts-accent: #B08968; }
+  :root { 
+    --ts-accent: #C9A961;
+    --ts-primary: #1a1a1a;
+    --ts-bg: var(--ts-primary);
+  }
 
   button,
   input[type="button"],

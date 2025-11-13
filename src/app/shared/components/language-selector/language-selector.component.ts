@@ -14,10 +14,9 @@ import { LanguageService, Language } from '../../../core/services/language.servi
         class="language-trigger"
         aria-haspopup="listbox"
         [attr.aria-expanded]="isOpen"
+        [attr.aria-label]="'Language: ' + currentLanguage.name"
       >
-        <span class="flag">{{ currentLanguage.flag }}</span>
         <span class="code">{{ currentLanguage.label }}</span>
-        <span class="name hidden lg:inline">{{ currentLanguage.name }}</span>
         <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" [class.rotate-180]="isOpen">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
@@ -34,11 +33,8 @@ import { LanguageService, Language } from '../../../core/services/language.servi
                   class="language-option"
                   [class.active]="lang.code === currentLanguage.code"
                 >
-                  <span class="flag">{{ lang.flag }}</span>
-                  <span class="option-text">
-                    <span class="code">{{ lang.label }}</span>
-                    <span class="name">{{ lang.name }}</span>
-                  </span>
+                  <span class="code-badge">{{ lang.label }}</span>
+                  <span class="name">{{ lang.name }}</span>
                 </button>
               </li>
             }
@@ -60,12 +56,11 @@ import { LanguageService, Language } from '../../../core/services/language.servi
     .language-trigger {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 0.9rem;
+      gap: 0.4rem;
+      padding: 0.5rem 0.65rem;
+      border-radius: 0.75rem;
       border: 1px solid rgba(17, 24, 39, 0.12);
       font-weight: 600;
-      letter-spacing: 0.03em;
       background: #ffffff;
       color: #111827;
       transition: all 0.2s ease;
@@ -73,27 +68,20 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       box-shadow: 0 16px 34px -24px rgba(15, 23, 42, 0.4);
     }
 
-    .language-trigger .flag {
-      font-size: 1.05rem;
-    }
-
     .language-trigger .code {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       color: #4b5563;
-    }
-
-    .language-trigger .name {
-      font-size: 0.85rem;
-      font-weight: 500;
+      line-height: 1;
     }
 
     .language-trigger .chevron {
-      width: 1rem;
-      height: 1rem;
+      width: 0.875rem;
+      height: 0.875rem;
       transition: transform 0.2s ease;
+      opacity: 0.6;
     }
 
     .language-trigger:hover {
@@ -159,27 +147,23 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       background: #f3f4f6;
     }
 
-    .language-option .flag {
-      font-size: 1.05rem;
-    }
-
-    .language-option .option-text {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-      line-height: 1.1;
-    }
-
-    .language-option .option-text .code {
-      font-size: 0.68rem;
+    .language-option .code-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      background: #f3f4f6;
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       color: #6b7280;
     }
 
-    .language-option .option-text .name {
-      font-size: 0.85rem;
+    .language-option .name {
+      font-size: 0.875rem;
       font-weight: 500;
       color: inherit;
     }
@@ -187,6 +171,11 @@ import { LanguageService, Language } from '../../../core/services/language.servi
     .language-option.active {
       background: #f6efe6;
       color: #b08968;
+    }
+
+    .language-option.active .code-badge {
+      background: #b08968;
+      color: #ffffff;
     }
 
     :host-context(.text-white) .language-option {
@@ -198,13 +187,19 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       background: #111827;
     }
 
-    :host-context(.text-white) .language-option .option-text .code {
-      color: rgba(248, 250, 252, 0.6);
+    :host-context(.text-white) .language-option .code-badge {
+      background: rgba(148, 163, 184, 0.2);
+      color: rgba(248, 250, 252, 0.8);
     }
 
     :host-context(.text-white) .language-option.active {
       background: rgba(176, 137, 104, 0.22);
       color: #f5e8d8;
+    }
+
+    :host-context(.text-white) .language-option.active .code-badge {
+      background: #b08968;
+      color: #ffffff;
     }
   `]
 })

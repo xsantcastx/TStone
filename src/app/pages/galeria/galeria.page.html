@@ -1,240 +1,222 @@
-<!-- Gallery Hero Section -->
-<section class="relative py-24 lg:py-32 bg-gradient-to-b from-ts-paper to-white overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-r from-ts-bg/5 to-ts-accent/5"></div>
-  <div class="relative max-w-7xl mx-auto px-6 text-center">
-    <div class="animate-fade-up">
-      <h1 class="font-serif text-5xl lg:text-7xl text-ts-bg mb-6 leading-tight">
-        Galería de <span class="text-ts-accent">Proyectos</span>
-      </h1>
-      <p class="text-xl lg:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-        Descubre cómo nuestras superficies porcelánicas transforman espacios reales 
-        en proyectos únicos y excepcionales.
-      </p>
-      <div class="mt-8 flex items-center justify-center gap-4 text-gray-600">
-        <div class="w-16 h-px bg-ts-accent"></div>
-        <span class="text-sm font-medium tracking-wider uppercase">{{getTotalItems()}} Proyectos</span>
-        <div class="w-16 h-px bg-ts-accent"></div>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="section-stack">
 
-<!-- Enhanced Category Filters with Pill Components -->
-<section class="py-8 bg-gradient-to-r from-ts-paper to-white backdrop-blur-sm border-b border-gray-100">
-  <div class="max-w-7xl mx-auto">
-    <div class="subnav justify-center">
-      <!-- All Categories Pill -->
-      <button 
-        (click)="filtrarPorCategoria('todos')"
-        [class]="{
-          'pill-active': categoriaActiva === 'todos',
-          'pill-light': categoriaActiva !== 'todos'
-        }"
-        class="pill">
-        <span>Todos</span>
-        <span class="text-xs opacity-75 ml-1">({{getCategoryCount('todos')}})</span>
-      </button>
-      
-      <!-- Category Pills -->
-      @for (categoria of categorias; track categoria.slug) {
-        <button 
-          (click)="filtrarPorCategoria(categoria.slug)"
-          [class]="{
-            'pill-active': categoriaActiva === categoria.slug,
-            'pill-light': categoriaActiva !== categoria.slug
-          }"
-          class="pill">
-          <span>{{categoria.titulo}}</span>
-          <span class="text-xs opacity-75 ml-1">({{getCategoryCount(categoria.slug)}})</span>
-        </button>
-      }
-    </div>
-
-    <!-- Results Info -->
-    @if (!isLoading) {
-      <div class="text-center text-sm text-gray-500 mb-8">
-        @if (categoriaActiva === 'todos') {
-          <span>Mostrando todos los proyectos</span>
-        } @else {
-          <span>Mostrando proyectos de {{getCategoryTitle(categoriaActiva)}}</span>
-        }
-      </div>
-    }
-  </div>
-</section>
-
-<!-- Premium Masonry Gallery -->
-<section class="py-16 bg-white min-h-screen">
-  <div class="max-w-7xl mx-auto px-6">
-    <!-- Loading State -->
-    @if (isLoading) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        @for (i of [1,2,3,4,5,6,7,8]; track i) {
-          <div class="animate-pulse">
-            <div class="bg-gray-200 rounded-2xl" [style.height.px]="200 + (i % 3) * 100"></div>
+<!-- Hero Carousel Section -->
+<section class="gallery-hero-carousel">
+  @if (heroSlides.length > 0) {
+    @for (slide of heroSlides; track slide.id; let i = $index) {
+      <div class="carousel-slide" 
+           [class.active]="i === currentSlideIndex"
+           [style.--slide-bg]="'url(' + slide.url + ')'">
+        <div class="carousel-slide__image">
+          <img 
+            [src]="slide.url" 
+            [alt]="slide.altText || 'Gallery image'"
+            (error)="$event.target.src='/assets/productos/placeholder.jpg'">
+        </div>
+        <div class="carousel-overlay">
+          <div class="carousel-caption">
+            <span class="eyebrow">Destacado</span>
+            <h2>{{ slide.altText || 'Proyecto Premium' }}</h2>
+            <p>{{ slide.caption || 'Superficies porcelánicas de alta calidad' }}</p>
           </div>
-        }
-      </div>
-    }
-
-    <!-- Masonry Grid -->
-    @if (!isLoading && itemsVisible.length > 0) {
-      <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-        @for (item of itemsVisible; track item.src; let i = $index) {
-          <div 
-            class="break-inside-avoid group cursor-pointer transform transition-all duration-500 hover:scale-102"
-            (click)="abrirModal(item, i)">
-            <div class="relative rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 bg-white">
-              <!-- Image -->
-              <div class="relative overflow-hidden">
-                <img 
-                  [src]="item.src" 
-                  [alt]="item.alt"
-                  class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
-                  loading="lazy"
-                  (error)="$event.target.src='/assets/productos/placeholder.jpg'"/>
-                
-                <!-- Overlay on Hover -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div class="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 class="font-medium text-lg mb-1">{{item.proyecto || 'Proyecto Premium'}}</h3>
-                    <p class="text-sm opacity-90 flex items-center">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.899a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      </svg>
-                      {{item.ubicacion || 'Valencia'}}
-                    </p>
-                  </div>
-                </div>
-                
-                <!-- View Icon -->
-                <div class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100">
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Card Content -->
-              <div class="p-5">
-                <h3 class="font-medium text-gray-900 mb-2 line-clamp-2">{{item.alt}}</h3>
-                <div class="flex items-center justify-between text-sm text-gray-500">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-ts-accent/10 text-ts-accent">
-                    {{item.producto}}
-                  </span>
-                  <span class="text-xs">Ver proyecto</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-      </div>
-    }
-
-    <!-- Empty State -->
-    @if (!isLoading && itemsVisible.length === 0) {
-      <div class="text-center py-24">
-        <div class="max-w-md mx-auto">
-          <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-100 flex items-center justify-center">
-            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-medium text-gray-900 mb-2">No hay proyectos disponibles</h3>
-          <p class="text-gray-500">No se encontraron proyectos para esta categoría. Prueba seleccionando otra categoría.</p>
         </div>
       </div>
     }
+    
+    <div class="carousel-indicators">
+      @for (slide of heroSlides; track slide.id; let i = $index) {
+        <button 
+          type="button"
+          (click)="goToSlide(i)"
+          [class.active]="i === currentSlideIndex"
+          [attr.aria-label]="'Go to slide ' + (i + 1)">
+        </button>
+      }
+    </div>
+    
+    <button 
+      type="button"
+      class="carousel-nav carousel-nav--prev"
+      (click)="prevSlide()"
+      aria-label="Previous slide">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    <button 
+      type="button"
+      class="carousel-nav carousel-nav--next"
+      (click)="nextSlide()"
+      aria-label="Next slide">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  }
+</section>
+
+<!-- Enhanced Tag Filter Section -->
+<section class="gallery-filter-section">
+  <div class="page-container">
+    <div class="filter-pills-container">
+      <button 
+        type="button"
+        (click)="filtrarPorCategoria('todos')"
+        class="gallery-pill"
+        [class.gallery-pill--active]="categoriaActiva === 'todos'">
+        <span>Todos</span>
+        <span class="count">{{ getImageCountByTag('todos') }}</span>
+      </button>
+      
+      @for (tag of getAvailableTags(); track tag.slug) {
+        <button 
+          type="button"
+          (click)="filtrarPorCategoria(tag.slug)"
+          class="gallery-pill"
+          [class.gallery-pill--active]="categoriaActiva === tag.slug">
+          @if (tag.icon) {
+            <span>{{ tag.icon }}</span>
+          }
+          <span>{{ tag.name }}</span>
+          <span class="count">{{ getImageCountByTag(tag.slug) }}</span>
+        </button>
+      }
+    </div>
   </div>
 </section>
 
-<!-- Enhanced Modal -->
-@if (modalItem) {
+<!-- Instagram-Style Grid Section -->
+<section class="gallery-instagram-section">
+  <div class="page-container">
+    
+    @if (isLoading) {
+      <div class="instagram-grid">
+        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
+          <div class="instagram-grid-item instagram-grid-item--loading">
+            <div class="grid-item__image"></div>
+          </div>
+        }
+      </div>
+    }
+    
+    @if (!isLoading && displayedImages.length > 0) {
+      <div class="instagram-grid">
+        @for (image of displayedImages; track image.id; let i = $index) {
+          <article
+            class="instagram-grid-item"
+            (click)="abrirImagen(image, i)">
+            <div class="grid-item__image">
+              <img
+                [src]="image.url"
+                [alt]="image.altText || 'Gallery image'"
+                loading="lazy"
+                (error)="$event.target.src='/assets/productos/placeholder.jpg'"/>
+            </div>
+            <div class="grid-item__overlay">
+              <div class="overlay-content">
+                @if (image.altText || image.caption) {
+                  <p class="image-caption">{{ image.altText || image.caption }}</p>
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+      
+      <!-- Loading More Indicator -->
+      @if (isLoadingMore) {
+        <div class="loading-more">
+          <div class="spinner"></div>
+          <p>Cargando más imágenes...</p>
+        </div>
+      }
+      
+      <!-- End Message -->
+      @if (!hasMoreImages && displayedImages.length > 0) {
+        <div class="end-message">
+          <p>Has visto todas las imágenes ({{ displayedImages.length }} fotos)</p>
+        </div>
+      }
+    }
+    
+    @if (!isLoading && displayedImages.length === 0) {
+      <div class="text-center py-24">
+        <h3>No hay fotos disponibles</h3>
+        <p>No se encontraron imágenes en esta categoría.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Lightbox Modal -->
+@if (selectedImage) {
   <div 
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
+    class="gallery-lightbox"
+    [class.gallery-lightbox--active]="selectedImage"
     (click)="cerrarModal()"
     (keydown)="onKeydown($event)"
-    tabindex="0">
+    tabindex="0"
+    role="dialog"
+    aria-modal="true">
     
-    <div class="relative max-w-7xl max-h-full p-6 w-full" (click)="$event.stopPropagation()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
       <!-- Close Button -->
       <button 
+        class="lightbox-close"
         (click)="cerrarModal()"
-        class="absolute top-6 right-6 z-20 w-12 h-12 rounded-full bg-black/50 text-white hover:bg-black/70 transition-all duration-300 flex items-center justify-center backdrop-blur-sm border border-white/10">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        aria-label="Cerrar">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
-
-      <!-- Previous Button -->
-      @if (modalIndex > 0) {
+      
+      <!-- Navigation Buttons -->
+      @if (selectedImageIndex > 0) {
         <button 
-          (click)="anterior()"
-          class="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-black/50 text-white hover:bg-black/70 transition-all duration-300 flex items-center justify-center backdrop-blur-sm border border-white/10">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          class="lightbox-nav lightbox-nav--prev"
+          (click)="anteriorImagen(); $event.stopPropagation()"
+          aria-label="Imagen anterior">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
         </button>
       }
-
-      <!-- Next Button -->
-      @if (modalIndex < itemsVisible.length - 1) {
+      
+      @if (selectedImageIndex < displayedImages.length - 1) {
         <button 
-          (click)="siguiente()"
-          class="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-black/50 text-white hover:bg-black/70 transition-all duration-300 flex items-center justify-center backdrop-blur-sm border border-white/10">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          class="lightbox-nav lightbox-nav--next"
+          (click)="siguienteImagen(); $event.stopPropagation()"
+          aria-label="Siguiente imagen">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </button>
       }
-
-      <!-- Modal Content -->
-      <div class="relative flex flex-col items-center justify-center h-full">
-        <!-- Main Image -->
+      
+      <!-- Image Container -->
+      <div class="lightbox-image-container">
         <img 
-          [src]="modalItem.src" 
-          [alt]="modalItem.alt"
-          class="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
+          [src]="selectedImage.url" 
+          [alt]="selectedImage.altText || 'Gallery image'"
           (error)="$event.target.src='/assets/productos/placeholder.jpg'">
+      </div>
+      
+      <!-- Info Panel -->
+      <div class="lightbox-info">
+        <div class="lightbox-header">
+          <h2>{{ selectedImage.altText || 'Proyecto' }}</h2>
+          <p>{{ selectedImage.caption || '' }}</p>
+        </div>
         
-        <!-- Project Information -->
-        <div class="absolute bottom-6 left-6 right-6 bg-black/60 backdrop-blur-sm text-white p-6 rounded-2xl border border-white/10">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="text-2xl font-medium mb-2">{{modalItem.proyecto || 'Proyecto Premium'}}</h3>
-              <p class="text-lg opacity-90 mb-2">{{modalItem.alt}}</p>
-              <div class="flex items-center gap-4 text-sm opacity-75">
-                <span class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.899a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                  {{modalItem.ubicacion || 'Valencia'}}
-                </span>
-                <span class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                  </svg>
-                  {{modalItem.producto}}
-                </span>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="text-sm opacity-75 mb-1">{{modalIndex + 1}} de {{itemsVisible.length}}</p>
-              <div class="flex items-center gap-2">
-                <div class="w-32 bg-white/20 rounded-full h-1">
-                  <div 
-                    class="bg-ts-accent h-1 rounded-full transition-all duration-300"
-                    [style.width.%]="((modalIndex + 1) / itemsVisible.length) * 100">
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="lightbox-details">
+          <div class="detail-item">
+            <div class="detail-label">Foto</div>
+            <div class="detail-value">{{ selectedImageIndex + 1 }} / {{ displayedImages.length }}</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 }
+
+</div>

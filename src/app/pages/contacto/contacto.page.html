@@ -152,6 +152,7 @@
         <div class="space-y-8">
           
           <!-- Dirección -->
+          @if ((settings$ | async)?.address) {
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-ts-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
               <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,14 +162,13 @@
             </div>
             <div>
               <h3 class="font-semibold text-lg text-ts-bg mb-1">Dirección</h3>
-              <p class="text-gray-600">
-                Calle Principal 123<br>
-                28001 Madrid, España
-              </p>
+              <p class="text-gray-600 whitespace-pre-line">{{ (settings$ | async)?.address }}</p>
             </div>
           </div>
+          }
 
           <!-- Teléfono -->
+          @if ((settings$ | async)?.contactPhone) {
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-ts-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
               <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,13 +177,15 @@
             </div>
             <div>
               <h3 class="font-semibold text-lg text-ts-bg mb-1">Teléfono</h3>
-              <a href="tel:+34910123456" class="text-gray-600 hover:text-ts-accent transition-colors">
-                +34 910 123 456
+              <a [href]="'tel:' + (settings$ | async)?.contactPhone" class="text-gray-600 hover:text-ts-accent transition-colors">
+                {{ (settings$ | async)?.contactPhone }}
               </a>
             </div>
           </div>
+          }
 
           <!-- Email -->
+          @if ((settings$ | async)?.contactEmail) {
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-ts-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
               <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,13 +194,15 @@
             </div>
             <div>
               <h3 class="font-semibold text-lg text-ts-bg mb-1">Email</h3>
-              <a href="mailto:info@topstone.com" class="text-gray-600 hover:text-ts-accent transition-colors">
-                info@topstone.com
+              <a [href]="'mailto:' + (settings$ | async)?.contactEmail" class="text-gray-600 hover:text-ts-accent transition-colors">
+                {{ (settings$ | async)?.contactEmail }}
               </a>
             </div>
           </div>
+          }
 
           <!-- Horarios -->
+          @if ((settings$ | async)?.businessHours) {
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-ts-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
               <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,16 +212,22 @@
             <div>
               <h3 class="font-semibold text-lg text-ts-bg mb-1">Horarios</h3>
               <p class="text-gray-600">
-                Lunes a Viernes: 9:00 - 18:00<br>
-                Sábados: 10:00 - 14:00<br>
-                Domingos: Cerrado
+                @if ((settings$ | async)?.businessHours?.monday) { Lunes: {{ (settings$ | async)?.businessHours?.monday }}<br> }
+                @if ((settings$ | async)?.businessHours?.tuesday) { Martes: {{ (settings$ | async)?.businessHours?.tuesday }}<br> }
+                @if ((settings$ | async)?.businessHours?.wednesday) { Miércoles: {{ (settings$ | async)?.businessHours?.wednesday }}<br> }
+                @if ((settings$ | async)?.businessHours?.thursday) { Jueves: {{ (settings$ | async)?.businessHours?.thursday }}<br> }
+                @if ((settings$ | async)?.businessHours?.friday) { Viernes: {{ (settings$ | async)?.businessHours?.friday }}<br> }
+                @if ((settings$ | async)?.businessHours?.saturday) { Sábado: {{ (settings$ | async)?.businessHours?.saturday }}<br> }
+                @if ((settings$ | async)?.businessHours?.sunday) { Domingo: {{ (settings$ | async)?.businessHours?.sunday }} }
               </p>
             </div>
           </div>
+          }
 
         </div>
 
         <!-- CTA adicional -->
+        @if ((settings$ | async)?.showSampleButton) {
         <div class="mt-12 p-6 bg-ts-bg rounded-2xl">
           <h3 class="font-serif text-xl text-ts-ink mb-3">¿Necesitas muestras?</h3>
           <p class="text-ts-ink-soft mb-4">
@@ -227,8 +237,26 @@
             Solicitar muestras
           </button>
         </div>
+        }
 
       </div>
     </div>
+
+    <!-- Google Maps -->
+    @if (googleMapsUrl$ | async; as mapsUrl) {
+    <div class="mt-16">
+      <h2 class="font-serif text-3xl text-ts-bg mb-6">Ubicación</h2>
+      <div class="rounded-2xl overflow-hidden shadow-lg">
+        <iframe 
+          [src]="mapsUrl" 
+          class="w-full h-96 border-0"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+    }
+
   </div>
 </section>

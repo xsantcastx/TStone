@@ -27,7 +27,18 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
+    provideAuth(() => {
+      const auth = getAuth();
+      // Ensure auth persistence is set to LOCAL (keeps users signed in after browser refresh/close)
+      if (typeof window !== 'undefined') {
+        import('firebase/auth').then(({ setPersistence, browserLocalPersistence }) => {
+          setPersistence(auth, browserLocalPersistence).catch((error) => {
+            console.error('Error setting auth persistence:', error);
+          });
+        });
+      }
+      return auth;
+    }),
     provideStorage(() => getStorage()),
     // Analytics with browser support check and production-only
     ...(environment.production ? [

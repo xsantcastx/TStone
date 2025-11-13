@@ -1,45 +1,24 @@
-<div class="min-h-screen bg-gradient-to-b from-ts-paper to-white">
-  
-  <!-- Admin Header -->
-  <div class="bg-ts-bg text-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <a routerLink="/admin" class="hover:opacity-80 transition-opacity">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-          </a>
-          <h1 class="text-xl font-bold">{{ 'admin.orders' | translate }}</h1>
-        </div>
-        <div class="flex items-center gap-4">
-          <a routerLink="/admin" class="text-sm hover:text-white/80">{{ 'admin.title' | translate }}</a>
-          <button (click)="logout()" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-xl transition-all">
-            {{ 'client.logout' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+<app-admin-sidebar></app-admin-sidebar>
 
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-gradient-to-b from-ts-paper to-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
     <!-- Success/Error Messages -->
-    @if (successMessage) {
+    @if (successMessage()) {
       <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
         <svg class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p class="text-sm text-green-700">{{ successMessage | translate }}</p>
+        <p class="text-sm text-green-700">{{ successMessage() }}</p>
       </div>
     }
 
-    @if (errorMessage) {
+    @if (errorMessage()) {
       <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
         <svg class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <p class="text-sm text-red-700">{{ errorMessage | translate }}</p>
+        <p class="text-sm text-red-700">{{ errorMessage() }}</p>
       </div>
     }
 
@@ -55,7 +34,7 @@
             type="text"
             [(ngModel)]="searchQuery"
             placeholder="{{ 'admin.search_orders' | translate }}"
-            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent">
+            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent text-gray-900 font-medium">
         </div>
       </div>
 
@@ -65,60 +44,60 @@
           (click)="selectedStatus = 'all'"
           [class.bg-ts-accent]="selectedStatus === 'all'"
           [class.text-white]="selectedStatus === 'all'"
-          [class.bg-gray-100]="selectedStatus !== 'all'"
-          [class.text-gray-700]="selectedStatus !== 'all'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-gray-200]="selectedStatus !== 'all'"
+          [class.text-gray-900]="selectedStatus !== 'all'"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
           {{ 'admin.all_orders' | translate }} ({{ getStatusCount('all') }})
         </button>
         <button
           (click)="selectedStatus = 'pending'"
-          [class.bg-yellow-100]="selectedStatus === 'pending'"
-          [class.text-yellow-800]="selectedStatus === 'pending'"
-          [class.bg-gray-100]="selectedStatus !== 'pending'"
-          [class.text-gray-700]="selectedStatus !== 'pending'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-yellow-500]="selectedStatus === 'pending'"
+          [class.text-white]="selectedStatus === 'pending'"
+          [class.bg-gray-200]="selectedStatus !== 'pending'"
+          [class.text-gray-900]="selectedStatus !== 'pending'"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
           {{ 'admin.pending' | translate }} ({{ getStatusCount('pending') }})
         </button>
         <button
           (click)="selectedStatus = 'processing'"
-          [class.bg-blue-100]="selectedStatus === 'processing'"
-          [class.text-blue-800]="selectedStatus === 'processing'"
-          [class.bg-gray-100]="selectedStatus !== 'processing'"
-          [class.text-gray-700]="selectedStatus !== 'processing'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-blue-500]="selectedStatus === 'processing'"
+          [class.text-white]="selectedStatus === 'processing'"
+          [class.bg-gray-200]="selectedStatus !== 'processing'"
+          [class.text-gray-900]="selectedStatus !== 'processing'"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
           {{ 'admin.processing' | translate }} ({{ getStatusCount('processing') }})
         </button>
         <button
           (click)="selectedStatus = 'shipped'"
-          [class.bg-purple-100]="selectedStatus === 'shipped'"
-          [class.text-purple-800]="selectedStatus === 'shipped'"
-          [class.bg-gray-100]="selectedStatus !== 'shipped'"
-          [class.text-gray-700]="selectedStatus !== 'shipped'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-purple-500]="selectedStatus === 'shipped'"
+          [class.text-white]="selectedStatus === 'shipped'"
+          [class.bg-gray-200]="selectedStatus !== 'shipped'"
+          [class.text-gray-900]="selectedStatus !== 'shipped'"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
           {{ 'admin.shipped' | translate }} ({{ getStatusCount('shipped') }})
         </button>
         <button
           (click)="selectedStatus = 'delivered'"
-          [class.bg-green-100]="selectedStatus === 'delivered'"
-          [class.text-green-800]="selectedStatus === 'delivered'"
-          [class.bg-gray-100]="selectedStatus !== 'delivered'"
-          [class.text-gray-700]="selectedStatus !== 'delivered'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-green-500]="selectedStatus === 'delivered'"
+          [class.text-white]="selectedStatus === 'delivered'"
+          [class.bg-gray-200]="selectedStatus !== 'delivered'"
+          [class.text-gray-900]="selectedStatus !== 'delivered'"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
           {{ 'admin.delivered' | translate }} ({{ getStatusCount('delivered') }})
         </button>
         <button
           (click)="selectedStatus = 'cancelled'"
-          [class.bg-red-100]="selectedStatus === 'cancelled'"
-          [class.text-red-800]="selectedStatus === 'cancelled'"
-          [class.bg-gray-100]="selectedStatus !== 'cancelled'"
-          [class.text-gray-700]="selectedStatus !== 'cancelled'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-red-500]="selectedStatus === 'cancelled'"
+          [class.text-white]="selectedStatus === 'cancelled'"
+          [class.bg-gray-200]="selectedStatus !== 'cancelled'"
+          [class.text-gray-900]="selectedStatus !== 'cancelled'"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
           {{ 'admin.cancelled' | translate }} ({{ getStatusCount('cancelled') }})
         </button>
       </div>
     </div>
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <!-- Loading State -->
       <div class="bg-white rounded-2xl shadow-lg p-12 border border-gray-100">
         <div class="flex flex-col items-center justify-center gap-4">
@@ -126,7 +105,7 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p class="text-gray-600">{{ 'common.loading' | translate }}</p>
+          <p class="text-gray-900 font-semibold text-lg">{{ 'common.loading' | translate }}</p>
         </div>
       </div>
     } @else {
@@ -135,10 +114,10 @@
         <!-- Empty State -->
         <div class="bg-white rounded-2xl shadow-lg p-12 border border-gray-100">
           <div class="flex flex-col items-center justify-center gap-4">
-            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <p class="text-gray-500">{{ 'admin.no_orders' | translate }}</p>
+            <p class="text-gray-900 font-semibold text-lg">{{ 'admin.no_orders' | translate }}</p>
           </div>
         </div>
       } @else {
@@ -148,22 +127,22 @@
             <table class="w-full">
               <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">
                     {{ 'admin.order_number' | translate }}
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">
                     {{ 'admin.date' | translate }}
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">
                     {{ 'admin.customer' | translate }}
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">
                     {{ 'admin.status' | translate }}
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">
                     {{ 'admin.total' | translate }}
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">
                     {{ 'admin.actions' | translate }}
                   </th>
                 </tr>
@@ -172,14 +151,14 @@
                 @for (order of filteredOrders; track order.id) {
                   <tr class="hover:bg-gray-50 transition-colors">
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="font-medium text-gray-900">{{ order.orderNumber }}</div>
+                      <div class="font-bold text-gray-900">{{ order.orderNumber }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-600">{{ order.date | date:'dd/MM/yyyy' }}</div>
+                      <div class="text-sm text-gray-900 font-medium">{{ order.date | date:'dd/MM/yyyy' }}</div>
                     </td>
                     <td class="px-6 py-4">
-                      <div class="text-sm font-medium text-gray-900">{{ order.customer.name }}</div>
-                      <div class="text-xs text-gray-500">{{ order.customer.email }}</div>
+                      <div class="text-sm font-bold text-gray-900">{{ getCustomerName(order) }}</div>
+                      <div class="text-xs text-gray-700 font-medium">{{ getCustomerEmail(order) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span [class]="getStatusClass(order.status)" class="px-3 py-1 text-xs font-medium rounded-full">
@@ -193,7 +172,7 @@
                       <div class="flex items-center gap-2">
                         <button
                           (click)="openDetailModal(order)"
-                          class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          class="p-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors shadow-sm"
                           [title]="'admin.view_detail' | translate">
                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -202,7 +181,7 @@
                         </button>
                         <button
                           (click)="openStatusModal(order)"
-                          class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                          class="p-2 bg-green-600 text-white hover:bg-green-700 rounded-lg transition-colors shadow-sm"
                           [title]="'admin.update_status' | translate">
                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -227,7 +206,7 @@
         <div class="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
           <div>
             <h2 class="text-2xl font-serif font-bold text-ts-bg">{{ selectedOrder.orderNumber }}</h2>
-            <p class="text-sm text-gray-600 mt-1">{{ selectedOrder.date | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p class="text-sm text-gray-900 font-medium mt-1">{{ selectedOrder.date | date:'dd/MM/yyyy HH:mm' }}</p>
           </div>
           <button (click)="closeDetailModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,7 +219,7 @@
           
           <!-- Status -->
           <div>
-            <h3 class="text-sm font-medium text-gray-500 mb-2">{{ 'admin.status' | translate }}</h3>
+            <h3 class="text-sm font-bold text-gray-800 mb-2">{{ 'admin.status' | translate }}</h3>
             <span [class]="getStatusClass(selectedOrder.status)" class="px-3 py-1 text-sm font-medium rounded-full">
               {{ 'admin.' + selectedOrder.status | translate }}
             </span>
@@ -248,35 +227,42 @@
 
           <!-- Customer Info -->
           <div>
-            <h3 class="text-sm font-medium text-gray-500 mb-3">{{ 'admin.customer_info' | translate }}</h3>
+            <h3 class="text-sm font-bold text-gray-800 mb-3">{{ 'admin.customer_info' | translate }}</h3>
             <div class="bg-gray-50 rounded-xl p-4 space-y-2">
-              <p class="text-sm"><span class="font-medium">{{ 'client.name' | translate }}:</span> {{ selectedOrder.customer.name }}</p>
-              <p class="text-sm"><span class="font-medium">{{ 'client.email' | translate }}:</span> {{ selectedOrder.customer.email }}</p>
-              <p class="text-sm"><span class="font-medium">{{ 'client.phone' | translate }}:</span> {{ selectedOrder.customer.phone }}</p>
-            </div>
-          </div>
-
-          <!-- Shipping Info -->
-          <div>
-            <h3 class="text-sm font-medium text-gray-500 mb-3">{{ 'admin.shipping_info' | translate }}</h3>
-            <div class="bg-gray-50 rounded-xl p-4 space-y-2">
-              <p class="text-sm">{{ selectedOrder.shipping.street }}</p>
-              <p class="text-sm">{{ selectedOrder.shipping.postalCode }} {{ selectedOrder.shipping.city }}</p>
-              <p class="text-sm">{{ selectedOrder.shipping.state }}, {{ selectedOrder.shipping.country }}</p>
-              @if (selectedOrder.tracking) {
-                <p class="text-sm mt-3"><span class="font-medium">{{ 'admin.tracking' | translate }}:</span> {{ selectedOrder.tracking }}</p>
+              <p class="text-sm text-gray-900"><span class="font-bold">{{ 'client.name' | translate }}:</span> {{ getCustomerName(selectedOrder) }}</p>
+              <p class="text-sm text-gray-900"><span class="font-bold">{{ 'client.email' | translate }}:</span> {{ getCustomerEmail(selectedOrder) }}</p>
+              @if (selectedOrder.customer?.phone || selectedOrder.shippingAddress?.phoneE164) {
+                <p class="text-sm text-gray-900"><span class="font-bold">{{ 'client.phone' | translate }}:</span> {{ selectedOrder.customer?.phone || selectedOrder.shippingAddress?.phoneE164 }}</p>
               }
             </div>
           </div>
 
+          <!-- Shipping Info -->
+          @if (selectedOrder.shippingAddress) {
+            <div>
+              <h3 class="text-sm font-bold text-gray-800 mb-3">{{ 'admin.shipping_info' | translate }}</h3>
+              <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+                <p class="text-sm text-gray-900 font-medium">{{ selectedOrder.shippingAddress.line1 || selectedOrder.shippingAddress.street }}</p>
+                @if (selectedOrder.shippingAddress.line2) {
+                  <p class="text-sm text-gray-900 font-medium">{{ selectedOrder.shippingAddress.line2 }}</p>
+                }
+                <p class="text-sm text-gray-900 font-medium">{{ selectedOrder.shippingAddress.postalCode }} {{ selectedOrder.shippingAddress.city }}</p>
+                <p class="text-sm text-gray-900 font-medium">{{ selectedOrder.shippingAddress.state || selectedOrder.shippingAddress.region }}, {{ selectedOrder.shippingAddress.country }}</p>
+                @if (selectedOrder.trackingNumber || selectedOrder.tracking) {
+                  <p class="text-sm mt-3 text-gray-900"><span class="font-bold">{{ 'admin.tracking' | translate }}:</span> {{ selectedOrder.trackingNumber || selectedOrder.tracking }}</p>
+                }
+              </div>
+            </div>
+          }
+
           <!-- Order Items -->
           <div>
-            <h3 class="text-sm font-medium text-gray-500 mb-3">{{ 'admin.order_items' | translate }}</h3>
+            <h3 class="text-sm font-bold text-gray-800 mb-3">{{ 'admin.order_items' | translate }}</h3>
             <div class="space-y-3">
               @for (item of selectedOrder.items; track item.productId) {
                 <div class="flex items-center gap-4 bg-gray-50 rounded-xl p-4">
-                  @if (item.image) {
-                    <img [src]="item.image" [alt]="item.name" class="w-16 h-16 object-cover rounded-lg">
+                  @if (item.image || item.imageUrl) {
+                    <img [src]="item.image || item.imageUrl" [alt]="item.name" class="w-16 h-16 object-cover rounded-lg">
                   } @else {
                     <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                       <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,12 +271,12 @@
                     </div>
                   }
                   <div class="flex-1">
-                    <p class="font-medium text-gray-900">{{ item.name }}</p>
-                    <p class="text-sm text-gray-600">{{ item.thickness }}</p>
+                    <p class="font-bold text-gray-900">{{ item.name }}</p>
+                    <p class="text-sm text-gray-800 font-medium">{{ item.thickness || item.grosor }}</p>
                   </div>
                   <div class="text-right">
-                    <p class="text-sm text-gray-600">{{ item.quantity }} x {{ item.price | number:'1.2-2' }}€</p>
-                    <p class="font-semibold text-gray-900">{{ (item.quantity * item.price) | number:'1.2-2' }}€</p>
+                    <p class="text-sm text-gray-900 font-medium">{{ item.quantity || item.qty }} x {{ (item.price || item.unitPrice) | number:'1.2-2' }}€</p>
+                    <p class="font-bold text-gray-900">{{ ((item.quantity || item.qty || 0) * (item.price || item.unitPrice || 0)) | number:'1.2-2' }}€</p>
                   </div>
                 </div>
               }
@@ -308,8 +294,8 @@
           <!-- Notes -->
           @if (selectedOrder.notes) {
             <div>
-              <h3 class="text-sm font-medium text-gray-500 mb-2">{{ 'admin.notes' | translate }}</h3>
-              <p class="text-sm text-gray-700 bg-yellow-50 border border-yellow-200 rounded-xl p-4">{{ selectedOrder.notes }}</p>
+              <h3 class="text-sm font-bold text-gray-800 mb-2">{{ 'admin.notes' | translate }}</h3>
+              <p class="text-sm text-gray-900 font-medium bg-yellow-50 border border-yellow-200 rounded-xl p-4">{{ selectedOrder.notes }}</p>
             </div>
           }
         </div>
@@ -324,12 +310,12 @@
         <h2 class="text-xl font-bold text-ts-bg mb-4">{{ 'admin.update_status' | translate }}</h2>
         
         <div class="mb-6">
-          <p class="text-sm text-gray-600 mb-1">{{ 'admin.order_number' | translate }}</p>
-          <p class="font-semibold text-gray-900">{{ orderToUpdate.orderNumber }}</p>
+          <p class="text-sm text-gray-800 font-bold mb-1">{{ 'admin.order_number' | translate }}</p>
+          <p class="font-bold text-gray-900">{{ orderToUpdate.orderNumber }}</p>
         </div>
 
         <div class="mb-6">
-          <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+          <label for="status" class="block text-sm font-bold text-gray-800 mb-2">
             {{ 'admin.new_status' | translate }}
           </label>
           <select
@@ -343,6 +329,31 @@
             <option value="cancelled">{{ 'admin.cancelled' | translate }}</option>
           </select>
         </div>
+
+        <!-- Tracking Number (for shipped status) -->
+        @if (newStatus === 'shipped') {
+          <div class="mb-6">
+            <label for="tracking" class="block text-sm font-bold text-gray-800 mb-2">
+              {{ 'admin.tracking' | translate }}
+            </label>
+            <div class="flex gap-2">
+              <input
+                id="tracking"
+                type="text"
+                [(ngModel)]="trackingNumber"
+                [placeholder]="'admin.tracking_placeholder' | translate"
+                class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent">
+              <button
+                (click)="updateTracking()"
+                [disabled]="!trackingNumber.trim()"
+                class="px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
 
         <div class="flex gap-3">
           <button

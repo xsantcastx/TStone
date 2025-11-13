@@ -3,7 +3,7 @@
   <div class="absolute inset-0 bg-gradient-to-r from-ts-bg/5 to-ts-accent/5"></div>
   <div class="relative max-w-7xl mx-auto px-6 text-center">
     <div class="animate-fade-up">
-      <h1 class="font-serif text-5xl lg:text-7xl text-ts-bg mb-6 leading-tight">
+      <h1 class="font-serif text-5xl lg:text-7xl text-black mb-6 leading-tight">
         {{ 'technical.title' | translate }}
       </h1>
       <p class="text-xl lg:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
@@ -25,15 +25,15 @@
       
       <!-- Quick Navigation Pills -->
       <div class="mb-12 bg-gradient-to-r from-ts-paper to-white rounded-2xl p-6 shadow-sm">
-        <h2 class="text-xl font-medium text-ts-bg mb-4">{{ 'technical.quick_nav' | translate }}</h2>
+        <h2 class="text-xl font-medium text-black mb-4">{{ 'technical.quick_nav' | translate }}</h2>
         <div class="flex flex-wrap gap-3">
           <button 
             (click)="openAccordionExclusive('especificaciones')"
             [class.bg-ts-accent]="acordeonesAbiertos['especificaciones']"
-            [class.text-white]="acordeonesAbiertos['especificaciones']"
+            [class.border-ts-accent]="acordeonesAbiertos['especificaciones']"
             [class.bg-white]="!acordeonesAbiertos['especificaciones']"
-            [class.text-ts-bg]="!acordeonesAbiertos['especificaciones']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['especificaciones']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v1a2 2 0 002 2h2m0 0h2a2 2 0 012-2V7a2 2 0 00-2-2H9m0 0v10m0-10h2v10"></path>
             </svg>
@@ -42,10 +42,10 @@
           <button 
             (click)="openAccordionExclusive('acabados')"
             [class.bg-ts-accent]="acordeonesAbiertos['acabados']"
-            [class.text-white]="acordeonesAbiertos['acabados']"
+            [class.border-ts-accent]="acordeonesAbiertos['acabados']"
             [class.bg-white]="!acordeonesAbiertos['acabados']"
-            [class.text-ts-bg]="!acordeonesAbiertos['acabados']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['acabados']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4z"></path>
             </svg>
@@ -54,10 +54,10 @@
           <button 
             (click)="openAccordionExclusive('fichas')"
             [class.bg-ts-accent]="acordeonesAbiertos['fichas']"
-            [class.text-white]="acordeonesAbiertos['fichas']"
+            [class.border-ts-accent]="acordeonesAbiertos['fichas']"
             [class.bg-white]="!acordeonesAbiertos['fichas']"
-            [class.text-ts-bg]="!acordeonesAbiertos['fichas']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['fichas']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
@@ -66,10 +66,10 @@
           <button 
             (click)="openAccordionExclusive('packing')"
             [class.bg-ts-accent]="acordeonesAbiertos['packing']"
-            [class.text-white]="acordeonesAbiertos['packing']"
+            [class.border-ts-accent]="acordeonesAbiertos['packing']"
             [class.bg-white]="!acordeonesAbiertos['packing']"
-            [class.text-ts-bg]="!acordeonesAbiertos['packing']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['packing']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"></path>
             </svg>
@@ -78,10 +78,10 @@
           <button 
             (click)="openAccordionExclusive('bordes')"
             [class.bg-ts-accent]="acordeonesAbiertos['bordes']"
-            [class.text-white]="acordeonesAbiertos['bordes']"
+            [class.border-ts-accent]="acordeonesAbiertos['bordes']"
             [class.bg-white]="!acordeonesAbiertos['bordes']"
-            [class.text-ts-bg]="!acordeonesAbiertos['bordes']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['bordes']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"></path>
             </svg>
@@ -90,10 +90,10 @@
           <button 
             (click)="openAccordionExclusive('fijaciones')"
             [class.bg-ts-accent]="acordeonesAbiertos['fijaciones']"
-            [class.text-white]="acordeonesAbiertos['fijaciones']"
+            [class.border-ts-accent]="acordeonesAbiertos['fijaciones']"
             [class.bg-white]="!acordeonesAbiertos['fijaciones']"
-            [class.text-ts-bg]="!acordeonesAbiertos['fijaciones']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['fijaciones']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"></path>
             </svg>
@@ -102,10 +102,10 @@
           <button 
             (click)="openAccordionExclusive('mantenimiento')"
             [class.bg-ts-accent]="acordeonesAbiertos['mantenimiento']"
-            [class.text-white]="acordeonesAbiertos['mantenimiento']"
+            [class.border-ts-accent]="acordeonesAbiertos['mantenimiento']"
             [class.bg-white]="!acordeonesAbiertos['mantenimiento']"
-            [class.text-ts-bg]="!acordeonesAbiertos['mantenimiento']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border border-gray-200 flex items-center gap-2">
+            [class.border-gray-300]="!acordeonesAbiertos['mantenimiento']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -126,7 +126,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.specifications' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.specifications' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -161,7 +161,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.surface_finishes' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.surface_finishes' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -188,7 +188,7 @@
                       </svg>
                     </div>
                   </div>
-                  <h3 class="font-semibold text-lg mb-2 text-ts-bg">{{acabado.nombre}}</h3>
+                  <h3 class="font-semibold text-lg mb-2 text-black">{{acabado.nombre}}</h3>
                   <p class="text-sm text-gray-600 leading-relaxed">{{acabado.descripcion}}</p>
                 </div>
               }
@@ -208,7 +208,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.datasheets' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.datasheets' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -257,7 +257,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.packaging' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.packaging' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -308,7 +308,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.edge_finishes' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.edge_finishes' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -335,7 +335,7 @@
                       </svg>
                     </div>
                   </div>
-                  <h3 class="font-semibold text-lg mb-2 text-ts-bg">{{borde.nombre}}</h3>
+                  <h3 class="font-semibold text-lg mb-2 text-black">{{borde.nombre}}</h3>
                   <p class="text-sm text-gray-600 leading-relaxed">{{borde.descripcion}}</p>
                 </div>
               }
@@ -355,7 +355,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.facade_systems' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.facade_systems' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -388,7 +388,7 @@
               </div>
 
               <div class="bg-ts-accent/5 rounded-xl p-6 border border-ts-accent/20">
-                <h3 class="font-semibold text-lg mb-4 text-ts-bg flex items-center gap-2">
+                <h3 class="font-semibold text-lg mb-4 text-black flex items-center gap-2">
                   <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
@@ -422,7 +422,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
             </div>
-            <h2 class="font-serif text-2xl text-ts-bg">{{ 'technical.maintenance' | translate }}</h2>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.maintenance' | translate }}</h2>
           </div>
           <svg 
             class="w-6 h-6 transition-transform duration-300"
@@ -438,7 +438,7 @@
               
               <!-- Limpieza -->
               <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 class="font-semibold text-lg mb-3 text-ts-bg flex items-center gap-2">
+                <h3 class="font-semibold text-lg mb-3 text-black flex items-center gap-2">
                   <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                   </svg>
@@ -449,7 +449,7 @@
 
               <!-- Frecuencia -->
               <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 class="font-semibold text-lg mb-3 text-ts-bg flex items-center gap-2">
+                <h3 class="font-semibold text-lg mb-3 text-black flex items-center gap-2">
                   <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>

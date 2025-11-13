@@ -13,6 +13,7 @@ import { Product } from '../../../models/product';
 import { Category, Material, TemplateComposition } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
 import { GalleryUploaderComponent } from '../../../shared/components/gallery-uploader/gallery-uploader.component';
+import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 
 interface CatalogOption {
   id: string;
@@ -26,7 +27,7 @@ interface CatalogOption {
 @Component({
   selector: 'app-products-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, TranslateModule, GalleryUploaderComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, TranslateModule, GalleryUploaderComponent, AdminSidebarComponent],
   templateUrl: './products-admin.page.html',
   styleUrl: './products-admin.page.scss'
 })
