@@ -92,11 +92,32 @@ export class AppComponent implements OnInit {
           document.documentElement.style.setProperty('--ts-accent', settings.accentColor);
         }
         
+        // Update favicon dynamically
+        if (settings.faviconUrl) {
+          this.updateFavicon(settings.faviconUrl);
+        }
+        
         // Check maintenance mode
         this.isMaintenanceMode = settings.maintenanceMode || false;
         this.checkMaintenanceMode();
       }
     });
+  }
+
+  private updateFavicon(faviconUrl: string): void {
+    // Remove existing favicon links
+    const existingLinks = document.querySelectorAll('link[rel*="icon"]');
+    existingLinks.forEach(link => link.remove());
+    
+    // Create new favicon link
+    const link = this.renderer.createElement('link');
+    this.renderer.setAttribute(link, 'rel', 'icon');
+    this.renderer.setAttribute(link, 'type', 'image/x-icon');
+    this.renderer.setAttribute(link, 'href', faviconUrl);
+    
+    // Append to head
+    const head = document.getElementsByTagName('head')[0];
+    this.renderer.appendChild(head, link);
   }
 
   private checkMaintenanceMode(): void {
