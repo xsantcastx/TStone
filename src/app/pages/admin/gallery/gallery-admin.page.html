@@ -30,9 +30,11 @@
           (click)="selectedTag = 'all'"
           [class.bg-ts-accent]="selectedTag === 'all'"
           [class.text-white]="selectedTag === 'all'"
-          [class.bg-gray-100]="selectedTag !== 'all'"
-          [class.text-gray-700]="selectedTag !== 'all'"
-          class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap">
+          [class.bg-white]="selectedTag !== 'all'"
+          [class.border-2]="selectedTag !== 'all'"
+          [class.border-gray-300]="selectedTag !== 'all'"
+          [style.color]="selectedTag !== 'all' ? '#1a1a1a' : ''"
+          class="px-4 py-2 rounded-xl font-semibold transition-all whitespace-nowrap shadow-sm">
           All Media ({{ getTagCount('all') }})
         </button>
         @for (tag of availableTags; track tag) {
@@ -40,9 +42,11 @@
             (click)="selectedTag = tag"
             [class.bg-ts-accent]="selectedTag === tag"
             [class.text-white]="selectedTag === tag"
-            [class.bg-gray-100]="selectedTag !== tag"
-            [class.text-gray-700]="selectedTag !== tag"
-            class="px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap capitalize">
+            [class.bg-white]="selectedTag !== tag"
+            [class.border-2]="selectedTag !== tag"
+            [class.border-gray-300]="selectedTag !== tag"
+            [style.color]="selectedTag !== tag ? '#1a1a1a' : ''"
+            class="px-4 py-2 rounded-xl font-semibold transition-all whitespace-nowrap capitalize shadow-sm">
             {{ tag }} ({{ getTagCount(tag) }})
           </button>
         }
@@ -148,7 +152,7 @@
                 
                 <!-- Alt Text -->
                 @if (media.altText) {
-                  <p class="text-sm text-gray-700 font-medium line-clamp-2">{{ media.altText }}</p>
+                  <p class="text-sm text-gray-900 font-semibold line-clamp-2">{{ media.altText }}</p>
                 }
 
                 <!-- Related Products -->
@@ -331,7 +335,7 @@
           @if (isUploading && uploadProgress > 0) {
             <div class="space-y-2">
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-700 font-medium">
+                <span class="text-gray-900 font-semibold">
                   Uploading {{ uploadedCount }}/{{ totalToUpload }} images...
                 </span>
                 <span class="text-ts-accent font-semibold">{{ uploadProgress }}%</span>
@@ -521,7 +525,7 @@
           </button>
           <button
             (click)="closeDeleteConfirm()"
-            class="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium">
+            class="flex-1 py-2 px-4 border border-gray-300 text-gray-900 rounded-xl hover:bg-gray-50 transition-colors font-semibold">
             {{ 'admin.cancel' | translate }}
           </button>
         </div>

@@ -15,97 +15,142 @@
     </div>
 
     <!-- 12mm Collection -->
-    <div class="mb-20">
-      <div class="flex items-center justify-between mb-8">
-        <h3 class="font-serif text-3xl text-ts-bg">Colección 12mm</h3>
-        <a routerLink="/productos/12mm" 
-           class="text-ts-accent hover:underline font-medium">
-          Ver todos →
-        </a>
-      </div>
+    @if (!isLoading && productos12mm.length > 0) {
+      <div class="mb-20">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="font-serif text-3xl text-ts-bg">Colección 12mm</h3>
+          <a routerLink="/productos/12mm" 
+             class="text-ts-accent hover:underline font-medium">
+            Ver todos →
+          </a>
+        </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        @for (producto of productos12mm; track producto.slug) {
-          <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
-            <div class="aspect-[4/3] overflow-hidden">
-              <img [src]="producto.cover" 
-                   [alt]="producto.nombre"
-                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                   loading="lazy"/>
+        @if (isLoading) {
+          @for (i of [1,2,3,4]; track i) {
+            <div class="rounded-2xl overflow-hidden bg-white shadow-sm animate-pulse">
+              <div class="aspect-[4/3] bg-gray-200"></div>
+              <div class="p-6 space-y-3">
+                <div class="h-6 bg-gray-200 rounded"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
             </div>
-            <div class="p-6">
-              <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.nombre}}</h4>
-              <p class="text-sm text-gray-600 mb-4">{{producto.medida}} · {{producto.grosor}}</p>
-              <a [routerLink]="['/productos', '12mm', producto.slug]" 
-                 class="text-ts-accent hover:underline font-medium">
-                Ver detalles →
-              </a>
-            </div>
-          </article>
+          }
+        } @else {
+          @for (producto of productos12mm; track producto.id) {
+            <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
+              <div class="aspect-[4/3] overflow-hidden">
+                <img [src]="producto.imageUrl || producto.coverImage || 'assets/placeholder.jpg'" 
+                     [alt]="producto.name"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     loading="lazy"/>
+              </div>
+              <div class="p-6">
+                <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.name}}</h4>
+                <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
+                <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
+                   class="text-ts-accent hover:underline font-medium">
+                  Ver detalles →
+                </a>
+              </div>
+            </article>
+          }
         }
       </div>
-    </div>
+      </div>
+    }
 
     <!-- 15mm Collection -->
-    <div class="mb-20">
-      <div class="flex items-center justify-between mb-8">
-        <h3 class="font-serif text-3xl text-ts-bg">Colección 15mm</h3>
-        <a routerLink="/productos/15mm" 
-           class="text-ts-accent hover:underline font-medium">
-          Ver todos →
-        </a>
-      </div>
+    @if (!isLoading && productos15mm.length > 0) {
+      <div class="mb-20">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="font-serif text-3xl text-ts-bg">Colección 15mm</h3>
+          <a routerLink="/productos/15mm" 
+             class="text-ts-accent hover:underline font-medium">
+            Ver todos →
+          </a>
+        </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @for (producto of productos15mm; track producto.slug) {
-          <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
-            <div class="aspect-[4/3] overflow-hidden">
-              <img [src]="producto.cover" 
-                   [alt]="producto.nombre"
-                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                   loading="lazy"/>
+        @if (isLoading) {
+          @for (i of [1,2,3]; track i) {
+            <div class="rounded-2xl overflow-hidden bg-white shadow-sm animate-pulse">
+              <div class="aspect-[4/3] bg-gray-200"></div>
+              <div class="p-6 space-y-3">
+                <div class="h-6 bg-gray-200 rounded"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
             </div>
-            <div class="p-6">
-              <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.nombre}}</h4>
-              <p class="text-sm text-gray-600 mb-4">{{producto.medida}} · {{producto.grosor}}</p>
-              <a [routerLink]="['/productos', '15mm', producto.slug]" 
-                 class="text-ts-accent hover:underline font-medium">
-                Ver detalles →
-              </a>
-            </div>
-          </article>
+          }
+        } @else {
+          @for (producto of productos15mm; track producto.id) {
+            <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
+              <div class="aspect-[4/3] overflow-hidden">
+                <img [src]="producto.imageUrl || producto.coverImage || 'assets/placeholder.jpg'" 
+                     [alt]="producto.name"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     loading="lazy"/>
+              </div>
+              <div class="p-6">
+                <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.name}}</h4>
+                <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
+                <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
+                   class="text-ts-accent hover:underline font-medium">
+                  Ver detalles →
+                </a>
+              </div>
+            </article>
+          }
         }
       </div>
-    </div>
+      </div>
+    }
 
     <!-- 20mm Collection -->
-    <div class="mb-20">
-      <div class="flex items-center justify-between mb-8">
-        <h3 class="font-serif text-3xl text-ts-bg">Colección 20mm</h3>
-        <a routerLink="/productos/20mm" 
-           class="text-ts-accent hover:underline font-medium">
-          Ver todos →
-        </a>
-      </div>
+    @if (!isLoading && productos20mm.length > 0) {
+      <div class="mb-20">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="font-serif text-3xl text-ts-bg">Colección 20mm</h3>
+          <a routerLink="/productos/20mm" 
+             class="text-ts-accent hover:underline font-medium">
+            Ver todos →
+          </a>
+        </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        @for (producto of productos20mm; track producto.slug) {
-          <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
-            <div class="aspect-[4/3] overflow-hidden">
-              <img [src]="producto.cover" 
-                   [alt]="producto.nombre"
-                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                   loading="lazy"/>
+        @if (isLoading) {
+          @for (i of [1,2,3,4]; track i) {
+            <div class="rounded-2xl overflow-hidden bg-white shadow-sm animate-pulse">
+              <div class="aspect-[4/3] bg-gray-200"></div>
+              <div class="p-6 space-y-3">
+                <div class="h-6 bg-gray-200 rounded"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
             </div>
-            <div class="p-6">
-              <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.nombre}}</h4>
-              <p class="text-sm text-gray-600 mb-4">{{producto.medida}} · {{producto.grosor}}</p>
-              <a [routerLink]="['/productos', '20mm', producto.slug]" 
-                 class="text-ts-accent hover:underline font-medium">
-                Ver detalles →
-              </a>
-            </div>
-          </article>
+          }
+        } @else {
+          @for (producto of productos20mm; track producto.id) {
+            <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
+              <div class="aspect-[4/3] overflow-hidden">
+                <img [src]="producto.imageUrl || producto.coverImage || 'assets/placeholder.jpg'" 
+                     [alt]="producto.name"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     loading="lazy"/>
+              </div>
+              <div class="p-6">
+                <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.name}}</h4>
+                <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
+                <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
+                   class="text-ts-accent hover:underline font-medium">
+                  Ver detalles →
+                </a>
+              </div>
+            </article>
+          }
         }
       </div>
-    </div>
+      </div>
+    }
   </div>
 </section>
 

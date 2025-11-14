@@ -2,7 +2,8 @@ import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angu
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { DataService, Producto } from '../../core/services/data.service';
+import { Firestore, collection, query, where, getDocs, limit, orderBy } from '@angular/fire/firestore';
+import { Product } from '../../models/product';
 import { HomeHeroComponent } from '../../features/home/home-hero/home-hero.component';
 
 @Component({
@@ -14,29 +15,13 @@ import { HomeHeroComponent } from '../../features/home/home-hero/home-hero.compo
 })
 export class HomePageComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
-  private dataService = inject(DataService);
+  private firestore = inject(Firestore);
   private cdr = inject(ChangeDetectorRef);
   
-  // Fallback data for immediate display and SSR
-  productos12mm: Producto[] = [
-    { nombre: 'Saint Laurent', slug: 'saint-laurent', grosor: '12mm', medida: '160x320cm', cover: 'assets/productos/12mm/saint-laurent.jpg' },
-    { nombre: 'Black Gold', slug: 'black-gold', grosor: '12mm', medida: '160x320cm', cover: 'assets/productos/12mm/black-gold.jpg' },
-    { nombre: 'Arenaria Ivory', slug: 'arenaria-ivory', grosor: '12mm', medida: '160x320cm', cover: 'assets/productos/12mm/arenaria-ivory.jpg' },
-    { nombre: 'Calacatta Gold', slug: 'calacatta-gold', grosor: '12mm', medida: '160x320cm', cover: 'assets/Detailed/image5.jpeg' }
-  ];
-
-  productos15mm: Producto[] = [
-    { nombre: 'Statuario Elegance', slug: 'statuario-elegance', grosor: '15mm', medida: '160x320cm', cover: 'assets/productos/15mm/statuario-elegance.jpg' },
-    { nombre: 'Laponia Black', slug: 'laponia-black', grosor: '15mm', medida: '160x320cm', cover: 'assets/Modern/image4.jpeg' },
-    { nombre: 'Patagonia Natural', slug: 'patagonia-natural', grosor: '15mm', medida: '160x320cm', cover: 'assets/Modern/image5.jpeg' }
-  ];
-
-  productos20mm: Producto[] = [
-    { nombre: 'Saint Laurent', slug: 'saint-laurent-20', grosor: '20mm', medida: '160x320cm', cover: 'assets/productos/20mm/saint-laurent.jpg' },
-    { nombre: 'Black Gold', slug: 'black-gold-20', grosor: '20mm', medida: '160x320cm', cover: 'assets/Modern/image7.jpeg' },
-    { nombre: 'Limestone Ivory', slug: 'limestone-ivory-20', grosor: '20mm', medida: '160x320cm', cover: 'assets/Modern/image8.jpeg' },
-    { nombre: 'Crystal Clear', slug: 'crystal-clear-20', grosor: '20mm', medida: '160x320cm', cover: 'assets/Modern/image9.jpeg' }
-  ];
+  isLoading = false;
+  productos12mm: Product[] = [];
+  productos15mm: Product[] = [];
+  productos20mm: Product[] = [];
 
   ngOnInit() {
     // Only load from service if in browser (not during SSR)
@@ -45,26 +30,80 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-  private loadProductos() {
-    this.dataService.getProductos().subscribe({
-      next: (data) => {
-        // Update with real data when available
-        const productos12 = this.dataService.getProductosByGrosor(data.items, '12mm');
-        const productos15 = this.dataService.getProductosByGrosor(data.items, '15mm');
-        const productos20 = this.dataService.getProductosByGrosor(data.items, '20mm');
-        
-        if (productos12.length > 0) this.productos12mm = productos12.slice(0, 4);
-        if (productos15.length > 0) this.productos15mm = productos15.slice(0, 3);
-        if (productos20.length > 0) this.productos20mm = productos20.slice(0, 4);
-        
-        // Force change detection
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.log('Using fallback product data');
-        // Fallback data is already set in component initialization
+  private shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  private async loadProductos() {
+    this.isLoading = true;
+    
+    try {
+      const productsRef = collection(this.firestore, 'products');
+      
+      // Load 12mm products (get more than needed, then randomize and limit)
+      const q12mm = query(
+        productsRef,
+        where('grosor', '==', '12mm'),
+        where('status', '==', 'published'),
+        where('active', '==', true),
+        orderBy('name')
+      );
+      const snapshot12mm = await getDocs(q12mm);
+      const all12mm = snapshot12mm.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Product));
+      this.productos12mm = this.shuffleArray(all12mm).slice(0, 4);
+      
+      // Load 15mm products (get all, then randomize and limit)
+      const q15mm = query(
+        productsRef,
+        where('grosor', '==', '15mm'),
+        where('status', '==', 'published'),
+        where('active', '==', true),
+        orderBy('name')
+      );
+      const snapshot15mm = await getDocs(q15mm);
+      const all15mm = snapshot15mm.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Product));
+      this.productos15mm = this.shuffleArray(all15mm).slice(0, 3);
+      
+      // Load 20mm products (get all, then randomize and limit)
+      const q20mm = query(
+        productsRef,
+        where('grosor', '==', '20mm'),
+        where('status', '==', 'published'),
+        where('active', '==', true),
+        orderBy('name')
+      );
+      const snapshot20mm = await getDocs(q20mm);
+      const all20mm = snapshot20mm.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Product));
+      this.productos20mm = this.shuffleArray(all20mm).slice(0, 4);
+      
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    } catch (error: any) {
+      console.error('Error loading products:', error);
+      
+      // Check if error is due to index building
+      if (error?.message?.includes('index is currently building')) {
+        console.log('Firestore index is building. Retrying in 5 seconds...');
+        // Retry after 5 seconds
+        setTimeout(() => this.loadProductos(), 5000);
+      } else {
+        this.isLoading = false;
         this.cdr.detectChanges();
       }
-    });
+    }
   }
 }

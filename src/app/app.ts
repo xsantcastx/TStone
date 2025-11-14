@@ -105,10 +105,12 @@ export class AppComponent implements OnInit {
     // - User is not admin
     // - User is not authenticated
     // - Current route is not in exemption list
+    // - User is not already on maintenance page
     if (this.isMaintenanceMode && 
         !this.isAdmin && 
         !this.isAuthenticated &&
-        !this.isMaintenanceExemptRoute()) {
+        !this.isMaintenanceExemptRoute() &&
+        this.currentUrl !== '/maintenance') {
       this.router.navigate(['/maintenance']);
     } else if (!this.isMaintenanceMode && this.currentUrl === '/maintenance') {
       // Redirect away from maintenance page if mode is disabled

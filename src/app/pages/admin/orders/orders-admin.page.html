@@ -44,54 +44,66 @@
           (click)="selectedStatus = 'all'"
           [class.bg-ts-accent]="selectedStatus === 'all'"
           [class.text-white]="selectedStatus === 'all'"
-          [class.bg-gray-200]="selectedStatus !== 'all'"
-          [class.text-gray-900]="selectedStatus !== 'all'"
-          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
+          [class.bg-white]="selectedStatus !== 'all'"
+          [class.border-2]="selectedStatus !== 'all'"
+          [class.border-gray-400]="selectedStatus !== 'all'"
+          [style.color]="selectedStatus !== 'all' ? '#000000 !important' : ''"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap">
           {{ 'admin.all_orders' | translate }} ({{ getStatusCount('all') }})
         </button>
         <button
           (click)="selectedStatus = 'pending'"
           [class.bg-yellow-500]="selectedStatus === 'pending'"
           [class.text-white]="selectedStatus === 'pending'"
-          [class.bg-gray-200]="selectedStatus !== 'pending'"
-          [class.text-gray-900]="selectedStatus !== 'pending'"
-          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
+          [class.bg-white]="selectedStatus !== 'pending'"
+          [class.border-2]="selectedStatus !== 'pending'"
+          [class.border-gray-400]="selectedStatus !== 'pending'"
+          [style.color]="selectedStatus !== 'pending' ? '#000000 !important' : ''"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap">
           {{ 'admin.pending' | translate }} ({{ getStatusCount('pending') }})
         </button>
         <button
           (click)="selectedStatus = 'processing'"
           [class.bg-blue-500]="selectedStatus === 'processing'"
           [class.text-white]="selectedStatus === 'processing'"
-          [class.bg-gray-200]="selectedStatus !== 'processing'"
-          [class.text-gray-900]="selectedStatus !== 'processing'"
-          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
+          [class.bg-white]="selectedStatus !== 'processing'"
+          [class.border-2]="selectedStatus !== 'processing'"
+          [class.border-gray-400]="selectedStatus !== 'processing'"
+          [style.color]="selectedStatus !== 'processing' ? '#000000 !important' : ''"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap">
           {{ 'admin.processing' | translate }} ({{ getStatusCount('processing') }})
         </button>
         <button
           (click)="selectedStatus = 'shipped'"
           [class.bg-purple-500]="selectedStatus === 'shipped'"
           [class.text-white]="selectedStatus === 'shipped'"
-          [class.bg-gray-200]="selectedStatus !== 'shipped'"
-          [class.text-gray-900]="selectedStatus !== 'shipped'"
-          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
+          [class.bg-white]="selectedStatus !== 'shipped'"
+          [class.border-2]="selectedStatus !== 'shipped'"
+          [class.border-gray-400]="selectedStatus !== 'shipped'"
+          [style.color]="selectedStatus !== 'shipped' ? '#000000 !important' : ''"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap">
           {{ 'admin.shipped' | translate }} ({{ getStatusCount('shipped') }})
         </button>
         <button
           (click)="selectedStatus = 'delivered'"
           [class.bg-green-500]="selectedStatus === 'delivered'"
           [class.text-white]="selectedStatus === 'delivered'"
-          [class.bg-gray-200]="selectedStatus !== 'delivered'"
-          [class.text-gray-900]="selectedStatus !== 'delivered'"
-          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
+          [class.bg-white]="selectedStatus !== 'delivered'"
+          [class.border-2]="selectedStatus !== 'delivered'"
+          [class.border-gray-400]="selectedStatus !== 'delivered'"
+          [style.color]="selectedStatus !== 'delivered' ? '#000000 !important' : ''"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap">
           {{ 'admin.delivered' | translate }} ({{ getStatusCount('delivered') }})
         </button>
         <button
           (click)="selectedStatus = 'cancelled'"
           [class.bg-red-500]="selectedStatus === 'cancelled'"
           [class.text-white]="selectedStatus === 'cancelled'"
-          [class.bg-gray-200]="selectedStatus !== 'cancelled'"
-          [class.text-gray-900]="selectedStatus !== 'cancelled'"
-          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap border-2 border-transparent">
+          [class.bg-white]="selectedStatus !== 'cancelled'"
+          [class.border-2]="selectedStatus !== 'cancelled'"
+          [class.border-gray-400]="selectedStatus !== 'cancelled'"
+          [style.color]="selectedStatus !== 'cancelled' ? '#000000 !important' : ''"
+          class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap">
           {{ 'admin.cancelled' | translate }} ({{ getStatusCount('cancelled') }})
         </button>
       </div>
@@ -158,7 +170,7 @@
                     </td>
                     <td class="px-6 py-4">
                       <div class="text-sm font-bold text-gray-900">{{ getCustomerName(order) }}</div>
-                      <div class="text-xs text-gray-700 font-medium">{{ getCustomerEmail(order) }}</div>
+                      <div class="text-xs text-gray-900 font-semibold">{{ getCustomerEmail(order) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span [class]="getStatusClass(order.status)" class="px-3 py-1 text-xs font-medium rounded-full">
@@ -363,7 +375,7 @@
           </button>
           <button
             (click)="closeStatusModal()"
-            class="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium">
+            class="flex-1 py-2 px-4 border border-gray-300 text-gray-900 rounded-xl hover:bg-gray-50 transition-colors font-semibold">
             {{ 'admin.cancel' | translate }}
           </button>
         </div>
