@@ -264,6 +264,74 @@ export class SettingsAdminComponent implements OnInit {
     }
   }
 
+  async onLogoLightSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage.set('Por favor selecciona un archivo de imagen');
+      return;
+    }
+
+    try {
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 512,
+        maxHeight: 512,
+        quality: 0.9,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Logo Light optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+      
+      const filename = `logo-light-${Date.now()}-${optimizedFile.name}`;
+      const storageRef = ref(this.storage, `site-assets/${filename}`);
+      await uploadBytes(storageRef, optimizedFile);
+      const url = await getDownloadURL(storageRef);
+      this.updateSetting('logoLightUrl', url);
+      this.successMessage.set(`Logo claro actualizado (${reduction}% más pequeño)`);
+      setTimeout(() => this.successMessage.set(''), 3000);
+    } catch (error) {
+      console.error('Error uploading logo light:', error);
+      this.errorMessage.set('Error al subir el logo claro');
+    }
+  }
+
+  async onLogoDarkSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage.set('Por favor selecciona un archivo de imagen');
+      return;
+    }
+
+    try {
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 512,
+        maxHeight: 512,
+        quality: 0.9,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Logo Dark optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+      
+      const filename = `logo-dark-${Date.now()}-${optimizedFile.name}`;
+      const storageRef = ref(this.storage, `site-assets/${filename}`);
+      await uploadBytes(storageRef, optimizedFile);
+      const url = await getDownloadURL(storageRef);
+      this.updateSetting('logoDarkUrl', url);
+      this.successMessage.set(`Logo oscuro actualizado (${reduction}% más pequeño)`);
+      setTimeout(() => this.successMessage.set(''), 3000);
+    } catch (error) {
+      console.error('Error uploading logo dark:', error);
+      this.errorMessage.set('Error al subir el logo oscuro');
+    }
+  }
+
   async onFaviconSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (!input.files || !input.files[0]) return;

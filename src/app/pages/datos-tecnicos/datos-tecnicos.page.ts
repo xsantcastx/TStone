@@ -3,11 +3,12 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataService, DatosTecnicosData } from '../../core/services/data.service';
 import { ImageLightboxComponent } from '../../shared/components/image-lightbox/image-lightbox.component';
+import { CatalogDownloadComponent } from '../../shared/components/catalog-download/catalog-download.component';
 
 @Component({
   selector: 'app-datos-tecnicos-page',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ImageLightboxComponent],
+  imports: [CommonModule, TranslateModule, ImageLightboxComponent, CatalogDownloadComponent],
   templateUrl: './datos-tecnicos.page.html',
   styleUrl: './datos-tecnicos.page.scss'
 })

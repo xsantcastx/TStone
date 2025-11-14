@@ -19,6 +19,18 @@ service firebase.storage {
              request.resource.size < 10 * 1024 * 1024; // 10MB max (matches frontend validation)
     }
     
+    function isValidPDF() {
+      return request.resource.contentType == 'application/pdf' &&
+             request.resource.size < 50 * 1024 * 1024; // 50MB max for PDFs
+    }
+    
+    // Catalog PDFs - Admin can write, everyone can read
+    match /catalogs/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidPDF();
+      allow delete: if isAdmin();
+    }
+    
     // Product images - Admin can write, everyone can read
     // Supports both cover images (2 levels) and gallery images (deeper nesting)
     match /products/{grosor}/{allPaths=**} {

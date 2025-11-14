@@ -436,18 +436,45 @@
         <h2 class="text-xl sm:text-2xl font-serif font-bold text-black mb-6">Configuración Visual</h2>
         
         <div class="grid md:grid-cols-2 gap-6">
-          <!-- Logo -->
+          <!-- Logo Light (for dark backgrounds) -->
           <div>
-            <label class="block text-sm font-bold text-black mb-2">Logo</label>
-            @if (settings()?.logoUrl) {
-              <img [src]="settings()?.logoUrl" alt="Logo" class="h-16 mb-2 object-contain">
+            <label class="block text-sm font-bold text-black mb-2">Logo Claro (para fondos oscuros)</label>
+            <p class="text-xs text-gray-600 mb-2">Se muestra cuando el navbar es transparente/oscuro</p>
+            @if (settings()?.logoLightUrl) {
+              <div class="bg-gray-900 p-4 rounded-lg mb-2">
+                <img [src]="settings()?.logoLightUrl" alt="Logo Claro" class="h-12 object-contain">
+              </div>
             }
             <input
               type="file"
               accept="image/*"
-              (change)="onLogoSelected($event)"
+              (change)="onLogoLightSelected($event)"
               class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-ts-accent/10 file:text-ts-accent hover:file:bg-ts-accent/20 cursor-pointer">
           </div>
+
+          <!-- Logo Dark (for light backgrounds) -->
+          <div>
+            <label class="block text-sm font-bold text-black mb-2">Logo Oscuro (para fondos claros)</label>
+            <p class="text-xs text-gray-600 mb-2">Se muestra cuando el navbar es blanco/claro al hacer scroll</p>
+            @if (settings()?.logoDarkUrl) {
+              <div class="bg-white border border-gray-200 p-4 rounded-lg mb-2">
+                <img [src]="settings()?.logoDarkUrl" alt="Logo Oscuro" class="h-12 object-contain">
+              </div>
+            }
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onLogoDarkSelected($event)"
+              class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-ts-accent/10 file:text-ts-accent hover:file:bg-ts-accent/20 cursor-pointer">
+          </div>
+
+          <!-- Legacy Logo (backward compatibility) -->
+          @if (settings()?.logoUrl && (!settings()?.logoLightUrl || !settings()?.logoDarkUrl)) {
+            <div class="md:col-span-2">
+              <label class="block text-sm font-bold text-black mb-2">Logo (Obsoleto - Usa Logo Claro/Oscuro)</label>
+              <img [src]="settings()?.logoUrl" alt="Logo" class="h-12 mb-2 object-contain">
+            </div>
+          }
 
           <!-- Favicon -->
           <div>

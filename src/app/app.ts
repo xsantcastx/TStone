@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   isAdmin = false;
   isAuthenticated = false;
   currentUrl = '';
+  isAdminRoute = false;
   
   // Routes that should be accessible during maintenance mode
   private maintenanceExemptRoutes = [
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event) => {
         this.currentUrl = (event as NavigationEnd).url;
+        this.isAdminRoute = this.currentUrl.startsWith('/admin');
         this.checkMaintenanceMode();
       });
   }
@@ -84,6 +86,12 @@ export class AppComponent implements OnInit {
     // Apply theme colors from settings and check maintenance mode
     this.settingsService.settings$.subscribe(settings => {
       if (isPlatformBrowser(this.platformId) && settings) {
+        // Update loader logo if it still exists (before it's removed)
+        const loaderLogo = document.getElementById('loader-logo');
+        if (loaderLogo && settings.logoLightUrl) {
+          loaderLogo.setAttribute('src', settings.logoLightUrl);
+        }
+        
         // Update CSS custom properties for theme colors
         if (settings.primaryColor) {
           document.documentElement.style.setProperty('--ts-primary', settings.primaryColor);

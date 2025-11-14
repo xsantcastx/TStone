@@ -110,6 +110,12 @@ export const routes: Routes = [
     title: 'TopStone | Gestión de Pedidos'
   },
   {
+    path: 'admin/catalogs',
+    loadComponent: () => import('./pages/admin/catalogs/catalogs-admin.page').then(m => m.CatalogsAdminPage),
+    canActivate: [adminGuard],
+    title: 'TopStone | Gestión de Catálogos PDF'
+  },
+  {
     path: 'admin/settings',
     loadComponent: () => import('./pages/admin/settings/settings-admin.page').then(m => m.SettingsAdminComponent),
     canActivate: [adminGuard],

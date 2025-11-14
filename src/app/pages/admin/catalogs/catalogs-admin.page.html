@@ -1,0 +1,184 @@
+<app-admin-sidebar></app-admin-sidebar>
+
+<div class="lg:ml-[280px] min-h-screen pt-16 lg:pt-0 bg-gradient-to-b from-ts-paper to-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de Catálogos PDF</h1>
+      <p class="text-gray-600">Sube y administra los catálogos en PDF para descarga de clientes</p>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Subir Nuevo Catálogo</h2>
+      
+      <div class="space-y-4">
+      <!-- File Input -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Archivo PDF *
+        </label>
+        <input
+          type="file"
+          id="catalogFile"
+          accept=".pdf"
+          (change)="onFileSelected($event)"
+          class="block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-md file:border-0
+            file:text-sm file:font-semibold
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100
+            cursor-pointer"
+        />
+        @if (selectedFile) {
+          <p class="mt-2 text-sm text-gray-600">
+            Archivo seleccionado: {{ selectedFile.name }} ({{ formatFileSize(selectedFile.size) }})
+          </p>
+        }
+      </div>
+
+      <!-- Name Input -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Nombre del Catálogo *
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="catalogName"
+          placeholder="Ej: Catálogo TopStone 2025"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Version Input -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Versión (Opcional)
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="catalogVersion"
+          placeholder="Ej: 2025 Q1, v2.0, Enero 2025"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Description Input -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Descripción (Opcional)
+        </label>
+        <textarea
+          [(ngModel)]="catalogDescription"
+          placeholder="Descripción breve del catálogo..."
+          rows="3"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        ></textarea>
+      </div>
+
+      <!-- Upload Button -->
+      <div>
+        <button
+          (click)="uploadCatalog()"
+          [disabled]="isUploading() || !selectedFile || !catalogName()"
+          class="px-6 py-3 bg-ts-accent text-white rounded-xl font-semibold shadow-md
+            hover:bg-ts-accent/90 disabled:bg-gray-400 disabled:cursor-not-allowed
+            transition-all duration-200">
+        >
+          @if (isUploading()) {
+            <span class="flex items-center gap-2">
+              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Subiendo...
+            </span>
+          } @else {
+            Subir Catálogo
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Catalogs List -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Catálogos Existentes</h2>
+    
+      @if ((catalogs$ | async)?.length === 0) {
+        <div class="text-center py-12 text-gray-500">
+        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+          <p class="text-lg font-medium">No hay catálogos subidos</p>
+          <p class="text-sm">Sube tu primer catálogo usando el formulario arriba</p>
+        </div>
+      } @else {
+        <div class="space-y-4">
+          @for (catalog of (catalogs$ | async); track catalog.id) {
+            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ catalog.name }}</h3>
+                    @if (catalog.isLatest) {
+                      <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-lg">
+                        Más Reciente
+                      </span>
+                    }
+                    @if (catalog.version) {
+                      <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-lg">
+                        {{ catalog.version }}
+                      </span>
+                    }
+                  </div>
+                  
+                  @if (catalog.description) {
+                    <p class="text-gray-600 text-sm mb-2">{{ catalog.description }}</p>
+                  }
+                  
+                  <div class="flex items-center gap-4 text-sm text-gray-500">
+                    <span>📅 {{ formatDate(catalog.uploadedAt) }}</span>
+                    <span>📄 {{ catalog.fileName }}</span>
+                    <span>💾 {{ formatFileSize(catalog.fileSize) }}</span>
+                  </div>
+                </div>
+
+              <div class="flex items-center gap-2 ml-4">
+                <!-- Download Button -->
+                <a
+                  [href]="catalog.fileUrl"
+                  target="_blank"
+                  download
+                  class="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                >
+                  Descargar
+                </a>
+
+                <!-- Set as Latest Button -->
+                @if (!catalog.isLatest) {
+                  <button
+                    (click)="setAsLatest(catalog)"
+                    class="px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium"
+                  >
+                    Marcar como Reciente
+                  </button>
+                }
+
+                <!-- Delete Button -->
+                <button
+                  (click)="deleteCatalog(catalog)"
+                  class="px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

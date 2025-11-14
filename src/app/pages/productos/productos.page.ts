@@ -11,11 +11,12 @@ import { CartService } from '../../services/cart.service';
 import { Product } from '../../models/product';
 import { Category, Material } from '../../models/catalog';
 import { Media } from '../../models/media';
+import { CatalogDownloadComponent } from '../../shared/components/catalog-download/catalog-download.component';
 
 @Component({
   selector: 'app-productos-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, CatalogDownloadComponent],
   templateUrl: './productos.page.html',
   styleUrl: './productos.page.scss'
 })

@@ -42,7 +42,9 @@ export interface AppSettings {
   maintenanceMessage?: string;
   
   // Visual Settings
-  logoUrl?: string;
+  logoUrl?: string; // Deprecated - use logoLightUrl/logoDarkUrl instead
+  logoLightUrl?: string; // Logo for dark backgrounds
+  logoDarkUrl?: string;  // Logo for light backgrounds
   faviconUrl?: string;
   primaryColor?: string;
   accentColor?: string;

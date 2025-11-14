@@ -1,10 +1,14 @@
-<app-navbar></app-navbar>
+@if (!isAdminRoute) {
+  <app-navbar></app-navbar>
+}
 
-<main id="main-content" class="pt-16 min-h-screen">
+<main id="main-content" [class.pt-16]="!isAdminRoute" class="min-h-screen">
   <router-outlet></router-outlet>
 </main>
 
-<app-footer></app-footer>
+@if (!isAdminRoute) {
+  <app-footer></app-footer>
+}
 
 <!-- Cookie Consent Banner (GDPR Compliant) -->
 <app-cookie-banner></app-cookie-banner>

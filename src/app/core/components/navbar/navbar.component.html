@@ -2,16 +2,19 @@
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between">
       <!-- Logo -->
-      <a routerLink="/" class="flex items-center gap-3">
-        <img [src]="(settings$ | async)?.logoUrl || 'assets/topstone-logotype-horizontal.svg'" alt="TopStone" class="h-8 w-auto" />
-        <span class="font-serif text-xl font-semibold transition-colors group-hover:text-ts-accent text-inherit">
-          {{ (settings$ | async)?.siteName || 'TopStone' }}
-        </span>
+      <a routerLink="/" class="flex items-center gap-3 flex-shrink-0">
+        @if (scrolled) {
+          <img [src]="(settings$ | async)?.logoDarkUrl || (settings$ | async)?.logoUrl || 'assets/topstone-logotype-horizontal.svg'" 
+               alt="TopStone" class="h-10 sm:h-12 w-auto" />
+        } @else {
+          <img [src]="(settings$ | async)?.logoLightUrl || (settings$ | async)?.logoUrl || 'assets/topstone-logotype-horizontal.svg'" 
+               alt="TopStone" class="h-10 sm:h-12 w-auto" />
+        }
       </a>
 
-      <!-- Mobile hamburger -->
+      <!-- Mobile/Tablet hamburger -->
       <button 
-        class="lg:hidden p-2 rounded-lg transition-colors"
+        class="xl:hidden p-2 rounded-lg transition-colors"
         [class.bg-white/10]="!scrolled"
         [class.bg-neutral-100]="scrolled"
         (click)="mobileOpen = !mobileOpen" 
@@ -22,7 +25,7 @@
       </button>
 
       <!-- Desktop navigation -->
-      <nav class="hidden lg:flex items-center gap-8 font-sans text-sm">
+      <nav class="hidden xl:flex items-center gap-8 font-sans text-sm">
         <a routerLink="/" routerLinkActive="text-ts-accent" [routerLinkActiveOptions]="{exact: true}" 
            class="hover:text-ts-accent transition-colors">
           {{ 'nav.home' | translate }}
@@ -48,7 +51,7 @@
       </nav>
 
       <!-- Actions: Social, Language, Account, Cart -->
-      <div class="hidden lg:flex items-center gap-4">
+      <div class="hidden xl:flex items-center gap-4">
         @if ((settings$ | async)?.socialMedia?.linkedin || (settings$ | async)?.socialMedia?.instagram || (settings$ | async)?.socialMedia?.facebook || (settings$ | async)?.socialMedia?.youtube) {
           <div class="flex items-center gap-2">
             @if ((settings$ | async)?.socialMedia?.linkedin) {
@@ -195,22 +198,22 @@
   </div>
 </header>
 
-<!-- Mobile overlay -->
+<!-- Mobile/Tablet overlay -->
 <div *ngIf="mobileOpen" 
-     class="lg:hidden fixed inset-0 z-40 modal-overlay" 
+     class="xl:hidden fixed inset-0 z-40 modal-overlay" 
      (click)="closeMobile()"></div>
 
-<!-- Mobile drawer -->
+<!-- Mobile/Tablet drawer -->
 <aside *ngIf="mobileOpen" 
-       class="lg:hidden fixed top-0 right-0 z-50 w-[84%] max-w-sm h-full
+       class="xl:hidden fixed top-0 right-0 z-50 w-[84%] max-w-sm h-full
               bg-white text-neutral-900 shadow-xl overflow-y-auto
               animate-in slide-in-from-right duration-300">
   
-  <!-- Mobile drawer header -->
+  <!-- Mobile/Tablet drawer header -->
   <div class="flex items-center justify-between p-6 border-b border-neutral-200">
     <div class="flex items-center gap-3">
-      <img src="assets/topstone-mark-dark.svg" alt="TopStone" class="h-8" />
-      <span class="font-serif text-xl font-semibold text-neutral-900">TopStone</span>
+      <img [src]="(settings$ | async)?.logoDarkUrl || (settings$ | async)?.logoUrl || 'assets/topstone-mark-dark.svg'" 
+           alt="TopStone" class="h-8 w-auto object-contain" />
     </div>
     <button (click)="closeMobile()" class="p-2 hover:bg-neutral-100 rounded-lg">
       <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

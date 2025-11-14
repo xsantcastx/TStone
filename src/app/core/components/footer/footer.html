@@ -1,8 +1,17 @@
 <footer class="footer">
   <div class="container footer__grid">
     <div>
-      <h4>The Stone</h4>
-      <p>Poligono Industrial La Plana, nave 18<br>Castellon de la Plana, Espana</p>
+      @if ((settings$ | async)?.logoLightUrl || (settings$ | async)?.logoUrl) {
+        <img [src]="(settings$ | async)?.logoLightUrl || (settings$ | async)?.logoUrl || 'assets/topstone-logotype-horizontal.svg'" 
+             alt="TopStone" class="h-14 w-auto mb-4 object-contain" />
+      } @else {
+        <h4>{{ (settings$ | async)?.siteName || 'The Stone' }}</h4>
+      }
+      @if ((settings$ | async)?.address) {
+        <p>{{ (settings$ | async)?.address }}</p>
+      } @else {
+        <p>Poligono Industrial La Plana, nave 18<br>Castellon de la Plana, Espana</p>
+      }
     </div>
     <div>
       <h5>Contacto</h5>
@@ -10,6 +19,10 @@
         +34 964 000 000<br>
         <a href="mailto:info@thestone.com">info@thestone.com</a>
       </p>
+    </div>
+    <div>
+      <h5>Recursos</h5>
+      <app-catalog-download variant="minimal" [showDescription]="false"></app-catalog-download>
     </div>
     <div>
       <h5>Horario</h5>
