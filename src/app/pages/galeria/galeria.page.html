@@ -13,13 +13,15 @@
             [alt]="slide.altText || 'Gallery image'"
             (error)="$event.target.src='/assets/productos/placeholder.jpg'">
         </div>
-        <div class="carousel-overlay">
-          <div class="carousel-caption">
-            <span class="eyebrow">Destacado</span>
-            <h2>{{ slide.altText || 'Proyecto Premium' }}</h2>
-            <p>{{ slide.caption || 'Superficies porcelánicas de alta calidad' }}</p>
+        @if (showCarouselOverlay) {
+          <div class="carousel-overlay">
+            <div class="carousel-caption">
+              <span class="eyebrow">Destacado</span>
+              <h2>{{ slide.altText || 'Proyecto Premium' }}</h2>
+              <p>{{ slide.caption || 'Superficies porcelánicas de alta calidad' }}</p>
+            </div>
           </div>
-        </div>
+        }
       </div>
     }
     

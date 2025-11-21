@@ -6,11 +6,10 @@
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-16">
       <h2 class="font-serif text-4xl lg:text-5xl text-ts-bg mb-4">
-        Nuestras Colecciones
+        {{ 'home.collections.title' | translate }}
       </h2>
       <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Descubre nuestras superficies porcelánicas disponibles en diferentes grosores 
-        para adaptarse a cualquier proyecto arquitectónico.
+        {{ 'home.collections.subtitle' | translate }}
       </p>
     </div>
 
@@ -18,10 +17,10 @@
     @if (!isLoading && productos12mm.length > 0) {
       <div class="mb-20">
         <div class="flex items-center justify-between mb-8">
-          <h3 class="font-serif text-3xl text-ts-bg">Colección 12mm</h3>
+          <h3 class="font-serif text-3xl text-ts-bg">{{ 'home.collections.collection_heading' | translate:{ thickness: '12mm' } }}</h3>
           <a routerLink="/productos/12mm" 
              class="text-ts-accent hover:underline font-medium">
-            Ver todos →
+            {{ 'home.collections.view_all' | translate }} &rarr;
           </a>
         </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -50,7 +49,7 @@
                 <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
                 <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                    class="text-ts-accent hover:underline font-medium">
-                  Ver detalles →
+                  {{ 'home.collections.view_details' | translate }} &rarr;
                 </a>
               </div>
             </article>
@@ -64,10 +63,10 @@
     @if (!isLoading && productos15mm.length > 0) {
       <div class="mb-20">
         <div class="flex items-center justify-between mb-8">
-          <h3 class="font-serif text-3xl text-ts-bg">Colección 15mm</h3>
+          <h3 class="font-serif text-3xl text-ts-bg">{{ 'home.collections.collection_heading' | translate:{ thickness: '15mm' } }}</h3>
           <a routerLink="/productos/15mm" 
              class="text-ts-accent hover:underline font-medium">
-            Ver todos →
+            {{ 'home.collections.view_all' | translate }} &rarr;
           </a>
         </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -96,7 +95,7 @@
                 <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
                 <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                    class="text-ts-accent hover:underline font-medium">
-                  Ver detalles →
+                  {{ 'home.collections.view_details' | translate }} &rarr;
                 </a>
               </div>
             </article>
@@ -110,10 +109,10 @@
     @if (!isLoading && productos20mm.length > 0) {
       <div class="mb-20">
         <div class="flex items-center justify-between mb-8">
-          <h3 class="font-serif text-3xl text-ts-bg">Colección 20mm</h3>
+          <h3 class="font-serif text-3xl text-ts-bg">{{ 'home.collections.collection_heading' | translate:{ thickness: '20mm' } }}</h3>
           <a routerLink="/productos/20mm" 
              class="text-ts-accent hover:underline font-medium">
-            Ver todos →
+            {{ 'home.collections.view_all' | translate }} &rarr;
           </a>
         </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -142,7 +141,7 @@
                 <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
                 <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                    class="text-ts-accent hover:underline font-medium">
-                  Ver detalles →
+                  {{ 'home.collections.view_details' | translate }} &rarr;
                 </a>
               </div>
             </article>
@@ -154,54 +153,54 @@
   </div>
 </section>
 
-<!-- Propuesta de Valor -->
+<!-- Why Choose Section -->
 <section class="py-20 lg:py-28 body-dark">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="font-serif text-4xl lg:text-5xl text-ts-ink mb-4">
-        ¿Por qué elegir TopStone?
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <p class="uppercase text-xs tracking-[0.3em] text-ts-accent mb-3">
+        {{ 'home.why_preheading' | translate }}
+      </p>
+      <h2 class="font-serif text-4xl md:text-5xl text-ts-ink mb-4">
+        {{ 'home.why.title' | translate }}
       </h2>
+      <p class="text-lg text-ts-ink-soft max-w-3xl mx-auto">
+        {{ 'home.why.subtitle' | translate }}
+      </p>
     </div>
-    
-    <div class="grid md:grid-cols-3 gap-12">
-      <!-- Diseño -->
-      <div class="text-center">
-        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-ts-accent/20 flex items-center justify-center">
-          <svg class="w-8 h-8 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z"></path>
-          </svg>
+    <div class="grid md:grid-cols-3 gap-8">
+      <article class="p-8 bg-white/5 rounded-3xl border border-white/10 shadow-sm hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 rounded-full bg-ts-accent/20 text-ts-accent flex items-center justify-center text-lg font-semibold mb-5">
+          01
         </div>
-        <h3 class="font-serif text-2xl text-ts-ink mb-4">Diseño Premium</h3>
+        <h3 class="text-2xl font-serif text-ts-ink mb-3">
+          {{ 'home.why.cards.premium.title' | translate }}
+        </h3>
         <p class="text-ts-ink-soft leading-relaxed">
-          Texturas únicas y acabados sofisticados que transforman cualquier espacio en una obra de arte contemporánea.
+          {{ 'home.why.cards.premium.body' | translate }}
         </p>
-      </div>
-      
-      <!-- Resistencia -->
-      <div class="text-center">
-        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-ts-accent/20 flex items-center justify-center">
-          <svg class="w-8 h-8 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-          </svg>
+      </article>
+      <article class="p-8 bg-white/5 rounded-3xl border border-white/10 shadow-sm hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 rounded-full bg-ts-accent/20 text-ts-accent flex items-center justify-center text-lg font-semibold mb-5">
+          02
         </div>
-        <h3 class="font-serif text-2xl text-ts-ink mb-4">Máxima Resistencia</h3>
+        <h3 class="text-2xl font-serif text-ts-ink mb-3">
+          {{ 'home.why.cards.resistance.title' | translate }}
+        </h3>
         <p class="text-ts-ink-soft leading-relaxed">
-          Materiales de última generación que garantizan durabilidad excepcional contra el desgaste, manchas y químicos.
+          {{ 'home.why.cards.resistance.body' | translate }}
         </p>
-      </div>
-      
-      <!-- Aplicaciones -->
-      <div class="text-center">
-        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-ts-accent/20 flex items-center justify-center">
-          <svg class="w-8 h-8 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-          </svg>
+      </article>
+      <article class="p-8 bg-white/5 rounded-3xl border border-white/10 shadow-sm hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 rounded-full bg-ts-accent/20 text-ts-accent flex items-center justify-center text-lg font-semibold mb-5">
+          03
         </div>
-        <h3 class="font-serif text-2xl text-ts-ink mb-4">Versatilidad Total</h3>
+        <h3 class="text-2xl font-serif text-ts-ink mb-3">
+          {{ 'home.why.cards.versatility.title' | translate }}
+        </h3>
         <p class="text-ts-ink-soft leading-relaxed">
-          Perfectas para cocinas, baños, fachadas e industria. Un material que se adapta a cualquier proyecto arquitectónico.
+          {{ 'home.why.cards.versatility.body' | translate }}
         </p>
-      </div>
+      </article>
     </div>
   </div>
 </section>
@@ -212,15 +211,15 @@
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <!-- CTA Galería -->
       <div class="relative rounded-2xl overflow-hidden group">
-        <img src="assets/Bathroom.jpeg" 
-             alt="Galería TopStone"
+        <img [src]="galleryImage1?.url || 'assets/Bathroom.jpeg'" 
+             [alt]="galleryImage1?.altText || ('home.gallery.projects_alt' | translate)"
              class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"/>
         <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div class="text-center text-white">
-            <h3 class="font-serif text-3xl mb-4">Inspírate con nuestros proyectos</h3>
+            <h3 class="font-serif text-3xl mb-4">{{ 'home.gallery.projects_title' | translate }}</h3>
             <a routerLink="/galeria" 
                class="inline-block px-8 py-4 bg-white text-ts-bg rounded-full font-semibold hover:bg-gray-100 transition-colors">
-              Ver galería
+              {{ 'home.gallery.projects_button' | translate }}
             </a>
           </div>
         </div>
@@ -228,15 +227,15 @@
       
       <!-- CTA Contacto -->
       <div class="relative rounded-2xl overflow-hidden group">
-        <img src="assets/Bathroom2.jpeg" 
-             alt="Contacto TopStone"
+        <img [src]="galleryImage2?.url || 'assets/Bathroom2.jpeg'" 
+             [alt]="galleryImage2?.altText || ('home.gallery.contact_alt' | translate)"
              class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"/>
         <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div class="text-center text-white">
-            <h3 class="font-serif text-3xl mb-4">¿Tienes un proyecto en mente?</h3>
+            <h3 class="font-serif text-3xl mb-4">{{ 'home.gallery.contact_title' | translate }}</h3>
             <a routerLink="/contacto" 
                class="inline-block px-8 py-4 bg-ts-accent text-ts-bg rounded-full font-semibold hover:bg-ts-accent/90 transition-colors">
-              Solicitar información
+              {{ 'home.gallery.contact_button' | translate }}
             </a>
           </div>
         </div>

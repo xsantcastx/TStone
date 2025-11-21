@@ -11,10 +11,11 @@ import { MaterialService } from '../../../services/material.service';
 import { StorageService } from '../../../services/storage.service';
 import { MediaService } from '../../../services/media.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
-import { Product } from '../../../models/product';
+import { Product, LanguageCode, TranslatedTextMap } from '../../../models/product';
 import { Category, Material } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
+import { LanguageService, Language } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-quick-add-product',
@@ -34,6 +35,7 @@ export class QuickAddProductComponent implements OnInit {
   private storageService = inject(StorageService);
   private mediaService = inject(MediaService);
   private imageOptimization = inject(ImageOptimizationService);
+  private languageService = inject(LanguageService);
 
   categories: Category[] = [];
   materials: Material[] = [];
@@ -72,6 +74,11 @@ export class QuickAddProductComponent implements OnInit {
   seoPreviewTitle = '';
   seoPreviewDescription = '';
   seoPreviewUrl = '';
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
+  activeDescriptionLang: Language = this.defaultLanguage;
+  activeSeoTitleLang: Language = this.defaultLanguage;
+  activeSeoMetaLang: Language = this.defaultLanguage;
 
   successMessage = '';
   errorMessage = '';
@@ -80,7 +87,7 @@ export class QuickAddProductComponent implements OnInit {
     this.productForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
       status: ['draft', Validators.required],
-      description: [''],
+      descriptionTranslations: this.createTranslationFormGroup(),
       categoryId: ['', Validators.required],
       materialId: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
@@ -90,8 +97,8 @@ export class QuickAddProductComponent implements OnInit {
       finish: ['Pulido'],
       usage: ['Cocinas, Baños, Fachadas'],
       // SEO fields
-      metaTitle: [''],
-      metaDescription: [''],
+      metaTitleTranslations: this.createTranslationFormGroup(),
+      metaDescriptionTranslations: this.createTranslationFormGroup(),
       slug: ['']
     });
   }
@@ -144,19 +151,22 @@ export class QuickAddProductComponent implements OnInit {
       this.productForm.patchValue({
         title: product.name || '',
         status: product.status || 'draft',
-        description: product.description || '',
         categoryId: product.categoryId || '',
         materialId: product.materialId || '',
         price: product.price || 0,
         stock: product.stock || 0,
         sku: product.sku || '',
-        size: product.specs?.size || product.size || '162×324cm',
+        size: product.specs?.size || product.size || '162A-324cm',
         finish: product.specs?.finish || 'Pulido',
-        usage: product.specs?.usage?.join(', ') || 'Cocinas, Baños, Fachadas',
-        metaTitle: product.seo?.title || '',
-        metaDescription: product.seo?.metaDescription || '',
+        usage: product.specs?.usage?.join(', ') || 'Cocinas, BaA?os, Fachadas',
         slug: product.slug || ''
       });
+      this.patchTranslationGroup('descriptionTranslations', product.descriptionTranslations, product.description || '');
+      this.patchTranslationGroup('metaTitleTranslations', product.seoTitleTranslations, product.seo?.title || product.name || '');
+      this.patchTranslationGroup('metaDescriptionTranslations', product.seoMetaTranslations, product.seo?.metaDescription || product.description || '');
+      this.activeDescriptionLang = this.defaultLanguage;
+      this.activeSeoTitleLang = this.defaultLanguage;
+      this.activeSeoMetaLang = this.defaultLanguage;
 
       // Load images - use imageUrl for preview, coverImage for Media ID
       if (product.imageUrl) {
@@ -257,15 +267,15 @@ export class QuickAddProductComponent implements OnInit {
     });
 
     // Update SEO preview on description change
-    this.productForm.get('description')?.valueChanges.subscribe(() => {
+    this.productForm.get('descriptionTranslations')?.valueChanges.subscribe(() => {
       this.updateSEOPreview();
     });
 
-    this.productForm.get('metaTitle')?.valueChanges.subscribe(() => {
+    this.productForm.get('metaTitleTranslations')?.valueChanges.subscribe(() => {
       this.updateSEOPreview();
     });
 
-    this.productForm.get('metaDescription')?.valueChanges.subscribe(() => {
+    this.productForm.get('metaDescriptionTranslations')?.valueChanges.subscribe(() => {
       this.updateSEOPreview();
     });
   }
@@ -289,14 +299,101 @@ export class QuickAddProductComponent implements OnInit {
     return `${prefix}-${random}`;
   }
 
+  private createTranslationFormGroup(initialValue: string = ''): FormGroup {
+    const config: Record<string, any[]> = {};
+    this.languages.forEach(lang => {
+      config[lang.code] = [initialValue];
+    });
+    return this.fb.group(config);
+  }
+
+  private getTranslationGroupRawValue(groupName: 'descriptionTranslations' | 'metaTitleTranslations' | 'metaDescriptionTranslations'): Record<string, string> {
+    const group = this.productForm.get(groupName) as FormGroup | null;
+    return group ? group.getRawValue() : {};
+  }
+
+  private patchTranslationGroup(
+    groupName: 'descriptionTranslations' | 'metaTitleTranslations' | 'metaDescriptionTranslations',
+    translations?: TranslatedTextMap,
+    fallback: string = ''
+  ): void {
+    const group = this.productForm.get(groupName) as FormGroup | null;
+    if (!group) return;
+    const patch: Record<string, string> = {};
+    this.languages.forEach(lang => {
+      const key = lang.code as LanguageCode;
+      patch[lang.code] = translations?.[key] || (lang.code === this.defaultLanguage ? fallback : '');
+    });
+    group.patchValue(patch, { emitEvent: false });
+  }
+
+  private normalizeTranslations(raw: Record<string, string> | undefined): TranslatedTextMap {
+    const normalized: TranslatedTextMap = {};
+    if (!raw) return normalized;
+    this.languages.forEach(lang => {
+      const value = raw[lang.code];
+      if (value && value.toString().trim().length > 0) {
+        normalized[lang.code as LanguageCode] = value.toString().trim();
+      }
+    });
+    return normalized;
+  }
+
+  private getPrimaryTranslation(translations: TranslatedTextMap, fallback: string = ''): string {
+    const defaultValue = translations[this.defaultLanguage as LanguageCode];
+    if (defaultValue && defaultValue.trim().length > 0) {
+      return defaultValue.trim();
+    }
+    for (const lang of this.languages) {
+      const candidate = translations[lang.code as LanguageCode];
+      if (candidate && candidate.trim().length > 0) {
+        return candidate.trim();
+      }
+    }
+    return fallback;
+  }
+
+  private getPreviewTranslation(translations: TranslatedTextMap, active: Language, fallback: string = ''): string {
+    const activeValue = translations[active as LanguageCode];
+    if (activeValue && activeValue.trim().length > 0) {
+      return activeValue.trim();
+    }
+    return this.getPrimaryTranslation(translations, fallback);
+  }
+
+  setActiveDescriptionLanguage(lang: Language) {
+    this.activeDescriptionLang = lang;
+    this.updateSEOPreview();
+  }
+
+  setActiveSeoTitleLanguage(lang: Language) {
+    this.activeSeoTitleLang = lang;
+    this.updateSEOPreview();
+  }
+
+  setActiveSeoMetaLanguage(lang: Language) {
+    this.activeSeoMetaLang = lang;
+    this.updateSEOPreview();
+  }
+
   private updateSEOPreview() {
-    const title = this.productForm.get('metaTitle')?.value || this.productForm.get('title')?.value || '';
-    const description = this.productForm.get('metaDescription')?.value || 
-                       this.productForm.get('description')?.value?.substring(0, 160) || '';
     const slug = this.productForm.get('slug')?.value || '';
+    const titleFallback = this.productForm.get('title')?.value || '';
+    const descriptionMap = this.normalizeTranslations(this.getTranslationGroupRawValue('descriptionTranslations'));
+    const metaTitleMap = this.normalizeTranslations(this.getTranslationGroupRawValue('metaTitleTranslations'));
+    const metaDescriptionMap = this.normalizeTranslations(this.getTranslationGroupRawValue('metaDescriptionTranslations'));
+
+    const previewTitle = this.getPreviewTranslation(metaTitleMap, this.activeSeoTitleLang, titleFallback) || 'Product Title';
+    const descriptionFallback = this.getPreviewTranslation(descriptionMap, this.activeDescriptionLang, '');
+    const previewDescriptionRaw = this.getPreviewTranslation(
+      metaDescriptionMap,
+      this.activeSeoMetaLang,
+      descriptionFallback || titleFallback
+    );
+    const previewDescription = (previewDescriptionRaw || 'Product description will appear here...').substring(0, 160);
     
-    this.seoPreviewTitle = title || 'Product Title';
-    this.seoPreviewDescription = description || 'Product description will appear here...';
+    this.seoPreviewTitle = previewTitle;
+    this.seoPreviewDescription = previewDescription;
     this.seoPreviewUrl = `https://topstone.com/productos/${slug || 'product-url'}`;
   }
 
@@ -382,6 +479,13 @@ export class QuickAddProductComponent implements OnInit {
 
       // 3. Prepare product data
       const formValue = this.productForm.value;
+      const descriptionTranslations = this.normalizeTranslations(this.getTranslationGroupRawValue('descriptionTranslations'));
+      const metaTitleTranslations = this.normalizeTranslations(this.getTranslationGroupRawValue('metaTitleTranslations'));
+      const metaDescriptionTranslations = this.normalizeTranslations(this.getTranslationGroupRawValue('metaDescriptionTranslations'));
+      const defaultDescription = this.getPrimaryTranslation(descriptionTranslations);
+      const defaultSeoTitle = this.getPrimaryTranslation(metaTitleTranslations, formValue.title);
+      const defaultSeoMetaRaw = this.getPrimaryTranslation(metaDescriptionTranslations, defaultDescription || formValue.title);
+      const defaultSeoMeta = (defaultSeoMetaRaw || '').substring(0, 160) || (defaultDescription || '').substring(0, 160);
 
       // Get category for grosor
       const category = this.categories.find(c => c.id === formValue.categoryId);
@@ -395,7 +499,8 @@ export class QuickAddProductComponent implements OnInit {
       const productData: Partial<Product> = {
         name: formValue.title,
         slug: slug,
-        description: formValue.description || '',
+        description: defaultDescription || '',
+        descriptionTranslations: Object.keys(descriptionTranslations).length ? descriptionTranslations : undefined,
         categoryId: formValue.categoryId,
         materialId: formValue.materialId,
         price: parseFloat(formValue.price) || 0,
@@ -416,10 +521,12 @@ export class QuickAddProductComponent implements OnInit {
         imageUrl: coverImageUrl,
         galleryImageIds: galleryMediaIds.length > 0 ? galleryMediaIds : undefined,
         seo: {
-          title: formValue.metaTitle || formValue.title,
-          metaDescription: formValue.metaDescription || formValue.description?.substring(0, 160),
+          title: defaultSeoTitle || formValue.title,
+          metaDescription: defaultSeoMeta || defaultDescription || '',
           ogImage: coverImageUrl
-        }
+        },
+        seoTitleTranslations: Object.keys(metaTitleTranslations).length ? metaTitleTranslations : undefined,
+        seoMetaTranslations: Object.keys(metaDescriptionTranslations).length ? metaDescriptionTranslations : undefined
       };
 
       this.uploadProgress = 90;

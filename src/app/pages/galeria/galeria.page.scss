@@ -62,6 +62,13 @@
   justify-content: center;
   padding: clamp(2rem, 5vw, 4rem);
   background: linear-gradient(to top, rgba(11, 31, 61, 0.85), transparent 60%);
+  opacity: 1;
+  transition: opacity 1s ease-out, visibility 1s ease-out;
+  
+  &:not(:has(*)) {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 .carousel-caption {

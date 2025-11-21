@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Firestore, collection, query, where, getDocs, limit, orderBy } from '@angular/fire/firestore';
 import { Product } from '../../models/product';
+import { Media } from '../../models/media';
 import { HomeHeroComponent } from '../../features/home/home-hero/home-hero.component';
 
 @Component({
@@ -22,11 +23,15 @@ export class HomePageComponent implements OnInit {
   productos12mm: Product[] = [];
   productos15mm: Product[] = [];
   productos20mm: Product[] = [];
+  
+  galleryImage1: Media | null = null;
+  galleryImage2: Media | null = null;
 
   ngOnInit() {
     // Only load from service if in browser (not during SSR)
     if (isPlatformBrowser(this.platformId)) {
       this.loadProductos();
+      this.loadGalleryImages();
     }
   }
 
@@ -104,6 +109,30 @@ export class HomePageComponent implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
       }
+    }
+  }
+  
+  private async loadGalleryImages() {
+    try {
+      const mediaQuery = query(
+        collection(this.firestore, 'media'),
+        where('relatedEntityType', '==', 'gallery')
+      );
+      
+      const snapshot = await getDocs(mediaQuery);
+      const allImages = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Media));
+      
+      if (allImages.length >= 2) {
+        const shuffled = this.shuffleArray(allImages);
+        this.galleryImage1 = shuffled[0];
+        this.galleryImage2 = shuffled[1];
+        this.cdr.detectChanges();
+      }
+    } catch (error) {
+      console.error('Error loading gallery images:', error);
     }
   }
 }

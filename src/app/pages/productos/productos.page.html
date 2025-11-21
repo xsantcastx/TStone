@@ -4,11 +4,10 @@
   <div class="relative py-24 lg:py-32 bg-gradient-to-b from-ts-paper to-white overflow-hidden">
     <div class="max-w-7xl mx-auto px-6 text-center">
       <h1 class="font-serif text-5xl lg:text-6xl text-ts-bg mb-6">
-        Nuestros Productos
+        {{ 'productsPage.hero.title' | translate }}
       </h1>
       <p class="text-xl text-neutral-600 max-w-3xl mx-auto leading-relaxed">
-        Superficies porcelánicas de gran formato disponibles en diferentes grosores.
-        Cada colección está diseñada para adaptarse a las necesidades específicas de tu proyecto.
+        {{ 'productsPage.hero.subtitle' | translate }}
       </p>
     </div>
   </div>
@@ -25,13 +24,13 @@
         <!-- Category Filter -->
         <div>
           <label for="categoryFilter" class="block text-sm font-medium text-neutral-700 mb-2">
-            Categoría
+            {{ 'productsPage.filters.category' | translate }}
           </label>
           <select id="categoryFilter"
                   [(ngModel)]="selectedCategoryId"
                   (change)="onCategoryChange()"
                   class="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent transition-all">
-            <option value="">Todas las categorías</option>
+            <option value="">{{ 'productsPage.filters.category_all' | translate }}</option>
             @for (category of categories; track category.id) {
               <option [value]="category.id">{{ category.name }}</option>
             }
@@ -41,13 +40,13 @@
         <!-- Material Filter -->
         <div>
           <label for="materialFilter" class="block text-sm font-medium text-neutral-700 mb-2">
-            Material
+            {{ 'productsPage.filters.material' | translate }}
           </label>
           <select id="materialFilter"
                   [(ngModel)]="selectedMaterialId"
                   (change)="onMaterialChange()"
                   class="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent transition-all">
-            <option value="">Todos los materiales</option>
+            <option value="">{{ 'productsPage.filters.material_all' | translate }}</option>
             @for (material of materials; track material.id) {
               <option [value]="material.id">{{ material.name }}</option>
             }
@@ -57,13 +56,13 @@
         <!-- Search Filter -->
         <div>
           <label for="searchFilter" class="block text-sm font-medium text-neutral-700 mb-2">
-            Buscar
+            {{ 'productsPage.filters.search' | translate }}
           </label>
           <input type="text"
                  id="searchFilter"
                  [(ngModel)]="searchTerm"
                  (input)="onSearchChange()"
-                 placeholder="Nombre del producto..."
+                 [placeholder]="'productsPage.filters.search_placeholder' | translate"
                  class="w-full px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent transition-all"/>
         </div>
 
@@ -72,7 +71,7 @@
           @if (hasFilters) {
             <button (click)="clearFilters()"
                     class="w-full px-4 py-2.5 bg-neutral-100 text-neutral-700 rounded-lg font-medium hover:bg-neutral-200 transition-colors">
-              Limpiar filtros
+              {{ 'productsPage.filters.clear' | translate }}
             </button>
           }
         </div>
@@ -82,9 +81,9 @@
       <div class="mt-4 pt-4 border-t border-neutral-200">
         <p class="text-sm text-neutral-600">
           @if (isLoading) {
-            Cargando productos...
+            {{ 'productsPage.loading' | translate }}
           } @else {
-            Mostrando <strong>{{ filteredProductsCount }}</strong> de <strong>{{ totalProductsCount }}</strong> productos
+            {{ 'productsPage.results' | translate:{ filtered: filteredProductsCount, total: totalProductsCount } }}
           }
         </p>
       </div>
@@ -99,7 +98,7 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span class="text-neutral-700 font-medium">Cargando productos...</span>
+        <span class="text-neutral-700 font-medium">{{ 'productsPage.loading' | translate }}</span>
       </div>
     </div>
   }
@@ -111,12 +110,12 @@
         <svg class="w-16 h-16 text-neutral-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
         </svg>
-        <h3 class="font-serif text-2xl text-neutral-800 mb-2">No se encontraron productos</h3>
-        <p class="text-neutral-600 mb-6">Intenta ajustar los filtros para ver más resultados</p>
+        <h3 class="font-serif text-2xl text-neutral-800 mb-2">{{ 'productsPage.empty.title' | translate }}</h3>
+        <p class="text-neutral-600 mb-6">{{ 'productsPage.empty.description' | translate }}</p>
         @if (hasFilters) {
           <button (click)="clearFilters()"
                   class="px-6 py-3 bg-ts-accent text-black rounded-full font-semibold hover:bg-ts-accent/90 transition-colors">
-            Limpiar filtros
+            {{ 'productsPage.filters.clear' | translate }}
           </button>
         }
       </div>
@@ -132,12 +131,12 @@
       <section class="mb-20">
         <div class="flex items-center justify-between mb-8">
           <div>
-            <h2 class="font-serif text-4xl text-ts-bg mb-2">12mm</h2>
-            <p class="text-lg text-neutral-600">162×324cm · Ideal para revestimientos interiores y exteriores</p>
+            <h2 class="font-serif text-4xl text-ts-bg mb-2">{{ 'productsPage.collections.mm12.heading' | translate }}</h2>
+            <p class="text-lg text-neutral-600">{{ 'productsPage.collections.mm12.subtitle' | translate }}</p>
           </div>
           <a routerLink="/productos/12mm" 
              class="inline-flex items-center gap-2 px-6 py-3 bg-ts-accent text-black rounded-full font-semibold hover:bg-ts-accent/90 transition-colors">
-            Ver toda la colección
+            {{ 'productsPage.collections.view_all' | translate }}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
@@ -171,17 +170,20 @@
                 }
                 @if (producto.stock !== undefined && producto.stock !== null) {
                   <p class="text-sm text-neutral-600 mb-4">
-                    Stock: <span [class.text-green-600]="producto.stock > 0" [class.text-red-600]="producto.stock === 0">{{producto.stock}} unidades</span>
+                    {{ 'productsPage.stock.label' | translate }}:
+                    <span [class.text-green-600]="producto.stock > 0" [class.text-red-600]="producto.stock === 0">
+                      {{producto.stock}} {{ 'productsPage.stock.units' | translate }}
+                    </span>
                   </p>
                 }
                 <div class="flex items-center justify-between">
                   <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                      class="text-ts-accent hover:underline font-medium transition-colors">
-                    Ver detalles →
+                    {{ 'productsPage.view_details' | translate }} &rarr;
                   </a>
                   <button (click)="addToCart(producto, $event)"
                           class="px-4 py-2 bg-ts-accent text-black rounded-lg font-medium hover:bg-ts-accent/90 transition-colors">
-                    Añadir
+                    {{ 'productsPage.add_to_cart' | translate }}
                   </button>
                 </div>
               </div>
@@ -196,12 +198,12 @@
       <section class="mb-20">
         <div class="flex items-center justify-between mb-8">
           <div>
-            <h2 class="font-serif text-4xl text-ts-bg mb-2">20mm</h2>
-            <p class="text-lg text-neutral-600">162×324cm · Ideales para exteriores y zonas de alto tránsito</p>
+            <h2 class="font-serif text-4xl text-ts-bg mb-2">{{ 'productsPage.collections.mm20.heading' | translate }}</h2>
+            <p class="text-lg text-neutral-600">{{ 'productsPage.collections.mm20.subtitle' | translate }}</p>
           </div>
           <a routerLink="/productos/20mm" 
              class="inline-flex items-center gap-2 px-6 py-3 bg-ts-accent text-black rounded-full font-semibold hover:bg-ts-accent/90 transition-colors">
-            Ver toda la colección
+            {{ 'productsPage.collections.view_all' | translate }}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
@@ -235,17 +237,20 @@
                 }
                 @if (producto.stock !== undefined && producto.stock !== null) {
                   <p class="text-sm text-neutral-600 mb-4">
-                    Stock: <span [class.text-green-600]="producto.stock > 0" [class.text-red-600]="producto.stock === 0">{{producto.stock}} unidades</span>
+                    {{ 'productsPage.stock.label' | translate }}:
+                    <span [class.text-green-600]="producto.stock > 0" [class.text-red-600]="producto.stock === 0">
+                      {{producto.stock}} {{ 'productsPage.stock.units' | translate }}
+                    </span>
                   </p>
                 }
                 <div class="flex items-center justify-between">
                   <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                      class="text-ts-accent hover:underline font-medium transition-colors">
-                    Ver detalles →
+                    {{ 'productsPage.view_details' | translate }} &rarr;
                   </a>
                   <button (click)="addToCart(producto, $event)"
                           class="px-4 py-2 bg-ts-accent text-black rounded-lg font-medium hover:bg-ts-accent/90 transition-colors">
-                    Añadir
+                    {{ 'productsPage.add_to_cart' | translate }}
                   </button>
                 </div>
               </div>
@@ -259,10 +264,10 @@
       <section class="text-center py-16">
         <div class="max-w-3xl mx-auto">
           <h2 class="font-serif text-3xl text-ts-bg mb-4">
-            ¿Necesitas asesoramiento personalizado?
+            {{ 'productsPage.cta.title' | translate }}
           </h2>
           <p class="text-lg text-neutral-600 mb-8">
-            Nuestro equipo de expertos te ayudará a elegir la superficie perfecta para tu proyecto.
+            {{ 'productsPage.cta.description' | translate }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a routerLink="/contacto" 
@@ -270,14 +275,14 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-3.793-.793L3 21l1.793-6.207A8.955 8.955 0 013 12a8 8 0 018-8c4.418 0 8 3.582 8 8z"/>
               </svg>
-              Solicitar asesoramiento
+              {{ 'productsPage.cta.primary' | translate }}
             </a>
             <a routerLink="/datos-tecnicos" 
                class="inline-flex items-center gap-2 px-8 py-4 ring-2 ring-ts-accent text-ts-accent hover:bg-ts-accent hover:text-black rounded-full font-semibold transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h3.75M9 15h3.75M9 18h3.75m4 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
               </svg>
-              Datos técnicos
+              {{ 'productsPage.cta.secondary' | translate }}
             </a>
           </div>
         </div>

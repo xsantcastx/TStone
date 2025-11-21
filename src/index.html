@@ -48,7 +48,7 @@
     #app-initial-loader {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      background: linear-gradient(135deg, #0B0B0C 0%, #1a1a1a 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -62,22 +62,73 @@
       pointer-events: none;
     }
 
-    #app-initial-loader img {
-      width: clamp(96px, 15vw, 160px);
-      height: clamp(96px, 15vw, 160px);
-      object-fit: contain;
-      filter: drop-shadow(0 12px 32px rgba(200, 169, 107, 0.4));
-      animation: logoBreath 2.4s ease-in-out infinite;
+    .loader-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
     }
 
-    @keyframes logoBreath {
-      0%, 100% {
-        transform: scale(1);
+    #app-initial-loader img {
+      width: clamp(120px, 20vw, 200px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 24px rgba(176, 137, 104, 0.3));
+      animation: logoFadeIn 1.2s ease-out;
+    }
+
+    .loader-dots {
+      display: flex;
+      gap: 0.5rem;
+      animation: fadeInUp 0.8s ease-out 0.3s both;
+    }
+
+    .loader-dots span {
+      width: 8px;
+      height: 8px;
+      background: #B08968;
+      border-radius: 50%;
+      animation: dotPulse 1.4s ease-in-out infinite;
+    }
+
+    .loader-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loader-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes logoFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
         opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes dotPulse {
+      0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
       }
       50% {
-        transform: scale(1.05);
-        opacity: 0.85;
+        opacity: 1;
+        transform: scale(1.2);
       }
     }
   </style>
@@ -86,9 +137,16 @@
   <!-- Skip link for accessibility -->
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
   
-  <!-- Initial Loading Screen (Instagram-style) -->
+  <!-- Initial Loading Screen -->
   <div id="app-initial-loader">
-    <img id="loader-logo" src="/assets/topstone-logotype-horizontal.svg" alt="TopStone" width="128" height="128">
+    <div class="loader-container">
+      <img id="loader-logo" src="/2.png" alt="TopStone" width="200" height="auto">
+      <div class="loader-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
   </div>
   
   <app-root></app-root>

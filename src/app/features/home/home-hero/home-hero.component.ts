@@ -33,24 +33,27 @@ import { SettingsService, HeroImage } from '../../../services/settings.service';
       
       <!-- Hero content -->
       <div class="relative h-full flex flex-col items-start justify-end max-w-7xl mx-auto px-6 pb-16 z-10">
+        <p class="text-sm uppercase tracking-[0.3em] text-white/80 mb-4 animate-fade-in-up">
+          {{ 'home.hero.tagline' | translate }}
+        </p>
         <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl tracking-tight text-white mb-4 animate-fade-in-up">
-          {{ 'hero.title' | translate }}
+          {{ 'home.hero.heading' | translate }}
         </h1>
         <p class="mt-4 max-w-xl text-lg text-white/90 leading-relaxed animate-fade-in-up animation-delay-200">
-          {{ 'hero.subtitle' | translate }}
+          {{ 'home.hero.description' | translate }}
         </p>
         <div class="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
           <a 
             routerLink="/productos" 
             class="px-8 py-4 rounded-full bg-ts-accent text-black font-semibold hover:bg-ts-accent/90 transition-all hover:scale-105 text-center shadow-lg"
           >
-            {{ 'hero.cta' | translate }}
+            {{ 'home.hero.primaryCta' | translate }}
           </a>
           <a 
-            routerLink="/galeria" 
+            routerLink="/contacto" 
             class="px-8 py-4 rounded-full ring-2 ring-white/40 text-white hover:bg-white/10 transition-all hover:scale-105 text-center backdrop-blur-sm"
           >
-            {{ 'nav.gallery' | translate }}
+            {{ 'home.hero.secondaryCta' | translate }}
           </a>
         </div>
 

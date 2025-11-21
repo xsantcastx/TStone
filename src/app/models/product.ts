@@ -1,5 +1,8 @@
 import { Timestamp } from '@angular/fire/firestore';
 
+export type LanguageCode = 'es' | 'en' | 'fr' | 'it';
+export type TranslatedTextMap = Partial<Record<LanguageCode, string>>;
+
 export interface Product {
   id?: string;             // Firestore document ID
   name: string;            // "Saint Laurent"
@@ -8,6 +11,7 @@ export interface Product {
   size: string;            // e.g., "160×320cm"
   imageUrl: string;        // Main product image URL (legacy or computed from coverImage)
   description?: string;    // Product description
+  descriptionTranslations?: TranslatedTextMap; // Per-language description
   price?: number;          // Price per unit
   stock?: number;          // Available stock
   sku?: string;            // SKU code
@@ -28,6 +32,8 @@ export interface Product {
     metaDescription?: string;
     ogImage?: string;
   };
+  seoTitleTranslations?: TranslatedTextMap;
+  seoMetaTranslations?: TranslatedTextMap;
   descriptionLocked?: boolean;
   specsLocked?: boolean;
   seoLocked?: boolean;

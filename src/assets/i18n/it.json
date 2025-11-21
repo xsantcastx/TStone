@@ -14,6 +14,94 @@
     "subtitle": "Eccellenza nelle finiture per spazi unici",
     "cta": "Vedi il Catalogo"
   },
+  "home": {
+    "why_preheading": "Eccellenza TopStone",
+    "hero": {
+      "tagline": "Ceramica tecnica da Castellón",
+      "heading": "Materiali nobili per pareti e pavimenti ispirati alla pietra naturale.",
+      "description": "In The Stone selezioniamo onici, marmi e quarziti che uniscono bellezza e resistenza. Progettiamo ogni collezione per progetti residenziali e contract che cercano distinzione.",
+      "primaryCta": "Vedi le collezioni",
+      "secondaryCta": "Richiedi consulenza",
+      "visualAlt": "Ambiente con rivestimento ceramico"
+    },
+    "collections": {
+      "title": "Le nostre collezioni",
+      "subtitle": "Scopri le nostre superfici in gres porcellanato disponibili in diversi spessori per adattarsi a qualsiasi progetto architettonico.",
+      "collection_heading": "Collezione {{thickness}}",
+      "view_all": "Vedi tutto",
+      "view_details": "Vedi dettagli"
+    },
+    "why": {
+      "title": "Perché scegliere TopStone?",
+      "subtitle": "Soluzioni superficiali progettate per elevare il valore estetico e tecnico di ogni progetto architettonico.",
+      "cards": {
+        "premium": {
+          "title": "Design Premium",
+          "body": "Texture uniche e finiture sofisticate che trasformano qualsiasi spazio in un'opera d'arte contemporanea."
+        },
+        "resistance": {
+          "title": "Massima Resistenza",
+          "body": "Materiali di ultima generazione che garantiscono una durata eccezionale contro usura, macchie e agenti chimici."
+        },
+        "versatility": {
+          "title": "Versatilità Totale",
+          "body": "Perfette per cucine, bagni, facciate e industria. Superfici che si adattano a ogni progetto."
+        }
+      }
+    },
+    "gallery": {
+      "projects_title": "Ispirati con i nostri progetti",
+      "projects_button": "Vedi galleria",
+      "projects_alt": "Galleria TopStone",
+      "contact_title": "Hai un progetto in mente?",
+      "contact_button": "Richiedi informazioni",
+      "contact_alt": "Contatta TopStone"
+    }
+  },
+  "productsPage": {
+    "hero": {
+      "title": "I Nostri Prodotti",
+      "subtitle": "Superfici in gres porcellanato di grande formato disponibili in diversi spessori. Ogni collezione è pensata per soddisfare le esigenze specifiche del tuo progetto."
+    },
+    "filters": {
+      "category": "Categoria",
+      "category_all": "Tutte le categorie",
+      "material": "Materiale",
+      "material_all": "Tutti i materiali",
+      "search": "Cerca",
+      "search_placeholder": "Nome del prodotto...",
+      "clear": "Pulisci filtri"
+    },
+    "loading": "Caricamento prodotti...",
+    "results": "Mostrati {{filtered}} di {{total}} prodotti",
+    "empty": {
+      "title": "Nessun prodotto trovato",
+      "description": "Prova a modificare i filtri per visualizzare altri risultati"
+    },
+    "collections": {
+      "mm12": {
+        "heading": "12mm",
+        "subtitle": "162×324cm · Ideale per rivestimenti interni ed esterni"
+      },
+      "mm20": {
+        "heading": "20mm",
+        "subtitle": "162×324cm · Perfette per esterni e zone ad alto traffico"
+      },
+      "view_all": "Vedi tutta la collezione"
+    },
+    "view_details": "Vedi dettagli",
+    "add_to_cart": "Aggiungi",
+    "stock": {
+      "label": "Disponibilità",
+      "units": "unità"
+    },
+    "cta": {
+      "title": "Hai bisogno di una consulenza personalizzata?",
+      "description": "Il nostro team di esperti ti aiuterà a scegliere la superficie perfetta per il tuo progetto.",
+      "primary": "Richiedi consulenza",
+      "secondary": "Dati tecnici"
+    }
+  },
   "products": {
     "title": "I Nostri Prodotti",
     "addToCart": "Aggiungi al Carrello",
@@ -305,9 +393,22 @@
     "download": "Scarica"
   },
   "footer": {
-    "about": "Chi Siamo",
-    "contact": "Contatto",
-    "social": "Social Media",
-    "rights": "Tutti i diritti riservati"
+    "default_site_name": "TopStone",
+    "default_tagline": "Superfici in gres porcellanato di grande formato che valorizzano ogni progetto con design, resistenza e versatilità.",
+    "default_email": "info@topstone.com",
+    "default_phone": "+34 964 000 000",
+    "default_address": "Zona Industriale La Plana, unità 18 · Castellón, Spagna",
+    "quick_links": "Link rapidi",
+    "products_title": "Prodotti",
+    "collections": {
+      "12mm": "Collezione 12mm",
+      "20mm": "Collezione 20mm"
+    },
+    "copyright": "© 2025 TopStone. Tutti i diritti riservati.",
+    "links": {
+      "privacy": "Informativa sulla privacy",
+      "terms": "Termini e condizioni",
+      "cookies": "Cookie"
+    }
   }
 }

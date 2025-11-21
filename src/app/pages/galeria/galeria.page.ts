@@ -48,6 +48,8 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
   heroSlides: Media[] = [];
   currentSlideIndex = 0;
   private carouselInterval: any;
+  showCarouselOverlay = true;
+  private overlayTimeout: any;
   
   // Available tags
   availableTags: Tag[] = [];
@@ -109,6 +111,10 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
       this.filtrarPorCategoria('todos');
       this.startCarousel();
       this.isLoading = false;
+      
+      // Auto-hide overlay after 5 seconds
+      this.startOverlayTimeout();
+      
       this.cdr.detectChanges(); // Force change detection
     } catch (error) {
       console.error('❌ Error loading gallery from Firebase:', error);
@@ -116,6 +122,16 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.cdr.detectChanges(); // Force change detection
     }
+  }
+  
+  private startOverlayTimeout() {
+    if (this.overlayTimeout) {
+      clearTimeout(this.overlayTimeout);
+    }
+    this.overlayTimeout = setTimeout(() => {
+      this.showCarouselOverlay = false;
+      this.cdr.detectChanges();
+    }, 5000);
   }
 
   private getTagDisplayName(slug: string): string {
@@ -284,6 +300,9 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
     }
     if (this.scrollTimeout) {
       clearTimeout(this.scrollTimeout);
+    }
+    if (this.overlayTimeout) {
+      clearTimeout(this.overlayTimeout);
     }
   }
 }

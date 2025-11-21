@@ -14,6 +14,94 @@
     "subtitle": "Excellence en finitions pour des espaces uniques",
     "cta": "Voir le Catalogue"
   },
+  "home": {
+    "why_preheading": "Excellence TopStone",
+    "hero": {
+      "tagline": "Céramique technique depuis Castellón",
+      "heading": "Des matériaux nobles pour murs et sols inspirés de la pierre naturelle.",
+      "description": "Chez The Stone, nous sélectionnons des onyx, marbres et quartzites qui allient beauté et résistance. Nous concevons chaque collection pour des projets résidentiels et contract exigeants.",
+      "primaryCta": "Voir les collections",
+      "secondaryCta": "Demander un conseil",
+      "visualAlt": "Ambiance avec revêtement céramique"
+    },
+    "collections": {
+      "title": "Nos collections",
+      "subtitle": "Découvrez nos surfaces en grès cérame disponibles en différentes épaisseurs pour s'adapter à tout projet architectural.",
+      "collection_heading": "Collection {{thickness}}",
+      "view_all": "Voir tout",
+      "view_details": "Voir les détails"
+    },
+    "why": {
+      "title": "Pourquoi choisir TopStone ?",
+      "subtitle": "Des surfaces pensées pour sublimer la valeur esthétique et technique de chaque projet architectural.",
+      "cards": {
+        "premium": {
+          "title": "Design Premium",
+          "body": "Des textures uniques et des finitions sophistiquées qui transforment tout espace en œuvre contemporaine."
+        },
+        "resistance": {
+          "title": "Résistance Maximale",
+          "body": "Des matériaux de dernière génération garantissant une durabilité exceptionnelle face à l’usure, aux taches et aux produits chimiques."
+        },
+        "versatility": {
+          "title": "Polyvalence Totale",
+          "body": "Parfaites pour cuisines, salles de bain, façades ou industrie : des surfaces qui s’adaptent à tous les projets."
+        }
+      }
+    },
+    "gallery": {
+      "projects_title": "Inspirez-vous de nos projets",
+      "projects_button": "Voir la galerie",
+      "projects_alt": "Galerie TopStone",
+      "contact_title": "Un projet en tête ?",
+      "contact_button": "Demander des informations",
+      "contact_alt": "Contact TopStone"
+    }
+  },
+  "productsPage": {
+    "hero": {
+      "title": "Nos Produits",
+      "subtitle": "Des surfaces en grès cérame grand format disponibles en plusieurs épaisseurs. Chaque collection est pensée pour répondre aux besoins spécifiques de votre projet."
+    },
+    "filters": {
+      "category": "Catégorie",
+      "category_all": "Toutes les catégories",
+      "material": "Matériau",
+      "material_all": "Tous les matériaux",
+      "search": "Rechercher",
+      "search_placeholder": "Nom du produit...",
+      "clear": "Réinitialiser les filtres"
+    },
+    "loading": "Chargement des produits...",
+    "results": "Affichage de {{filtered}} sur {{total}} produits",
+    "empty": {
+      "title": "Aucun produit trouvé",
+      "description": "Essayez d’ajuster les filtres pour voir plus de résultats"
+    },
+    "collections": {
+      "mm12": {
+        "heading": "12mm",
+        "subtitle": "162×324cm · Idéal pour les revêtements intérieurs et extérieurs"
+      },
+      "mm20": {
+        "heading": "20mm",
+        "subtitle": "162×324cm · Parfait pour l’extérieur et les zones à fort passage"
+      },
+      "view_all": "Voir toute la collection"
+    },
+    "view_details": "Voir les détails",
+    "add_to_cart": "Ajouter",
+    "stock": {
+      "label": "Stock",
+      "units": "unités"
+    },
+    "cta": {
+      "title": "Besoin d’un accompagnement personnalisé ?",
+      "description": "Notre équipe d’experts vous aidera à choisir la surface idéale pour votre projet.",
+      "primary": "Demander un conseil",
+      "secondary": "Données techniques"
+    }
+  },
   "products": {
     "title": "Nos Produits",
     "addToCart": "Ajouter au Panier",
@@ -305,9 +393,22 @@
     "download": "Télécharger"
   },
   "footer": {
-    "about": "À Propos",
-    "contact": "Contact",
-    "social": "Réseaux Sociaux",
-    "rights": "Tous droits réservés"
+    "default_site_name": "TopStone",
+    "default_tagline": "Des surfaces en grès cérame grand format qui subliment chaque projet grâce au design, à la résistance et à la polyvalence.",
+    "default_email": "info@topstone.com",
+    "default_phone": "+34 964 000 000",
+    "default_address": "Zone industrielle La Plana, unité 18 · Castellón, Espagne",
+    "quick_links": "Liens rapides",
+    "products_title": "Produits",
+    "collections": {
+      "12mm": "Collection 12mm",
+      "20mm": "Collection 20mm"
+    },
+    "copyright": "© 2025 TopStone. Tous droits réservés.",
+    "links": {
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions d'utilisation",
+      "cookies": "Cookies"
+    }
   }
 }

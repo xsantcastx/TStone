@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, HostListener, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { LanguageService, Language } from '../../../core/services/language.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { LanguageService, Language } from '../../../core/services/language.servi
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="language-selector">
+    <div class="language-selector" [class.dark-mode]="isDarkMode">
       <button
         type="button"
         (click)="toggleDropdown()"
@@ -76,6 +76,10 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       color: #4b5563;
       line-height: 1;
     }
+    
+    .language-trigger .chevron {
+      color: #6b7280;
+    }
 
     .language-trigger .chevron {
       width: 0.875rem;
@@ -96,10 +100,33 @@ import { LanguageService, Language } from '../../../core/services/language.servi
     }
 
     :host-context(.text-white) .language-trigger .code {
-      color: rgba(248, 250, 252, 0.76);
+      color: #ffffff;
+    }
+    
+    :host-context(.text-white) .language-trigger .chevron {
+      color: #ffffff;
     }
 
     :host-context(.text-white) .language-trigger:hover {
+      background: #111827;
+    }
+    
+    .dark-mode .language-trigger {
+      background: #1f2937;
+      border-color: rgba(148, 163, 184, 0.18);
+      color: #f8fafc;
+      box-shadow: 0 16px 34px -24px rgba(15, 23, 42, 0.6);
+    }
+
+    .dark-mode .language-trigger .code {
+      color: #ffffff;
+    }
+    
+    .dark-mode .language-trigger .chevron {
+      color: #ffffff;
+    }
+
+    .dark-mode .language-trigger:hover {
       background: #111827;
     }
 
@@ -108,19 +135,25 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       right: 0;
       margin-top: 0.5rem;
       min-width: 12rem;
-      border-radius: 1rem;
+      border-radius: 0.75rem;
       padding: 0.5rem 0;
       background: #ffffff;
       color: #111827;
-      border: 1px solid rgba(17, 24, 39, 0.08);
-      box-shadow: 0 24px 55px -22px rgba(15, 23, 42, 0.4);
-      z-index: 40;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      z-index: 130;
     }
 
     :host-context(.text-white) .language-menu {
-      background: #1f2937;
-      border-color: rgba(148, 163, 184, 0.25);
-      color: #f8fafc;
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.05);
+      color: #111827;
+    }
+    
+    .dark-mode .language-menu {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.05);
+      color: #111827;
     }
 
     .language-menu ul {
@@ -134,17 +167,18 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.65rem 1rem;
-      background: #ffffff;
+      padding: 0.5rem 1rem;
+      background: transparent;
       border: none;
       cursor: pointer;
-      color: #111827;
-      transition: background-color 0.18s ease, color 0.18s ease;
+      color: #374151;
+      transition: background-color 0.15s ease;
       text-align: left;
+      font-size: 0.875rem;
     }
 
     .language-option:hover {
-      background: #f3f4f6;
+      background: #f9fafb;
     }
 
     .language-option .code-badge {
@@ -154,7 +188,7 @@ import { LanguageService, Language } from '../../../core/services/language.servi
       min-width: 2rem;
       padding: 0.25rem 0.5rem;
       border-radius: 0.375rem;
-      background: #f3f4f6;
+      background: #e5e7eb;
       font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 0.05em;
@@ -165,58 +199,120 @@ import { LanguageService, Language } from '../../../core/services/language.servi
     .language-option .name {
       font-size: 0.875rem;
       font-weight: 500;
-      color: inherit;
+      color: #374151;
     }
 
     .language-option.active {
-      background: #f6efe6;
-      color: #b08968;
+      background: #fef3e2;
     }
 
     .language-option.active .code-badge {
       background: #b08968;
       color: #ffffff;
     }
+    
+    .language-option.active .name {
+      color: #78350f;
+      font-weight: 600;
+    }
 
     :host-context(.text-white) .language-option {
-      background: #1f2937;
-      color: #f8fafc;
+      background: transparent;
+      color: #374151;
     }
 
     :host-context(.text-white) .language-option:hover {
-      background: #111827;
+      background: #f9fafb;
     }
 
     :host-context(.text-white) .language-option .code-badge {
-      background: rgba(148, 163, 184, 0.2);
-      color: rgba(248, 250, 252, 0.8);
+      background: #e5e7eb;
+      color: #6b7280;
+    }
+    
+    :host-context(.text-white) .language-option .name {
+      color: #374151;
     }
 
     :host-context(.text-white) .language-option.active {
-      background: rgba(176, 137, 104, 0.22);
-      color: #f5e8d8;
+      background: #fef3e2;
     }
 
     :host-context(.text-white) .language-option.active .code-badge {
       background: #b08968;
       color: #ffffff;
     }
+    
+    :host-context(.text-white) .language-option.active .name {
+      color: #78350f;
+      font-weight: 600;
+    }
+    
+    .dark-mode .language-option {
+      background: transparent;
+      color: #374151;
+    }
+
+    .dark-mode .language-option:hover {
+      background: #f9fafb;
+    }
+
+    .dark-mode .language-option .code-badge {
+      background: #e5e7eb;
+      color: #6b7280;
+    }
+    
+    .dark-mode .language-option .name {
+      color: #374151;
+    }
+
+    .dark-mode .language-option.active {
+      background: #fef3e2;
+    }
+
+    .dark-mode .language-option.active .code-badge {
+      background: #b08968;
+      color: #ffffff;
+    }
+    
+    .dark-mode .language-option.active .name {
+      color: #78350f;
+      font-weight: 600;
+    }
   `]
 })
 export class LanguageSelectorComponent {
   languageService = inject(LanguageService);
+  private platformId = inject(PLATFORM_ID);
   isOpen = false;
   currentLanguage = this.languageService.languages[0];
+  isDarkMode = false;
 
   constructor() {
     this.languageService.lang$.subscribe(lang => {
       const found = this.languageService.languages.find(l => l.code === lang);
       if (found) this.currentLanguage = found;
     });
+    
+    // Initial check for dark mode
+    this.checkDarkMode();
+  }
+  
+  @HostListener('window:scroll')
+  onScroll() {
+    this.checkDarkMode();
+  }
+  
+  private checkDarkMode(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const header = document.querySelector('header');
+      this.isDarkMode = header?.classList.contains('text-white') ?? false;
+    }
   }
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
+    this.checkDarkMode();
   }
 
   selectLanguage(code: Language): void {

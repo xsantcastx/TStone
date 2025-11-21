@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -6,10 +6,11 @@ import { Title, Meta } from '@angular/platform-browser';
 import { ProductsService } from '../../../services/products.service';
 import { MediaService } from '../../../services/media.service';
 import { CartService } from '../../../services/cart.service';
-import { Product } from '../../../models/product';
+import { Product, TranslatedTextMap } from '../../../models/product';
 import { Media } from '../../../models/media';
 import { ImageLightboxComponent } from '../../../shared/components/image-lightbox/image-lightbox.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-detalle',
@@ -17,7 +18,7 @@ import { firstValueFrom } from 'rxjs';
   imports: [CommonModule, RouterLink, TranslateModule, ImageLightboxComponent],
   templateUrl: './detalle.component.html'
 })
-export class DetalleComponent implements OnInit {
+export class DetalleComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private productsService = inject(ProductsService);
   private mediaService = inject(MediaService);
@@ -27,6 +28,8 @@ export class DetalleComponent implements OnInit {
   private titleService = inject(Title);
   private metaService = inject(Meta);
   private cdr = inject(ChangeDetectorRef);
+  private languageService = inject(LanguageService);
+  private languageSub?: Subscription;
   
   producto: Product | undefined;
   productosRelacionados: Product[] = [];
@@ -37,6 +40,7 @@ export class DetalleComponent implements OnInit {
   lightboxOpen = false;
   currentLightboxImage = '';
   currentLightboxAlt = '';
+  localizedDescription = '';
 
   async ngOnInit() {
     this.grosor = this.route.snapshot.paramMap.get('grosor') || '';
@@ -47,6 +51,18 @@ export class DetalleComponent implements OnInit {
     } else {
       this.loading = false;
     }
+    
+    this.languageSub = this.languageService.lang$.subscribe(() => {
+      if (this.producto) {
+        this.localizedDescription = this.getLocalizedText(this.producto.descriptionTranslations, this.producto.description || '');
+        this.updateSEO();
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.languageSub?.unsubscribe();
   }
 
   private async loadProducto(slug: string) {
@@ -64,6 +80,7 @@ export class DetalleComponent implements OnInit {
         );
         
         if (this.producto) {
+          this.localizedDescription = this.getLocalizedText(this.producto.descriptionTranslations, this.producto.description || '');
           // Load cover image
           if (this.producto.coverImage) {
             const isMediaId = !this.producto.coverImage.includes('http');
@@ -75,7 +92,7 @@ export class DetalleComponent implements OnInit {
           
           // Load gallery images
           if (this.producto.galleryImageIds && this.producto.galleryImageIds.length > 0) {
-            this.galleryImages = await this.mediaService.getMediaByIds(this.producto.galleryImageIds);
+          this.galleryImages = await this.mediaService.getMediaByIds(this.producto.galleryImageIds);
           }
           
           // Update page title and meta tags
@@ -151,21 +168,38 @@ export class DetalleComponent implements OnInit {
   private updateSEO() {
     if (!this.producto) return;
     
-    // Update page title
-    const title = this.producto.seo?.title || `${this.producto.name} - TopStone`;
-    this.titleService.setTitle(title);
+    const defaultTitle = this.producto.seo?.title || `${this.producto.name} - TopStone`;
+    const localizedTitle = this.getLocalizedText(this.producto.seoTitleTranslations, defaultTitle);
+    this.titleService.setTitle(localizedTitle);
     
-    // Update meta description
-    const description = this.producto.seo?.metaDescription || this.producto.description || '';
-    this.metaService.updateTag({ name: 'description', content: description });
-    
-    // Update Open Graph tags
-    this.metaService.updateTag({ property: 'og:title', content: title });
-    this.metaService.updateTag({ property: 'og:description', content: description });
+    const fallbackDescription = this.producto.seo?.metaDescription || this.producto.description || '';
+    const localizedMeta = this.getLocalizedText(this.producto.seoMetaTranslations, this.localizedDescription || fallbackDescription);
+    const ogDescription = localizedMeta || fallbackDescription;
+    this.metaService.updateTag({ name: 'description', content: ogDescription });
+    this.metaService.updateTag({ property: 'og:title', content: localizedTitle });
+    this.metaService.updateTag({ property: 'og:description', content: ogDescription });
     
     if (this.coverImage?.url) {
       this.metaService.updateTag({ property: 'og:image', content: this.coverImage.url });
     }
+  }
+
+  private getLocalizedText(translations?: TranslatedTextMap, fallback: string = ''): string {
+    if (!translations) {
+      return fallback;
+    }
+    const currentLang = this.languageService.getCurrentLanguage();
+    const direct = translations[currentLang as keyof typeof translations];
+    if (direct && direct.trim().length > 0) {
+      return direct.trim();
+    }
+    for (const lang of this.languageService.languages) {
+      const value = translations[lang.code as keyof typeof translations];
+      if (value && value.trim().length > 0) {
+        return value.trim();
+      }
+    }
+    return fallback;
   }
 
   goBack() {

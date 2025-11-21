@@ -14,6 +14,94 @@
     "subtitle": "Excelencia en acabados para espacios únicos",
     "cta": "Ver Catálogo"
   },
+  "home": {
+    "why_preheading": "Excelencia cerámica",
+    "hero": {
+      "tagline": "Cerámica técnica desde Castellón",
+      "heading": "Materiales nobles para paredes y suelos inspirados en la piedra natural.",
+      "description": "En The Stone seleccionamos ónix, mármoles y cuarcitas que combinan belleza y resistencia. Diseñamos cada colección para proyectos residenciales y contract que buscan distinción.",
+      "primaryCta": "Ver colecciones",
+      "secondaryCta": "Solicitar asesoramiento",
+      "visualAlt": "Ambiente con revestimiento cerámico"
+    },
+    "collections": {
+      "title": "Nuestras Colecciones",
+      "subtitle": "Descubre nuestras superficies porcelánicas disponibles en diferentes grosores para adaptarse a cualquier proyecto arquitectónico.",
+      "collection_heading": "Colección {{thickness}}",
+      "view_all": "Ver todos",
+      "view_details": "Ver detalles"
+    },
+    "why": {
+      "title": "¿Por qué elegir TopStone?",
+      "subtitle": "Soluciones de superficies diseñadas para elevar el valor estético y técnico de cualquier proyecto arquitectónico.",
+      "cards": {
+        "premium": {
+          "title": "Diseño Premium",
+          "body": "Texturas únicas y acabados sofisticados que transforman cualquier espacio en una obra de arte contemporánea."
+        },
+        "resistance": {
+          "title": "Máxima Resistencia",
+          "body": "Materiales de última generación que garantizan durabilidad excepcional frente al desgaste, manchas y químicos."
+        },
+        "versatility": {
+          "title": "Versatilidad Total",
+          "body": "Perfectas para cocinas, baños, fachadas e industria. Un material que se adapta a cualquier proyecto."
+        }
+      }
+    },
+    "gallery": {
+      "projects_title": "Inspírate con nuestros proyectos",
+      "projects_button": "Ver galería",
+      "projects_alt": "Galería TopStone",
+      "contact_title": "¿Tienes un proyecto en mente?",
+      "contact_button": "Solicitar información",
+      "contact_alt": "Contacto TopStone"
+    }
+  },
+  "productsPage": {
+    "hero": {
+      "title": "Nuestros Productos",
+      "subtitle": "Superficies porcelánicas de gran formato disponibles en diferentes grosores. Cada colección está diseñada para adaptarse a las necesidades específicas de tu proyecto."
+    },
+    "filters": {
+      "category": "Categoría",
+      "category_all": "Todas las categorías",
+      "material": "Material",
+      "material_all": "Todos los materiales",
+      "search": "Buscar",
+      "search_placeholder": "Nombre del producto...",
+      "clear": "Limpiar filtros"
+    },
+    "loading": "Cargando productos...",
+    "results": "Mostrando {{filtered}} de {{total}} productos",
+    "empty": {
+      "title": "No se encontraron productos",
+      "description": "Intenta ajustar los filtros para ver más resultados"
+    },
+    "collections": {
+      "mm12": {
+        "heading": "12mm",
+        "subtitle": "162×324cm · Ideal para revestimientos interiores y exteriores"
+      },
+      "mm20": {
+        "heading": "20mm",
+        "subtitle": "162×324cm · Ideales para exteriores y zonas de alto tránsito"
+      },
+      "view_all": "Ver toda la colección"
+    },
+    "view_details": "Ver detalles",
+    "add_to_cart": "Añadir",
+    "stock": {
+      "label": "Stock",
+      "units": "unidades"
+    },
+    "cta": {
+      "title": "¿Necesitas asesoramiento personalizado?",
+      "description": "Nuestro equipo de expertos te ayudará a elegir la superficie perfecta para tu proyecto.",
+      "primary": "Solicitar asesoramiento",
+      "secondary": "Datos técnicos"
+    }
+  },
   "products": {
     "title": "Nuestros Productos",
     "addToCart": "Añadir al Carrito",
@@ -176,7 +264,7 @@
     "total_products": "Total de Productos",
     "total_orders": "Total de Pedidos",
     "total_users": "Total de Usuarios",
-    "gallery_images": "Galería de imágenes",
+    "gallery_images": "Imágenes de Galería",
     "quick_actions": "Acciones Rápidas",
     "recent_activity": "Actividad Reciente",
     "no_recent_activity": "No hay actividad reciente",
@@ -293,7 +381,6 @@
     "media": "Medios",
     "cover_image_label": "Imagen de Portada",
     "upload_cover_image": "Subir imagen de portada",
-    "gallery_images": "Imágenes de Galería",
     "add_gallery_images": "Agregar imágenes de galería",
     "details": "Detalles",
     "material": "Material",
@@ -434,9 +521,22 @@
     "download": "Descargar"
   },
   "footer": {
-    "about": "Sobre Nosotros",
-    "contact": "Contacto",
-    "social": "Redes Sociales",
-    "rights": "Todos los derechos reservados"
+    "default_site_name": "TopStone",
+    "default_tagline": "Superficies porcelánicas de gran formato que elevan cada proyecto con diseño, resistencia y versatilidad.",
+    "default_email": "info@topstone.com",
+    "default_phone": "+34 964 000 000",
+    "default_address": "Polígono Industrial La Plana, nave 18 · Castellón, España",
+    "quick_links": "Enlaces rápidos",
+    "products_title": "Productos",
+    "collections": {
+      "12mm": "Colección 12mm",
+      "20mm": "Colección 20mm"
+    },
+    "copyright": "© 2025 TopStone. Todos los derechos reservados.",
+    "links": {
+      "privacy": "Política de privacidad",
+      "terms": "Términos y condiciones",
+      "cookies": "Cookies"
+    }
   }
 }

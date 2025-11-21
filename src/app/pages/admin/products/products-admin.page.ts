@@ -9,11 +9,12 @@ import { CategoryService } from '../../../services/category.service';
 import { MaterialService } from '../../../services/material.service';
 import { StorageService } from '../../../services/storage.service';
 import { MediaService } from '../../../services/media.service';
-import { Product } from '../../../models/product';
+import { LanguageCode, Product, TranslatedTextMap } from '../../../models/product';
 import { Category, Material, TemplateComposition } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
 import { GalleryUploaderComponent } from '../../../shared/components/gallery-uploader/gallery-uploader.component';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
+import { LanguageService, Language } from '../../../core/services/language.service';
 
 interface CatalogOption {
   id: string;
@@ -42,6 +43,13 @@ export class ProductsAdminComponent implements OnInit {
   private storageService = inject(StorageService);
   private mediaService = inject(MediaService);
   private cdr = inject(ChangeDetectorRef);
+  private languageService = inject(LanguageService);
+
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
+  activeDescriptionLang: Language = this.defaultLanguage;
+  activeSeoTitleLang: Language = this.defaultLanguage;
+  activeSeoMetaLang: Language = this.defaultLanguage;
 
   products: Product[] = [];
   categories: Category[] = [];
@@ -114,9 +122,9 @@ export class ProductsAdminComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3)]],
       categoryId: ['', [Validators.required]],
       materialId: ['', [Validators.required]],
-      description: [''],
-      seoTitle: [''],
-      seoMeta: [''],
+      descriptionTranslations: this.createTranslationFormGroup(),
+      seoTitleTranslations: this.createTranslationFormGroup(),
+      seoMetaTranslations: this.createTranslationFormGroup(),
       price: ['', [Validators.min(0)]],
       stock: ['', [Validators.min(0)]],
       size: ['160×320cm', [Validators.required]],
@@ -347,19 +355,19 @@ export class ProductsAdminComponent implements OnInit {
     });
     this.productForm.get('usage')?.valueChanges.subscribe(() => this.triggerAutoFill());
 
-    this.productForm.get('description')?.valueChanges.subscribe(() => {
+    this.productForm.get('descriptionTranslations')?.valueChanges.subscribe(() => {
       if (!this.isAutoFilling) {
         this.descriptionLocked = true;
       }
     });
 
-    this.productForm.get('seoTitle')?.valueChanges.subscribe(() => {
+    this.productForm.get('seoTitleTranslations')?.valueChanges.subscribe(() => {
       if (!this.isAutoFilling) {
         this.seoLocked = true;
       }
     });
 
-    this.productForm.get('seoMeta')?.valueChanges.subscribe(() => {
+    this.productForm.get('seoMetaTranslations')?.valueChanges.subscribe(() => {
       if (!this.isAutoFilling) {
         this.seoLocked = true;
       }
@@ -452,14 +460,14 @@ export class ProductsAdminComponent implements OnInit {
 
       // Auto-apply if not locked
       if (!this.descriptionLocked && generated.description) {
-        this.productForm.patchValue({ description: generated.description }, { emitEvent: false });
+        this.setTranslationValue('descriptionTranslations', this.defaultLanguage, generated.description);
       }
       if (!this.seoLocked) {
         if (generated.seoTitle) {
-          this.productForm.patchValue({ seoTitle: generated.seoTitle }, { emitEvent: false });
+          this.setTranslationValue('seoTitleTranslations', this.defaultLanguage, generated.seoTitle);
         }
         if (generated.seoMeta) {
-          this.productForm.patchValue({ seoMeta: generated.seoMeta }, { emitEvent: false });
+          this.setTranslationValue('seoMetaTranslations', this.defaultLanguage, generated.seoMeta);
         }
       }
 
@@ -678,20 +686,41 @@ export class ProductsAdminComponent implements OnInit {
     this.catalogSearchTerm = '';
     this.applyCatalogFilter('');
     this.currentStep = 1;
+
     
-    this.productForm.reset({ 
+
+    this.productForm.reset({
+
       name: '',
+
       categoryId: '',
+
       materialId: '',
-      description: '',
-      seoTitle: '',
-      seoMeta: '',
-      size: '160×320cm',
+
+      descriptionTranslations: this.buildTranslationResetValue(),
+
+      seoTitleTranslations: this.buildTranslationResetValue(),
+
+      seoMetaTranslations: this.buildTranslationResetValue(),
+
+      size: '160A-320cm',
+
       finish: 'Pulido',
-      usage: 'Cocinas, Baños, Fachadas',
+
+      usage: 'Cocinas, BaA?os, Fachadas',
+
       active: true
+
     });
-    
+
+    this.activeDescriptionLang = this.defaultLanguage;
+
+    this.activeSeoTitleLang = this.defaultLanguage;
+
+    this.activeSeoMetaLang = this.defaultLanguage;
+
+
+
     this.selectedCoverFile = null;
     this.coverPreview = null;
     this.galleryFiles = [];
@@ -716,21 +745,42 @@ export class ProductsAdminComponent implements OnInit {
     const usageStr = product.specs?.usage?.join(', ') || 'Cocinas, Baños, Fachadas';
     
     this.productForm.patchValue({
+
       name: product.name,
+
       categoryId: product.categoryId || '',
+
       materialId: product.materialId || '',
-      description: product.description || '',
-      seoTitle: product.seo?.title || '',
-      seoMeta: product.seo?.metaDescription || '',
+
       price: product.price || '',
+
       stock: product.stock || '',
-      size: product.specs?.size || product.size || '160×320cm',
+
+      size: product.specs?.size || product.size || '160A-320cm',
+
       sku: product.sku || '',
+
       finish: product.specs?.finish || 'Pulido',
+
       usage: usageStr,
+
       active: product.active !== false
+
     });
-    
+
+    this.patchTranslationGroup('descriptionTranslations', product.descriptionTranslations, product.description || '');
+
+    this.patchTranslationGroup('seoTitleTranslations', product.seoTitleTranslations, product.seo?.title || '');
+
+    this.patchTranslationGroup('seoMetaTranslations', product.seoMetaTranslations, product.seo?.metaDescription || '');
+
+    this.activeDescriptionLang = this.defaultLanguage;
+
+    this.activeSeoTitleLang = this.defaultLanguage;
+
+    this.activeSeoMetaLang = this.defaultLanguage;
+
+   
     this.selectedCoverFile = null;
     this.coverPreview = product.coverImage || product.imageUrl || null;
     this.galleryFiles = [];
@@ -871,6 +921,12 @@ export class ProductsAdminComponent implements OnInit {
     // For drafts, only require basic product info (name, category, material)
     // For published, validate all required fields
     const formData = this.productForm.value;
+    const descriptionTranslations = this.normalizeTranslations(formData.descriptionTranslations);
+    const seoTitleTranslations = this.normalizeTranslations(formData.seoTitleTranslations);
+    const seoMetaTranslations = this.normalizeTranslations(formData.seoMetaTranslations);
+    const defaultDescription = this.getPrimaryTranslation(descriptionTranslations);
+    const defaultSeoTitle = this.getPrimaryTranslation(seoTitleTranslations);
+    const defaultSeoMeta = this.getPrimaryTranslation(seoMetaTranslations);
     
     if (status === 'draft') {
       // Drafts require minimal validation
@@ -945,7 +1001,8 @@ export class ProductsAdminComponent implements OnInit {
         categoryId: formData.categoryId,
         materialId: formData.materialId,
         status,
-        description: formData.description || '',
+        description: defaultDescription || '',
+        descriptionTranslations: Object.keys(descriptionTranslations).length ? descriptionTranslations : undefined,
         variantMode: 'embedded',
         variants: [{
           sku: formData.sku || undefined,
@@ -964,10 +1021,12 @@ export class ProductsAdminComponent implements OnInit {
           usage
         },
         seo: {
-          title: formData.seoTitle || '',
-          metaDescription: formData.seoMeta || '',
+          title: defaultSeoTitle || '',
+          metaDescription: defaultSeoMeta || '',
           ogImage: coverImageUrl || undefined
         },
+        seoTitleTranslations: Object.keys(seoTitleTranslations).length ? seoTitleTranslations : undefined,
+        seoMetaTranslations: Object.keys(seoMetaTranslations).length ? seoMetaTranslations : undefined,
         tags: this.autoFillPreview?.tags || this.selectedProduct?.tags || [],
         descriptionLocked: this.descriptionLocked,
         specsLocked: this.specsLocked,
@@ -1160,6 +1219,91 @@ export class ProductsAdminComponent implements OnInit {
     }
   }
 
+  private createTranslationFormGroup(initialValue: string = ''): FormGroup {
+    const config: Record<string, any[]> = {};
+    this.languages.forEach(lang => {
+      config[lang.code] = [initialValue];
+    });
+    return this.fb.group(config);
+  }
+
+  private setTranslationValue(
+    groupName: 'descriptionTranslations' | 'seoTitleTranslations' | 'seoMetaTranslations',
+    lang: Language,
+    value: string
+  ) {
+    const control = this.productForm.get(`${groupName}.${lang}`);
+    control?.setValue(value, { emitEvent: false });
+  }
+
+  private buildTranslationResetValue(initialValue: string = ''): Record<Language, string> {
+    const values: Record<string, string> = {};
+    this.languages.forEach(lang => {
+      values[lang.code] = initialValue;
+    });
+    return values;
+  }
+
+  private patchTranslationGroup(
+    groupName: 'descriptionTranslations' | 'seoTitleTranslations' | 'seoMetaTranslations',
+    translations?: TranslatedTextMap,
+    fallback: string = ''
+  ) {
+    const group = this.productForm.get(groupName) as FormGroup | null;
+    if (!group) {
+      return;
+    }
+    const patch: Record<string, string> = {};
+    this.languages.forEach(lang => {
+      const value = translations?.[lang.code as LanguageCode];
+      patch[lang.code] = value ?? (lang.code === this.defaultLanguage ? fallback : '');
+    });
+    group.patchValue(patch, { emitEvent: false });
+  }
+
+  private normalizeTranslations(raw: Record<string, string> | undefined): TranslatedTextMap {
+    const normalized: TranslatedTextMap = {};
+    if (!raw) {
+      return normalized;
+    }
+    this.languages.forEach(lang => {
+      const value = raw[lang.code];
+      if (value && value.toString().trim().length > 0) {
+        normalized[lang.code as LanguageCode] = value.toString().trim();
+      }
+    });
+    return normalized;
+  }
+
+  private getPrimaryTranslation(
+    translations: TranslatedTextMap,
+    fallback: string = ''
+  ): string {
+    const primary = translations[this.defaultLanguage as LanguageCode];
+    if (primary && primary.trim().length > 0) {
+      return primary.trim();
+    }
+    for (const lang of this.languages) {
+      const candidate = translations[lang.code as LanguageCode];
+      if (candidate && candidate.trim().length > 0) {
+        return candidate.trim();
+      }
+    }
+    return fallback;
+  }
+
+  setActiveDescriptionLanguage(lang: Language) {
+    this.activeDescriptionLang = lang;
+  }
+
+  setActiveSeoTitleLanguage(lang: Language) {
+    this.activeSeoTitleLang = lang;
+  }
+
+  setActiveSeoMetaLanguage(lang: Language) {
+    this.activeSeoMetaLang = lang;
+  }
+
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -1171,9 +1315,9 @@ export class ProductsAdminComponent implements OnInit {
   get name() { return this.productForm.get('name'); }
   get categoryId() { return this.productForm.get('categoryId'); }
   get materialId() { return this.productForm.get('materialId'); }
-  get description() { return this.productForm.get('description'); }
-  get seoTitle() { return this.productForm.get('seoTitle'); }
-  get seoMeta() { return this.productForm.get('seoMeta'); }
+  get descriptionTranslationsGroup() { return this.productForm.get('descriptionTranslations') as FormGroup; }
+  get seoTitleTranslationsGroup() { return this.productForm.get('seoTitleTranslations') as FormGroup; }
+  get seoMetaTranslationsGroup() { return this.productForm.get('seoMetaTranslations') as FormGroup; }
   get price() { return this.productForm.get('price'); }
   get stock() { return this.productForm.get('stock'); }
   get size() { return this.productForm.get('size'); }

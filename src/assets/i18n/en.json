@@ -14,6 +14,94 @@
     "subtitle": "Excellence in finishes for unique spaces",
     "cta": "View Catalog"
   },
+  "home": {
+    "why_preheading": "TopStone Excellence",
+    "hero": {
+      "tagline": "Technical ceramics from Castellón",
+      "heading": "Noble materials for walls and floors inspired by natural stone.",
+      "description": "At The Stone we select onyx, marbles and quartzites that combine beauty and durability. We design each collection for residential and contract projects seeking distinction.",
+      "primaryCta": "See collections",
+      "secondaryCta": "Request consultation",
+      "visualAlt": "Interior with ceramic cladding"
+    },
+    "collections": {
+      "title": "Our Collections",
+      "subtitle": "Discover our porcelain surfaces available in different thicknesses to suit any architectural project.",
+      "collection_heading": "Collection {{thickness}}",
+      "view_all": "View all",
+      "view_details": "View details"
+    },
+    "why": {
+      "title": "Why choose TopStone?",
+      "subtitle": "Surface solutions engineered to elevate both the aesthetic and technical value of every architectural project.",
+      "cards": {
+        "premium": {
+          "title": "Premium Design",
+          "body": "Unique textures and refined finishes that turn any space into a piece of contemporary art."
+        },
+        "resistance": {
+          "title": "Maximum Resistance",
+          "body": "Next-generation materials that guarantee outstanding durability against wear, stains, and chemicals."
+        },
+        "versatility": {
+          "title": "Total Versatility",
+          "body": "Perfect for kitchens, bathrooms, façades, and industry—materials that adapt to every project."
+        }
+      }
+    },
+    "gallery": {
+      "projects_title": "Get inspired by our projects",
+      "projects_button": "View gallery",
+      "projects_alt": "TopStone gallery showcase",
+      "contact_title": "Have a project in mind?",
+      "contact_button": "Request information",
+      "contact_alt": "Contact TopStone"
+    }
+  },
+  "productsPage": {
+    "hero": {
+      "title": "Our Products",
+      "subtitle": "Large-format porcelain surfaces available in multiple thicknesses. Each collection is crafted to match the specific needs of your project."
+    },
+    "filters": {
+      "category": "Category",
+      "category_all": "All categories",
+      "material": "Material",
+      "material_all": "All materials",
+      "search": "Search",
+      "search_placeholder": "Product name...",
+      "clear": "Clear filters"
+    },
+    "loading": "Loading products...",
+    "results": "Showing {{filtered}} of {{total}} products",
+    "empty": {
+      "title": "No products found",
+      "description": "Try adjusting the filters to see more results"
+    },
+    "collections": {
+      "mm12": {
+        "heading": "12mm",
+        "subtitle": "162×324cm · Ideal for interior and exterior cladding"
+      },
+      "mm20": {
+        "heading": "20mm",
+        "subtitle": "162×324cm · Perfect for outdoors and high-traffic areas"
+      },
+      "view_all": "View the full collection"
+    },
+    "view_details": "View details",
+    "add_to_cart": "Add to cart",
+    "stock": {
+      "label": "Stock",
+      "units": "units"
+    },
+    "cta": {
+      "title": "Need tailored guidance?",
+      "description": "Our team of experts will help you choose the perfect surface for your project.",
+      "primary": "Request consultation",
+      "secondary": "Technical data"
+    }
+  },
   "products": {
     "title": "Our Products",
     "addToCart": "Add to Cart",
@@ -392,9 +480,22 @@
     "download": "Download"
   },
   "footer": {
-    "about": "About Us",
-    "contact": "Contact",
-    "social": "Social Media",
-    "rights": "All rights reserved"
+    "default_site_name": "TopStone",
+    "default_tagline": "Large-format porcelain surfaces that elevate every project with design, durability, and versatility.",
+    "default_email": "info@topstone.com",
+    "default_phone": "+34 964 000 000",
+    "default_address": "La Plana Industrial Park, unit 18 · Castellón, Spain",
+    "quick_links": "Quick links",
+    "products_title": "Products",
+    "collections": {
+      "12mm": "Collection 12mm",
+      "20mm": "Collection 20mm"
+    },
+    "copyright": "© 2025 TopStone. All rights reserved.",
+    "links": {
+      "privacy": "Privacy policy",
+      "terms": "Terms & conditions",
+      "cookies": "Cookies"
+    }
   }
 }
