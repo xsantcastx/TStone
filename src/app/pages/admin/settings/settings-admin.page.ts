@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ export class SettingsAdminComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private imageOptimization = inject(ImageOptimizationService);
+  private cdr = inject(ChangeDetectorRef);
 
   settings = signal<AppSettings | null>(null);
   heroImages = signal<HeroImage[]>([]);
@@ -102,10 +103,12 @@ export class SettingsAdminComponent implements OnInit {
       };
       this.heroImages.set(images);
       
+      this.cdr.detectChanges(); // Force UI update
       this.successMessage.set(`Imagen subida correctamente (${reduction}% más pequeña)`);
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading image:', error);
+      this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir la imagen');
       setTimeout(() => this.errorMessage.set(''), 3000);
     }
@@ -256,10 +259,12 @@ export class SettingsAdminComponent implements OnInit {
       await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
       this.updateSetting('logoUrl', url);
+      this.cdr.detectChanges(); // Force UI update
       this.successMessage.set(`Logo actualizado (${reduction}% más pequeño)`);
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading logo:', error);
+      this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el logo');
     }
   }
@@ -290,10 +295,12 @@ export class SettingsAdminComponent implements OnInit {
       await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
       this.updateSetting('logoLightUrl', url);
+      this.cdr.detectChanges(); // Force UI update
       this.successMessage.set(`Logo claro actualizado (${reduction}% más pequeño)`);
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading logo light:', error);
+      this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el logo claro');
     }
   }
@@ -324,10 +331,12 @@ export class SettingsAdminComponent implements OnInit {
       await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
       this.updateSetting('logoDarkUrl', url);
+      this.cdr.detectChanges(); // Force UI update
       this.successMessage.set(`Logo oscuro actualizado (${reduction}% más pequeño)`);
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading logo dark:', error);
+      this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el logo oscuro');
     }
   }
@@ -359,10 +368,12 @@ export class SettingsAdminComponent implements OnInit {
       await uploadBytes(storageRef, optimizedFile);
       const url = await getDownloadURL(storageRef);
       this.updateSetting('faviconUrl', url);
+      this.cdr.detectChanges(); // Force UI update
       this.successMessage.set(`Favicon actualizado (${reduction}% más pequeño)`);
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading favicon:', error);
+      this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el favicon');
     }
   }

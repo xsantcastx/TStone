@@ -96,8 +96,12 @@ export class MaterialService {
    */
   async updateMaterial(id: string, updates: Partial<Material>): Promise<void> {
     const docRef = this.materialDoc(id);
+    // Remove undefined values to avoid Firestore errors
+    const cleanUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== undefined)
+    );
     await updateDoc(docRef, {
-      ...updates,
+      ...cleanUpdates,
       updatedAt: Timestamp.now()
     } as any);
   }

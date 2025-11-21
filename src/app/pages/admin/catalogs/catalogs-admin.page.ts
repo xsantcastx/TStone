@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CatalogService, Catalog } from '../../../services/catalog.service';
@@ -13,6 +13,7 @@ import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/
 })
 export class CatalogsAdminPage {
   private catalogService = inject(CatalogService);
+  private cdr = inject(ChangeDetectorRef);
   
   catalogs$ = this.catalogService.catalogs$;
   isUploading = signal(false);
@@ -68,12 +69,15 @@ export class CatalogsAdminPage {
       const fileInput = document.getElementById('catalogFile') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
       
+      this.cdr.detectChanges(); // Force UI update
       alert('Catálogo subido exitosamente');
     } catch (error) {
       console.error('Error uploading catalog:', error);
+      this.cdr.detectChanges(); // Force UI update
       alert('Error al subir el catálogo');
     } finally {
       this.isUploading.set(false);
+      this.cdr.detectChanges(); // Force UI update
     }
   }
 
@@ -84,9 +88,11 @@ export class CatalogsAdminPage {
 
     try {
       await this.catalogService.deleteCatalog(catalog.id!, catalog.fileUrl);
+      this.cdr.detectChanges(); // Force UI update
       alert('Catálogo eliminado');
     } catch (error) {
       console.error('Error deleting catalog:', error);
+      this.cdr.detectChanges(); // Force UI update
       alert('Error al eliminar el catálogo');
     }
   }
@@ -94,9 +100,11 @@ export class CatalogsAdminPage {
   async setAsLatest(catalog: Catalog): Promise<void> {
     try {
       await this.catalogService.setLatestCatalog(catalog.id!);
+      this.cdr.detectChanges(); // Force UI update
       alert('Catálogo marcado como más reciente');
     } catch (error) {
       console.error('Error setting latest catalog:', error);
+      this.cdr.detectChanges(); // Force UI update
       alert('Error al actualizar el catálogo');
     }
   }

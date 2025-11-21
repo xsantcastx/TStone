@@ -96,8 +96,12 @@ export class CategoryService {
    */
   async updateCategory(id: string, updates: Partial<Category>): Promise<void> {
     const docRef = this.categoryDoc(id);
+    // Remove undefined values to avoid Firestore errors
+    const cleanUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== undefined)
+    );
     await updateDoc(docRef, {
-      ...updates,
+      ...cleanUpdates,
       updatedAt: Timestamp.now()
     } as any);
   }

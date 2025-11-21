@@ -96,8 +96,12 @@ export class SizeGroupService {
    */
   async updateSizeGroup(id: string, updates: Partial<SizeGroup>): Promise<void> {
     const docRef = this.sizeGroupDoc(id);
+    // Remove undefined values to avoid Firestore errors
+    const cleanUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== undefined)
+    );
     await updateDoc(docRef, {
-      ...updates,
+      ...cleanUpdates,
       updatedAt: Timestamp.now()
     } as any);
   }
