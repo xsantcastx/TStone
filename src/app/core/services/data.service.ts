@@ -128,7 +128,8 @@ export class DataService {
         packing: [],
         acabadosBordes: [],
         fijacionesFachada: { descripcion: '', imagen: '', ventajas: [] },
-        mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] }
+        mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] },
+        testResults: []
       });
     }
     return this.http.get<DatosTecnicosData>('/assets/data/datos_tecnicos.json');
