@@ -49,32 +49,42 @@ export class ProductosPageComponent implements OnInit {
   isLoading = true;
 
   async ngOnInit() {
-    // Load filter options
-    await this.loadFilterOptions();
-    
-    // Load products if in browser
+    // Load filter options and products in parallel
     if (isPlatformBrowser(this.platformId)) {
-      await this.loadProducts();
+      await Promise.all([
+        this.loadFilterOptions(),
+        this.loadProducts()
+      ]);
     }
   }
 
   private async loadFilterOptions() {
     try {
-      this.categoryService.getActiveCategories().subscribe({
-        next: (categories) => {
-          this.categories = categories;
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error('Error loading categories:', err)
-      });
+      // Load categories and materials in parallel
+      const [categories, materials] = await Promise.all([
+        new Promise<Category[]>((resolve) => {
+          this.categoryService.getActiveCategories().subscribe({
+            next: (cats) => resolve(cats),
+            error: (err) => {
+              console.error('Error loading categories:', err);
+              resolve([]);
+            }
+          });
+        }),
+        new Promise<Material[]>((resolve) => {
+          this.materialService.getActiveMaterials().subscribe({
+            next: (mats) => resolve(mats),
+            error: (err) => {
+              console.error('Error loading materials:', err);
+              resolve([]);
+            }
+          });
+        })
+      ]);
 
-      this.materialService.getActiveMaterials().subscribe({
-        next: (materials) => {
-          this.materials = materials;
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error('Error loading materials:', err)
-      });
+      this.categories = categories;
+      this.materials = materials;
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error loading filter options:', error);
     }

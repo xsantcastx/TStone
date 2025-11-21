@@ -8,7 +8,7 @@ import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage
 import { AuthService } from '../../../services/auth.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
-import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento } from '../../../core/services/data.service';
+import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento, TestResult } from '../../../core/services/data.service';
 
 @Component({
   selector: 'app-datos-tecnicos-admin',
@@ -31,14 +31,15 @@ export class DatosTecnicosAdminComponent implements OnInit {
     packing: [],
     acabadosBordes: [],
     fijacionesFachada: { descripcion: '', imagen: '', ventajas: [] },
-    mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] }
+    mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] },
+    testResults: []
   });
 
   isLoading = signal(false);
   isSaving = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
-  activeTab = signal<'specs' | 'acabados' | 'fichas' | 'packing' | 'bordes' | 'fachada' | 'mantenimiento'>('specs');
+  activeTab = signal<'specs' | 'acabados' | 'fichas' | 'packing' | 'bordes' | 'fachada' | 'mantenimiento' | 'tests'>('specs');
 
   // Editing states
   editingSpec: { key: string; value: string } = { key: '', value: '' };
@@ -249,7 +250,7 @@ export class DatosTecnicosAdminComponent implements OnInit {
       ...current,
       packing: [
         ...current.packing,
-        { grosor: '', piezasPorPallet: 0, pesoAprox: '', dimensionesPallet: '', volumen: '' }
+        { grosor: '', piezasPorPallet: 0, pesoAprox: '', dimensionesPallet: '', superficie: '', superficiePallet: '', pesoPallet: '' }
       ]
     });
   }
@@ -486,6 +487,37 @@ export class DatosTecnicosAdminComponent implements OnInit {
         ...current.mantenimiento,
         evitar: current.mantenimiento.evitar.filter((_, i) => i !== index)
       }
+    });
+  }
+
+  // Test Results
+  addTest(): void {
+    const current = this.datosTecnicos();
+    this.datosTecnicos.set({
+      ...current,
+      testResults: [
+        ...(current.testResults || []),
+        { nombre: '', valorPrescrito: '', valorObtenido: '', norma: '' }
+      ]
+    });
+  }
+
+  removeTest(index: number): void {
+    const current = this.datosTecnicos();
+    this.datosTecnicos.set({
+      ...current,
+      testResults: (current.testResults || []).filter((_, i) => i !== index)
+    });
+  }
+
+  updateTest(index: number, field: keyof TestResult, value: string): void {
+    const current = this.datosTecnicos();
+    const tests = [...(current.testResults || [])];
+    tests[index] = { ...tests[index], [field]: value };
+    
+    this.datosTecnicos.set({
+      ...current,
+      testResults: tests
     });
   }
 

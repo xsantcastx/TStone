@@ -53,7 +53,9 @@ export interface PackingInfo {
   piezasPorPallet: number;
   pesoAprox: string;
   dimensionesPallet: string;
-  volumen: string;
+  superficie: string;
+  superficiePallet: string;
+  pesoPallet: string;
 }
 
 export interface AcabadoBorde {
@@ -75,6 +77,13 @@ export interface Mantenimiento {
   evitar: string[];
 }
 
+export interface TestResult {
+  nombre: string;
+  valorPrescrito: string;
+  valorObtenido: string;
+  norma?: string;
+}
+
 export interface DatosTecnicosData {
   acabadosSuperficie: AcabadoSuperficie[];
   fichasTecnicas: FichaTecnica[];
@@ -83,6 +92,7 @@ export interface DatosTecnicosData {
   acabadosBordes: AcabadoBorde[];
   fijacionesFachada: FijacionesFachada;
   mantenimiento: Mantenimiento;
+  testResults: TestResult[];
 }
 
 @Injectable({

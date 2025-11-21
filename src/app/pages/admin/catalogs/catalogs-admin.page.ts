@@ -49,6 +49,22 @@ export class CatalogsAdminPage {
       alert('Solo se permiten archivos PDF');
       return;
     }
+    
+    // Validate file size (500MB max)
+    const maxSize = 500 * 1024 * 1024; // 500MB in bytes
+    if (this.selectedFile.size > maxSize) {
+      const fileSizeMB = (this.selectedFile.size / (1024 * 1024)).toFixed(2);
+      alert(`El archivo es demasiado grande (${fileSizeMB}MB). El tamaño máximo permitido es 500MB.\n\nPor favor, comprime el PDF usando herramientas como Adobe Acrobat, SmallPDF.com, o PDF Compressor.`);
+      return;
+    }
+    
+    // Warn for large files
+    if (this.selectedFile.size > 100 * 1024 * 1024) {
+      const fileSizeMB = (this.selectedFile.size / (1024 * 1024)).toFixed(2);
+      if (!confirm(`El archivo es bastante grande (${fileSizeMB}MB). La subida puede tardar varios minutos.\n\n¿Deseas continuar?`)) {
+        return;
+      }
+    }
 
     this.isUploading.set(true);
     this.uploadProgress.set(0);

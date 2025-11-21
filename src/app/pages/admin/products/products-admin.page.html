@@ -83,19 +83,102 @@
       </div>
     } @else {
       <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- Active Filters Display -->
+        @if (searchTerm || selectedThickness !== 'all' || categoryFilter !== 'all' || priceFilter !== 'all') {
+          <div class="px-6 py-3 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-medium text-blue-900">Filtros activos:</span>
+              @if (searchTerm) {
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">Búsqueda: {{searchTerm}}</span>
+              }
+              @if (selectedThickness !== 'all') {
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">Grosor: {{selectedThickness}}</span>
+              }
+              @if (categoryFilter !== 'all') {
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">Categoría</span>
+              }
+              @if (priceFilter !== 'all') {
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">Precio</span>
+              }
+            </div>
+            <button (click)="clearAllFilters()" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+              Limpiar todo
+            </button>
+          </div>
+        }
+        
         <div class="overflow-x-auto">
           <table class="w-full">
             <thead class="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'admin.product_image' | translate }}</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'admin.product_name' | translate }}</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'admin.product_category' | translate }}</th>
+                
+                <!-- Category Column with Filter -->
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div class="flex items-center gap-2 relative">
+                    <span>{{ 'admin.product_category' | translate }}</span>
+                    <button (click)="toggleColumnFilter('category')" class="hover:bg-gray-200 rounded p-1">
+                      <svg class="w-4 h-4" [class.text-blue-600]="categoryFilter !== 'all'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                      </svg>
+                    </button>
+                    @if (columnFilterOpen === 'category') {
+                      <div class="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 w-48">
+                        <div class="p-2 max-h-64 overflow-y-auto">
+                          <label class="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="radio" [(ngModel)]="categoryFilter" value="all" (change)="columnFilterOpen = null" class="text-blue-600">
+                            <span class="text-sm">Todas</span>
+                          </label>
+                          @for (cat of uniqueCategories; track cat.id) {
+                            <label class="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer">
+                              <input type="radio" [(ngModel)]="categoryFilter" [value]="cat.id" (change)="columnFilterOpen = null" class="text-blue-600">
+                              <span class="text-sm">{{cat.name}}</span>
+                            </label>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </th>
+                
+                <!-- Thickness Column (already has filter above) -->
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'admin.product_thickness' | translate }}</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'admin.product_price' | translate }}</th>
+                
+                <!-- Price Column with Filter -->
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <div class="flex items-center gap-2 relative">
+                    <span>{{ 'admin.product_price' | translate }}</span>
+                    <button (click)="toggleColumnFilter('price')" class="hover:bg-gray-200 rounded p-1">
+                      <svg class="w-4 h-4" [class.text-blue-600]="priceFilter !== 'all'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                      </svg>
+                    </button>
+                    @if (columnFilterOpen === 'price') {
+                      <div class="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 w-48">
+                        <div class="p-2">
+                          <label class="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="radio" [(ngModel)]="priceFilter" value="all" (change)="columnFilterOpen = null" class="text-blue-600">
+                            <span class="text-sm">Todos</span>
+                          </label>
+                          <label class="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="radio" [(ngModel)]="priceFilter" value="withPrice" (change)="columnFilterOpen = null" class="text-blue-600">
+                            <span class="text-sm">Con precio</span>
+                          </label>
+                          <label class="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="radio" [(ngModel)]="priceFilter" value="noPrice" (change)="columnFilterOpen = null" class="text-blue-600">
+                            <span class="text-sm">Sin precio</span>
+                          </label>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </th>
+                
                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'admin.actions' | translate }}</th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200">`
               @if (filteredProducts.length === 0) {
                 <tr>
                   <td colspan="6" class="px-6 py-12 text-center">

@@ -76,6 +76,11 @@ export class ProductsAdminComponent implements OnInit {
   showDeleteConfirm = false;
   productToDelete: Product | null = null;
 
+  // Column filters
+  categoryFilter: string = 'all';
+  priceFilter: string = 'all';
+  columnFilterOpen: string | null = null;
+
   // Image upload
   selectedCoverFile: File | null = null;
   coverPreview: string | null = null;
@@ -497,7 +502,46 @@ export class ProductsAdminComponent implements OnInit {
       filtered = filtered.filter(p => p.grosor === this.selectedThickness);
     }
 
+    // Filter by category
+    if (this.categoryFilter !== 'all') {
+      filtered = filtered.filter(p => p.categoryId === this.categoryFilter);
+    }
+
+    // Filter by price
+    if (this.priceFilter !== 'all') {
+      if (this.priceFilter === 'withPrice') {
+        filtered = filtered.filter(p => p.price && p.price > 0);
+      } else if (this.priceFilter === 'noPrice') {
+        filtered = filtered.filter(p => !p.price || p.price === 0);
+      }
+    }
+
     return filtered;
+  }
+
+  get uniqueCategories(): Array<{id: string, name: string}> {
+    const categoryMap = new Map<string, string>();
+    this.products.forEach(p => {
+      if (p.categoryId) {
+        const category = this.categories.find(c => c.id === p.categoryId);
+        if (category) {
+          categoryMap.set(p.categoryId, category.name);
+        }
+      }
+    });
+    return Array.from(categoryMap.entries()).map(([id, name]) => ({ id, name }));
+  }
+
+  toggleColumnFilter(column: string): void {
+    this.columnFilterOpen = this.columnFilterOpen === column ? null : column;
+  }
+
+  clearAllFilters(): void {
+    this.searchTerm = '';
+    this.selectedThickness = 'all';
+    this.categoryFilter = 'all';
+    this.priceFilter = 'all';
+    this.columnFilterOpen = null;
   }
 
   openCreateModal() {

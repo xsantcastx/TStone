@@ -512,15 +512,19 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
 
       this.successMessage = 'Media updated successfully';
       this.closeEditModal();
+      this.cdr.detectChanges();
 
       setTimeout(() => {
         this.successMessage = '';
+        this.cdr.detectChanges();
       }, 3000);
     } catch (error) {
       console.error('Error updating media:', error);
       this.errorMessage = 'Error updating media';
+      this.cdr.detectChanges();
     } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -540,7 +544,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     this.isSaving = true;
 
     try {
-      // For gallery images, check if linked to products via relatedProductIds
+      // For gallery images linked to products, automatically unlink them before deletion
       if (this.mediaToDelete.relatedEntityType === 'gallery' && 
           this.mediaToDelete.relatedEntityIds && 
           this.mediaToDelete.relatedEntityIds.length > 0) {
@@ -551,13 +555,22 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
           .filter(id => id); // Remove empty strings
         
         if (productIds.length > 0) {
-          const relatedProducts = this.products.filter(p => productIds.includes(p.id || ''));
-          if (relatedProducts.length > 0) {
-            const productNames = relatedProducts.map(p => p.name).join(', ');
-            this.errorMessage = `Cannot delete: Used by products: ${productNames}. Please remove this image from the product's gallery first.`;
-            this.isSaving = false;
-            return;
+          // Unlink image from all related products automatically
+          for (const productId of productIds) {
+            const product = this.products.find(p => p.id === productId);
+            if (product && product.galleryImageIds) {
+              const updatedGalleryIds = product.galleryImageIds.filter(
+                imgId => imgId !== this.mediaToDelete!.id
+              );
+              
+              // Update product to remove this image from gallery
+              await this.productsService.updateProduct(productId, {
+                galleryImageIds: updatedGalleryIds
+              });
+            }
           }
+          
+          this.warningMessage = `Image was automatically unlinked from ${productIds.length} product${productIds.length !== 1 ? 's' : ''} before deletion.`;
         }
       }
 
@@ -566,15 +579,20 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
       
       this.successMessage = 'Media deleted successfully';
       this.closeDeleteConfirm();
+      this.cdr.detectChanges();
 
       setTimeout(() => {
         this.successMessage = '';
+        this.warningMessage = '';
+        this.cdr.detectChanges();
       }, 3000);
     } catch (error) {
       console.error('Error deleting media:', error);
       this.errorMessage = 'Error deleting media';
+      this.cdr.detectChanges();
     } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
