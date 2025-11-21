@@ -33,11 +33,11 @@
         </a>
         
         <!-- Mega Menu -->
-        <div class="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 absolute right-0 mt-2 w-[920px] -translate-x-[calc(100%-200px)]">
-          <div class="p-6 rounded-2xl bg-ts-paper text-black shadow-xl border border-gray-200 grid grid-cols-4 gap-6">
+        <div class="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 absolute right-0 mt-2 w-[720px] -translate-x-[calc(100%-200px)]">
+          <div class="p-6 rounded-2xl bg-ts-paper text-black shadow-xl border border-gray-200 grid grid-cols-3 gap-6">
             <!-- 12mm Column -->
             <div>
-              <h4 class="font-semibold mb-3 text-ts-bg">12mm (160×320cm)</h4>
+              <h4 class="font-semibold mb-3 text-ts-bg">12mm (162×324cm)</h4>
               <ul class="space-y-2">
                 <li *ngFor="let producto of productos12mm">
                   <a [routerLink]="['/productos', '12mm', producto.slug]" 
@@ -49,23 +49,9 @@
               </ul>
             </div>
             
-            <!-- 15mm Column -->
-            <div>
-              <h4 class="font-semibold mb-3 text-ts-bg">15mm (160×320cm)</h4>
-              <ul class="space-y-2">
-                <li *ngFor="let producto of productos15mm">
-                  <a [routerLink]="['/productos', '15mm', producto.slug]" 
-                     class="nav-link text-sm block py-1"
-                     (mouseenter)="onProductHover(producto)">
-                    {{producto.nombre}}
-                  </a>
-                </li>
-              </ul>
-            </div>
-            
             <!-- 20mm Column -->
             <div>
-              <h4 class="font-semibold mb-3 text-ts-bg">20mm (160×320cm)</h4>
+              <h4 class="font-semibold mb-3 text-ts-bg">20mm (162×324cm)</h4>
               <ul class="space-y-2">
                 <li *ngFor="let producto of productos20mm">
                   <a [routerLink]="['/productos', '20mm', producto.slug]" 

@@ -55,6 +55,7 @@ export class ProfilePageComponent implements OnInit {
           company: profile.company || '',
           phone: profile.phone || ''
         });
+        this.cdr.detectChanges(); // Force change detection after loading profile
       }
     } catch (error) {
       console.error('Error loading profile:', error);

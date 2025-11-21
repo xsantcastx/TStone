@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
   isMaintenanceMode = false;
   isAdmin = false;
   isAuthenticated = false;
+  isAuthReady = false;
   currentUrl = '';
   isAdminRoute = false;
   
@@ -42,11 +43,17 @@ export class AppComponent implements OnInit {
   ];
 
   constructor() {
-    // Subscribe to auth changes
+    // Subscribe to auth changes - this also tracks when auth is initialized
     this.authService.userProfile$.subscribe(profile => {
       this.isAdmin = (profile?.role === 'admin');
       this.isAuthenticated = !!profile;
+      this.isAuthReady = true; // Auth is now initialized
       this.cdr.markForCheck();
+      
+      // Hide loader once auth is ready (if in browser)
+      if (isPlatformBrowser(this.platformId) && this.isAuthReady) {
+        this.hideInitialLoader();
+      }
     });
 
     // Track current route for maintenance mode exemptions
@@ -63,20 +70,8 @@ export class AppComponent implements OnInit {
     // Language is auto-initialized by LanguageService constructor
     // It auto-detects browser language and loads from localStorage
     
-    // Hide initial loader after app is ready
-    if (isPlatformBrowser(this.platformId)) {
-      // Use setTimeout to ensure DOM is fully rendered
-      setTimeout(() => {
-        const loader = document.getElementById('app-initial-loader');
-        if (loader) {
-          loader.classList.add('hidden');
-          // Remove from DOM after transition completes
-          setTimeout(() => {
-            loader.remove();
-          }, 350); // Match the CSS transition duration
-        }
-      }, 100);
-    }
+    // Loader will be hidden automatically when auth is ready (see constructor)
+    // This ensures we don't hide it too early before Firebase Auth initializes
     
     // Initialize page view tracking on route changes (browser only)
     if (isPlatformBrowser(this.platformId)) {
@@ -112,6 +107,20 @@ export class AppComponent implements OnInit {
     });
   }
 
+  private hideInitialLoader(): void {
+    // Use setTimeout to ensure DOM is fully rendered and minimum display time
+    setTimeout(() => {
+      const loader = document.getElementById('app-initial-loader');
+      if (loader) {
+        loader.classList.add('hidden');
+        // Remove from DOM after transition completes
+        setTimeout(() => {
+          loader.remove();
+        }, 350); // Match the CSS transition duration
+      }
+    }, 500); // Minimum 500ms display time for better UX
+  }
+
   private updateFavicon(faviconUrl: string): void {
     // Remove existing favicon links
     const existingLinks = document.querySelectorAll('link[rel*="icon"]');
@@ -143,10 +152,15 @@ export class AppComponent implements OnInit {
         !this.isAdmin && 
         !this.isMaintenanceExemptRoute() &&
         this.currentUrl !== '/maintenance') {
-      this.router.navigate(['/maintenance']);
+      // Store current URL so we can return after maintenance is over
+      this.router.navigate(['/maintenance'], { 
+        queryParams: { returnUrl: this.currentUrl }
+      });
     } else if (!this.isMaintenanceMode && this.currentUrl === '/maintenance') {
       // Redirect away from maintenance page if mode is disabled
-      this.router.navigate(['/']);
+      // Use returnUrl if available, otherwise go to home
+      const returnUrl = this.router.getCurrentNavigation()?.extras?.queryParams?.['returnUrl'] || '/';
+      this.router.navigate([returnUrl]);
     }
   }
 

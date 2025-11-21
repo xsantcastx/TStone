@@ -84,7 +84,6 @@ import { SettingsService } from '../../../services/settings.service';
             <h3 class="font-semibold text-ts-ink mb-4">Productos</h3>
             <ul class="space-y-2">
               <li><a routerLink="/productos/12mm" class="text-ts-ink-soft hover:text-ts-accent transition-colors">Colección 12mm</a></li>
-              <li><a routerLink="/productos/15mm" class="text-ts-ink-soft hover:text-ts-accent transition-colors">Colección 15mm</a></li>
               <li><a routerLink="/productos/20mm" class="text-ts-ink-soft hover:text-ts-accent transition-colors">Colección 20mm</a></li>
             </ul>
           </div>

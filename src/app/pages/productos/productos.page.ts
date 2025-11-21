@@ -51,31 +51,40 @@ export class ProductosPageComponent implements OnInit {
   async ngOnInit() {
     // Load filter options and products in parallel
     if (isPlatformBrowser(this.platformId)) {
+      console.log('🚀 Productos page initializing...');
       await Promise.all([
         this.loadFilterOptions(),
         this.loadProducts()
       ]);
+      console.log('✅ Productos page initialization complete');
     }
   }
 
   private async loadFilterOptions() {
     try {
+      console.log('📋 Loading filter options...');
       // Load categories and materials in parallel
       const [categories, materials] = await Promise.all([
         new Promise<Category[]>((resolve) => {
           this.categoryService.getActiveCategories().subscribe({
-            next: (cats) => resolve(cats),
+            next: (cats) => {
+              console.log('✅ Categories loaded:', cats.length, cats);
+              resolve(cats);
+            },
             error: (err) => {
-              console.error('Error loading categories:', err);
+              console.error('❌ Error loading categories:', err);
               resolve([]);
             }
           });
         }),
         new Promise<Material[]>((resolve) => {
           this.materialService.getActiveMaterials().subscribe({
-            next: (mats) => resolve(mats),
+            next: (mats) => {
+              console.log('✅ Materials loaded:', mats.length, mats);
+              resolve(mats);
+            },
             error: (err) => {
-              console.error('Error loading materials:', err);
+              console.error('❌ Error loading materials:', err);
               resolve([]);
             }
           });
@@ -84,6 +93,7 @@ export class ProductosPageComponent implements OnInit {
 
       this.categories = categories;
       this.materials = materials;
+      console.log('📊 Filter options ready - Categories:', this.categories.length, 'Materials:', this.materials.length);
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error loading filter options:', error);
@@ -92,32 +102,38 @@ export class ProductosPageComponent implements OnInit {
 
   private async loadProducts() {
     this.isLoading = true;
+    this.cdr.detectChanges(); // Force initial loading state
 
     try {
       // Get all published products from Firestore
       this.productsService.getAllProducts().subscribe({
         next: async (products) => {
+          console.log('Products loaded from Firestore:', products.length);
+          
           // Filter only published products
           const publishedProducts = products.filter(p => p.status === 'published');
+          console.log('Published products:', publishedProducts.length);
           
           // Load cover images from media
           this.allProducts = await this.loadProductCovers(publishedProducts);
+          console.log('Products with covers loaded:', this.allProducts.length);
           
           // Apply filters
           this.applyFilters();
           
           this.isLoading = false;
-          this.cdr.detectChanges(); // Force change detection
+          this.cdr.detectChanges(); // Force change detection after products load
         },
         error: (error) => {
           console.error('Error loading products:', error);
           this.isLoading = false;
-          this.cdr.detectChanges(); // Force change detection
+          this.cdr.detectChanges(); // Force change detection on error
         }
       });
     } catch (error) {
       console.error('Error in loadProducts:', error);
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -180,6 +196,11 @@ export class ProductosPageComponent implements OnInit {
     this.productos12mm = filtered.filter(p => p.grosor === '12mm' || p.specs?.grosor === '12mm');
     this.productos15mm = filtered.filter(p => p.grosor === '15mm' || p.specs?.grosor === '15mm');
     this.productos20mm = filtered.filter(p => p.grosor === '20mm' || p.specs?.grosor === '20mm');
+    
+    console.log('Filter applied - 12mm:', this.productos12mm.length, '15mm:', this.productos15mm.length, '20mm:', this.productos20mm.length);
+    
+    // Force change detection after filtering
+    this.cdr.detectChanges();
   }
 
   onCategoryChange() {

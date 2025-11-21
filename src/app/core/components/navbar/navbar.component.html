@@ -237,7 +237,7 @@
         </summary>
         <div class="mt-3 pl-4 space-y-3">
           <div>
-            <h5 class="font-medium text-sm text-ts-accent mb-2">12mm (160×320cm)</h5>
+            <h5 class="font-medium text-sm text-ts-accent mb-2">12mm (162×324cm)</h5>
             <div class="space-y-1">
               @for (producto of productos12mm.slice(0, 6); track producto.slug) {
                 <a [routerLink]="['/productos/12mm', producto.slug]" 
@@ -249,19 +249,7 @@
             </div>
           </div>
           <div>
-            <h5 class="font-medium text-sm text-ts-accent mb-2">15mm (160×320cm)</h5>
-            <div class="space-y-1">
-              @for (producto of productos15mm; track producto.slug) {
-                <a [routerLink]="['/productos/15mm', producto.slug]" 
-                   (click)="closeMobile()" 
-                   class="block text-sm hover:text-ts-accent transition-colors">
-                  {{producto.name}}
-                </a>
-              }
-            </div>
-          </div>
-          <div>
-            <h5 class="font-medium text-sm text-ts-accent mb-2">20mm (160×320cm)</h5>
+            <h5 class="font-medium text-sm text-ts-accent mb-2">20mm (162×324cm)</h5>
             <div class="space-y-1">
               @for (producto of productos20mm.slice(0, 6); track producto.slug) {
                 <a [routerLink]="['/productos/20mm', producto.slug]" 

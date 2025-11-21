@@ -145,7 +145,7 @@
         </div>
         
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          @for (producto of productos12mm; track producto.slug) {
+          @for (producto of productos12mm; track producto.id) {
             <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
               <div class="aspect-[4/3] overflow-hidden bg-neutral-100">
                 @if (producto.imageUrl) {
@@ -209,7 +209,7 @@
         </div>
         
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          @for (producto of productos20mm; track producto.slug) {
+          @for (producto of productos20mm; track producto.id) {
             <article class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300">
               <div class="aspect-[4/3] overflow-hidden bg-neutral-100">
                 @if (producto.imageUrl) {
@@ -228,7 +228,7 @@
               <div class="p-6">
                 <h3 class="font-serif text-xl text-ts-bg mb-2">{{producto.name}}</h3>
                 <p class="text-sm text-neutral-600 mb-4">
-                  {{producto.specs?.size || producto.size || '160×320cm'}} · {{producto.grosor}}
+                  {{producto.specs?.size || producto.size || '162×324cm'}} · {{producto.grosor}}
                 </p>
                 @if (producto.price) {
                   <p class="text-lg font-semibold text-ts-bg mb-4">{{producto.price | currency:'EUR':'symbol':'1.2-2'}}</p>

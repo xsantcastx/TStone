@@ -137,6 +137,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     this.productsSub = this.productsService.getAllProducts().subscribe({
       next: (products) => {
         this.products = products.filter(product => (product.status || 'draft') !== 'archived');
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading products:', error);
@@ -469,17 +470,22 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
 
       this.successMessage = `Successfully uploaded ${this.uploadedCount} image${this.uploadedCount !== 1 ? 's' : ''}`;
       this.uploadProgress = 100;
+      this.isUploading = false;
+      this.isSaving = false;
+      this.cdr.detectChanges();
       this.closeUploadModal();
 
       setTimeout(() => {
         this.successMessage = '';
+        this.cdr.detectChanges();
       }, 3000);
     } catch (error) {
       console.error('Error uploading media:', error);
       this.errorMessage = error instanceof Error ? error.message : 'Error uploading media';
-    } finally {
       this.isUploading = false;
       this.isSaving = false;
+      this.cdr.detectChanges();
+    } finally {
       this.selectedFiles = [];
       this.revokeAllPreviewUrls();
     }

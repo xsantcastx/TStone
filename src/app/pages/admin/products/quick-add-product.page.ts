@@ -86,7 +86,7 @@ export class QuickAddProductComponent implements OnInit {
       price: [0, [Validators.required, Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
       sku: [''],
-      size: ['160×320cm', Validators.required],
+      size: ['162×324cm', Validators.required],
       finish: ['Pulido'],
       usage: ['Cocinas, Baños, Fachadas'],
       // SEO fields
@@ -150,7 +150,7 @@ export class QuickAddProductComponent implements OnInit {
         price: product.price || 0,
         stock: product.stock || 0,
         sku: product.sku || '',
-        size: product.specs?.size || product.size || '160×320cm',
+        size: product.specs?.size || product.size || '162×324cm',
         finish: product.specs?.finish || 'Pulido',
         usage: product.specs?.usage?.join(', ') || 'Cocinas, Baños, Fachadas',
         metaTitle: product.seo?.title || '',
@@ -443,7 +443,6 @@ export class QuickAddProductComponent implements OnInit {
     } catch (error: any) {
       console.error('Error saving product:', error);
       this.errorMessage = error.message || 'Failed to save product';
-    } finally {
       this.isSaving = false;
       this.isUploading = false;
     }

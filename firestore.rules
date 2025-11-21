@@ -35,6 +35,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Size Groups - Public read, Admin write
+    match /sizeGroups/{sizeGroupId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Templates - Admin only (should not be public)
     match /templates/{templateId} {
       allow read: if isAdmin();

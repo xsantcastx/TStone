@@ -65,16 +65,7 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
                  [class.border-ts-accent]="grosor !== '12mm'"
                  [class.text-neutral-700]="grosor !== '12mm'"
                  class="px-6 py-3 rounded-full font-medium whitespace-nowrap transition-all duration-300 border hover:bg-ts-accent hover:text-black hover:border-ts-accent">
-                12mm (160×320cm)
-              </a>
-              <a routerLink="/productos/15mm" 
-                 [class.bg-ts-accent]="grosor === '15mm'"
-                 [class.text-black]="grosor === '15mm'"
-                 [class.bg-white]="grosor !== '15mm'"
-                 [class.border-ts-accent]="grosor !== '15mm'"
-                 [class.text-neutral-700]="grosor !== '15mm'"
-                 class="px-6 py-3 rounded-full font-medium whitespace-nowrap transition-all duration-300 border hover:bg-ts-accent hover:text-black hover:border-ts-accent">
-                15mm (160×320cm)
+                12mm (162×324cm)
               </a>
               <a routerLink="/productos/20mm" 
                  [class.bg-ts-accent]="grosor === '20mm'"
@@ -83,7 +74,7 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
                  [class.border-ts-accent]="grosor !== '20mm'"
                  [class.text-neutral-700]="grosor !== '20mm'"
                  class="px-6 py-3 rounded-full font-medium whitespace-nowrap transition-all duration-300 border hover:bg-ts-accent hover:text-black hover:border-ts-accent">
-                20mm (160×320cm)
+                20mm (162×324cm)
               </a>
             </div>
           </div>
@@ -226,13 +217,12 @@ export class GrosorComponent implements OnInit {
   }
 
   get medidaInfo(): string {
-    return '160×320cm';
+    return '162×324cm';
   }
 
   get aplicacionesInfo(): string {
     switch (this.grosor) {
       case '12mm': return 'revestimientos interiores y exteriores';
-      case '15mm': return 'pavimentos y encimeras';
       case '20mm': return 'pavimentos exteriores y aplicaciones de alto tránsito';
       default: return 'múltiples aplicaciones';
     }
@@ -241,7 +231,6 @@ export class GrosorComponent implements OnInit {
   getAplicaciones(grosor: string): string {
     switch (grosor) {
       case '12mm': return 'cocinas y baños residenciales';
-      case '15mm': return 'espacios comerciales y residenciales';
       case '20mm': return 'exteriores y zonas de alto tránsito';
       default: return 'diversos proyectos';
     }

@@ -65,7 +65,7 @@ a:hover {
   .body-dark button,
   .body-dark input[type="button"],
   .body-dark input[type="submit"] {
-    color: var(--ts-ink);
+    color: #1a1a1a;
   }
 
   button[data-variant="inverse"],
@@ -203,14 +203,16 @@ a:hover {
     @apply inline-flex items-center justify-center;
     padding: 0.6rem;
     border-radius: 0.9rem;
-    border: 1px solid color-mix(in srgb, var(--text) 14%, var(--bg-elevated));
-    background: color-mix(in srgb, var(--text) 4%, var(--bg-elevated));
-    color: var(--text);
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    color: #374151;
     transition: all 0.2s ease;
+    opacity: 1 !important;
   }
 
   .ts-btn-icon:hover {
-    background: color-mix(in srgb, var(--text) 10%, var(--bg-elevated));
+    background: #e5e7eb;
+    border-color: #9ca3af;
     transform: translateY(-1px);
   }
 
@@ -219,33 +221,36 @@ a:hover {
   }
 
   .ts-btn-icon.is-danger {
-    background: color-mix(in srgb, #dc2626 12%, var(--bg-elevated));
+    background: #fee2e2;
     color: #b91c1c;
-    border-color: color-mix(in srgb, #dc2626 22%, var(--bg-elevated));
+    border-color: #fca5a5;
   }
 
   .ts-btn-icon.is-danger:hover {
-    background: color-mix(in srgb, #dc2626 18%, var(--bg-elevated));
+    background: #fecaca;
+    border-color: #f87171;
   }
 
   .ts-btn-icon.is-success {
-    background: color-mix(in srgb, #16a34a 12%, var(--bg-elevated));
+    background: #dcfce7;
     color: #15803d;
-    border-color: color-mix(in srgb, #16a34a 22%, var(--bg-elevated));
+    border-color: #86efac;
   }
 
   .ts-btn-icon.is-success:hover {
-    background: color-mix(in srgb, #16a34a 18%, var(--bg-elevated));
+    background: #bbf7d0;
+    border-color: #4ade80;
   }
 
   .ts-btn-icon.is-info {
-    background: color-mix(in srgb, #2563eb 12%, var(--bg-elevated));
+    background: #dbeafe;
     color: #1d4ed8;
-    border-color: color-mix(in srgb, #2563eb 22%, var(--bg-elevated));
+    border-color: #93c5fd;
   }
 
   .ts-btn-icon.is-info:hover {
-    background: color-mix(in srgb, #2563eb 18%, var(--bg-elevated));
+    background: #bfdbfe;
+    border-color: #60a5fa;
   }
   .ts-btn-sm {
     @apply px-4 py-2 text-sm;
@@ -476,7 +481,7 @@ html {
 
 .body-dark {
   background: var(--ts-bg);
-  color: var(--ts-ink);
+  color: #1a1a1a;
 }
 
 .font-serif {
@@ -525,6 +530,20 @@ button {
   color: inherit; /* Keep button text color as defined */
 }
 
+/* Default button styling - only for buttons without specific classes */
+button:not([class*="ts-btn"]):not([class*="bg-"]):not([class*="hover:"]):not([type="submit"]):not([type="button"]):not([type="reset"]) {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+button:not([class*="ts-btn"]):not([class*="bg-"]):not([class*="hover:"]):not([type="submit"]):not([type="button"]):not([type="reset"]):hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
 button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
@@ -552,10 +571,10 @@ button:disabled {
   opacity: 0.5;
 }
 
-/* Help text should be readable but subtle */
+/* Help text should be readable */
 .text-xs,
 .text-sm {
-  opacity: 0.9;
+  /* Removed opacity to ensure text is fully visible */
 }
 
 /* Custom scrollbar for webkit browsers */
@@ -633,4 +652,46 @@ img {
     --ts-paper: #FFFFFF;
     --ts-line: #808080;
   }
+}
+
+/* Ensure all dropdowns/submenus are fully opaque */
+[class*="dropdown"],
+[class*="submenu"],
+[class*="menu"],
+.absolute[class*="bg-white"],
+.fixed[class*="bg-white"] {
+  opacity: 1 !important;
+  background-color: white !important;
+}
+
+/* Ensure dropdown text and content is fully visible */
+[class*="dropdown"] *,
+[class*="submenu"] *,
+[class*="menu"] *,
+.absolute[class*="bg-white"] *,
+.fixed[class*="bg-white"] * {
+  opacity: 1 !important;
+}
+
+/* Specifically for filter dropdowns in admin */
+.absolute.bg-white,
+.absolute[class*="shadow"],
+div[class*="absolute"][class*="bg-white"] {
+  opacity: 1 !important;
+  background-color: #ffffff !important;
+}
+
+.absolute.bg-white *,
+.absolute[class*="shadow"] *,
+div[class*="absolute"][class*="bg-white"] * {
+  opacity: 1 !important;
+  color: inherit !important;
+}
+
+/* Input fields in dropdowns should be fully visible */
+.absolute input,
+.absolute label,
+.absolute span,
+.absolute button {
+  opacity: 1 !important;
 }

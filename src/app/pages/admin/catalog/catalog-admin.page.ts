@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { MaterialService } from '../../../services/material.service';
 import { SizeGroupService } from '../../../services/size-group.service';
 import { Category, Material, Family, SizeGroup } from '../../../models/catalog';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
+import { firstValueFrom } from 'rxjs';
 
 type TabType = 'categories' | 'materials' | 'families' | 'sizes';
 
@@ -26,6 +27,7 @@ export class CatalogAdminComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private materialService = inject(MaterialService);
   private sizeGroupService = inject(SizeGroupService);
+  private cdr = inject(ChangeDetectorRef);
 
   // Data
   categories: Category[] = [];
@@ -118,20 +120,19 @@ export class CatalogAdminComponent implements OnInit {
 
   private async loadAllData() {
     this.isLoading = true;
+    this.cdr.detectChanges();
+    
     try {
-      // Subscribe to observables
-      this.categoryService.getAllCategories().subscribe(categories => {
-        this.categories = categories;
-      });
-      
-      this.materialService.getAllMaterials().subscribe(materials => {
-        this.materials = materials;
-      });
-      
-      this.sizeGroupService.getAllSizeGroups().subscribe(sizes => {
-        this.sizes = sizes;
-      });
-      
+      const [categories, materials, sizes] = await Promise.all([
+        firstValueFrom(this.categoryService.getAllCategories()),
+        firstValueFrom(this.materialService.getAllMaterials()),
+        firstValueFrom(this.sizeGroupService.getAllSizeGroups())
+      ]);
+
+      this.categories = categories;
+      this.materials = materials;
+      this.sizes = sizes;
+
       // TODO: Load families when service is ready
       this.families = [];
     } catch (error) {
@@ -139,6 +140,7 @@ export class CatalogAdminComponent implements OnInit {
       this.errorMessage = 'Error loading catalog data';
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -193,14 +195,19 @@ export class CatalogAdminComponent implements OnInit {
       }
 
       await this.loadAllData();
+      this.isSaving = false;
+      this.cdr.detectChanges();
       this.closeCategoryModal();
       
-      setTimeout(() => this.successMessage = '', 3000);
+      setTimeout(() => {
+        this.successMessage = '';
+        this.cdr.detectChanges();
+      }, 3000);
     } catch (error) {
       console.error('Error saving category:', error);
       this.errorMessage = 'Error saving category';
-    } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -259,14 +266,19 @@ export class CatalogAdminComponent implements OnInit {
       }
 
       await this.loadAllData();
+      this.isSaving = false;
+      this.cdr.detectChanges();
       this.closeMaterialModal();
       
-      setTimeout(() => this.successMessage = '', 3000);
+      setTimeout(() => {
+        this.successMessage = '';
+        this.cdr.detectChanges();
+      }, 3000);
     } catch (error) {
       console.error('Error saving material:', error);
       this.errorMessage = 'Error saving material';
-    } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -321,14 +333,19 @@ export class CatalogAdminComponent implements OnInit {
       }
 
       await this.loadAllData();
+      this.isSaving = false;
+      this.cdr.detectChanges();
       this.closeSizeModal();
       
-      setTimeout(() => this.successMessage = '', 3000);
+      setTimeout(() => {
+        this.successMessage = '';
+        this.cdr.detectChanges();
+      }, 3000);
     } catch (error) {
       console.error('Error saving size group:', error);
       this.errorMessage = 'Error saving size group';
-    } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -370,14 +387,19 @@ export class CatalogAdminComponent implements OnInit {
       }
 
       await this.loadAllData();
+      this.isSaving = false;
+      this.cdr.detectChanges();
       this.closeDeleteConfirm();
       
-      setTimeout(() => this.successMessage = '', 3000);
+      setTimeout(() => {
+        this.successMessage = '';
+        this.cdr.detectChanges();
+      }, 3000);
     } catch (error) {
       console.error('Error deleting item:', error);
       this.errorMessage = 'Error deleting item. It may be in use by products.';
-    } finally {
       this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 

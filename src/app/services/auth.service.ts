@@ -53,7 +53,7 @@ export class AuthService {
   );
 
   // Register new user
-  async register(email: string, password: string, displayName: string, company?: string): Promise<User> {
+  async register(email: string, password: string, displayName: string, company?: string, phone?: string): Promise<User> {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
@@ -66,6 +66,7 @@ export class AuthService {
       email: email,
       displayName: displayName,
       company: company,
+      phone: phone,
       role: 'client',
       createdAt: new Date()
     });
@@ -94,7 +95,20 @@ export class AuthService {
   async getUserProfile(uid: string): Promise<UserProfile | null> {
     const userDoc = doc(this.firestore, `users/${uid}`);
     const docSnap = await getDoc(userDoc);
-    return docSnap.exists() ? docSnap.data() as UserProfile : null;
+    
+    if (!docSnap.exists()) {
+      return null;
+    }
+    
+    const data = docSnap.data();
+    
+    // Convert Firestore Timestamps to Date objects
+    return {
+      ...data,
+      createdAt: data['createdAt']?.toDate ? data['createdAt'].toDate() : data['createdAt'],
+      updatedAt: data['updatedAt']?.toDate ? data['updatedAt'].toDate() : data['updatedAt'],
+      lastLogin: data['lastLogin']?.toDate ? data['lastLogin'].toDate() : data['lastLogin']
+    } as UserProfile;
   }
 
   // Update user profile

@@ -72,13 +72,20 @@ export class ProductsAdminComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   searchTerm = '';
-  selectedThickness: string = 'all';
   showDeleteConfirm = false;
   productToDelete: Product | null = null;
 
+  // Inline editing
+  editingProductId: string | null = null;
+  pendingChanges = new Map<string, Partial<Product>>();
+  hasPendingChanges = false;
+
   // Column filters
   categoryFilter: string = 'all';
+  sizeFilter: string = 'all';
   priceFilter: string = 'all';
+  nameFilter: string = 'all';
+  stockFilter: string = 'all';
   columnFilterOpen: string | null = null;
 
   // Image upload
@@ -123,7 +130,7 @@ export class ProductsAdminComponent implements OnInit {
   async ngOnInit() {
     await this.checkAdminAccess();
     await this.loadMasterData();
-    await this.loadProducts();
+    await this.loadProducts(); // Now properly awaits the Promise
     this.setupAutoFillListeners();
     
     // Check if we should auto-open create modal
@@ -201,23 +208,26 @@ export class ProductsAdminComponent implements OnInit {
   }
 
   private async loadProducts() {
-    this.isLoading = true;
     try {
-      this.productsService.getAllProducts().subscribe({
-        next: (products) => {
-          this.products = products;
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error loading products:', error);
-          this.errorMessage = 'admin.error_occurred';
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        }
+      console.log('📦 Loading products...');
+      const products = await new Promise<Product[]>((resolve, reject) => {
+        this.productsService.getAllProducts().subscribe({
+          next: (products) => {
+            console.log('✅ Products loaded:', products.length);
+            resolve(products);
+          },
+          error: (error) => {
+            console.error('❌ Error loading products:', error);
+            reject(error);
+          }
+        });
       });
+      
+      this.products = products;
+      this.isLoading = false;
+      this.cdr.detectChanges();
     } catch (error) {
-      console.error('Error loading products:', error);
+      console.error('❌ Error in loadProducts:', error);
       this.errorMessage = 'admin.error_occurred';
       this.isLoading = false;
       this.cdr.detectChanges();
@@ -490,21 +500,27 @@ export class ProductsAdminComponent implements OnInit {
     // Filter by search term
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.name.toLowerCase().includes(term) ||
-        p.slug.toLowerCase().includes(term) ||
-        (p.description && p.description.toLowerCase().includes(term))
-      );
+      filtered = filtered.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const slug = (p.slug || '').toLowerCase();
+        const description = (p.description || '').toLowerCase();
+        return name.includes(term) || slug.includes(term) || description.includes(term);
+      });
     }
 
-    // Filter by thickness
-    if (this.selectedThickness !== 'all') {
-      filtered = filtered.filter(p => p.grosor === this.selectedThickness);
+    // Filter by product name
+    if (this.nameFilter !== 'all') {
+      filtered = filtered.filter(p => p.id === this.nameFilter);
     }
 
     // Filter by category
     if (this.categoryFilter !== 'all') {
       filtered = filtered.filter(p => p.categoryId === this.categoryFilter);
+    }
+
+    // Filter by size
+    if (this.sizeFilter !== 'all') {
+      filtered = filtered.filter(p => p.size === this.sizeFilter);
     }
 
     // Filter by price
@@ -513,6 +529,21 @@ export class ProductsAdminComponent implements OnInit {
         filtered = filtered.filter(p => p.price && p.price > 0);
       } else if (this.priceFilter === 'noPrice') {
         filtered = filtered.filter(p => !p.price || p.price === 0);
+      }
+    }
+
+    // Filter by stock
+    if (this.stockFilter !== 'all') {
+      if (this.stockFilter === 'inStock') {
+        filtered = filtered.filter(p => p.stock && p.stock > 0);
+      } else if (this.stockFilter === 'outOfStock') {
+        filtered = filtered.filter(p => !p.stock || p.stock === 0);
+      } else {
+        // Filter by specific stock number
+        const stockNum = parseInt(this.stockFilter);
+        if (!isNaN(stockNum)) {
+          filtered = filtered.filter(p => p.stock === stockNum);
+        }
       }
     }
 
@@ -532,15 +563,43 @@ export class ProductsAdminComponent implements OnInit {
     return Array.from(categoryMap.entries()).map(([id, name]) => ({ id, name }));
   }
 
+  get uniqueSizes(): string[] {
+    const sizes = new Set<string>();
+    this.products.forEach(p => {
+      if (p.size) {
+        sizes.add(p.size);
+      }
+    });
+    return Array.from(sizes).sort();
+  }
+
+  get uniqueProductNames(): Array<{id: string, name: string}> {
+    return this.products
+      .map(p => ({ id: p.id || '', name: p.name || '' }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  get uniqueStockLevels(): number[] {
+    const stocks = new Set<number>();
+    this.products.forEach(p => {
+      if (p.stock !== undefined && p.stock !== null) {
+        stocks.add(p.stock);
+      }
+    });
+    return Array.from(stocks).sort((a, b) => a - b);
+  }
+
   toggleColumnFilter(column: string): void {
     this.columnFilterOpen = this.columnFilterOpen === column ? null : column;
   }
 
   clearAllFilters(): void {
     this.searchTerm = '';
-    this.selectedThickness = 'all';
     this.categoryFilter = 'all';
+    this.sizeFilter = 'all';
     this.priceFilter = 'all';
+    this.stockFilter = 'all';
+    this.nameFilter = 'all';
     this.columnFilterOpen = null;
   }
 
@@ -548,6 +607,64 @@ export class ProductsAdminComponent implements OnInit {
     if (!categoryId) return '';
     const category = this.categories.find(c => c.id === categoryId);
     return category ? category.name : '';
+  }
+
+  // Inline editing methods
+  updateProductField(productId: string, field: keyof Product, value: any): void {
+    const existing = this.pendingChanges.get(productId) || {};
+    this.pendingChanges.set(productId, { ...existing, [field]: value });
+    this.hasPendingChanges = this.pendingChanges.size > 0;
+  }
+
+  async saveAllChanges(): Promise<void> {
+    if (this.pendingChanges.size === 0) return;
+
+    this.isSaving = true;
+    this.cdr.detectChanges();
+    const updates: Promise<void>[] = [];
+
+    for (const [productId, changes] of this.pendingChanges.entries()) {
+      const product = this.products.find(p => p.id === productId);
+      if (product) {
+        const updatedProduct = { ...product, ...changes };
+        updates.push(this.productsService.updateProduct(productId, updatedProduct).then(() => {
+          Object.assign(product, changes);
+        }));
+      }
+    }
+
+    try {
+      await Promise.all(updates);
+      this.successMessage = `${this.pendingChanges.size} producto(s) actualizado(s) correctamente`;
+      this.pendingChanges.clear();
+      this.hasPendingChanges = false;
+      this.isSaving = false;
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.successMessage = '';
+        this.cdr.detectChanges();
+      }, 3000);
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      this.errorMessage = 'Error al guardar los cambios';
+      this.isSaving = false;
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.errorMessage = '';
+        this.cdr.detectChanges();
+      }, 3000);
+    }
+  }
+
+  discardChanges(): void {
+    this.pendingChanges.clear();
+    this.hasPendingChanges = false;
+    this.editingProductId = null;
+  }
+
+  getEditValue(productId: string, field: keyof Product, originalValue: any): any {
+    const changes = this.pendingChanges.get(productId);
+    return changes && changes[field] !== undefined ? changes[field] : originalValue;
   }
 
   openCreateModal() {
@@ -888,18 +1005,23 @@ export class ProductsAdminComponent implements OnInit {
       }
 
       await this.loadProducts();
+      this.isSaving = false;
+      this.isUploading = false;
+      this.uploadProgress = 0;
+      this.cdr.detectChanges();
       this.closeModal();
 
       setTimeout(() => {
         this.successMessage = '';
+        this.cdr.detectChanges();
       }, 3000);
     } catch (error) {
       console.error('Error saving product:', error);
       this.errorMessage = 'admin.error_occurred';
-    } finally {
       this.isSaving = false;
       this.isUploading = false;
       this.uploadProgress = 0;
+      this.cdr.detectChanges();
     }
   }
 
