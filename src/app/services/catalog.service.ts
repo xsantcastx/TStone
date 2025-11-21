@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, query, orderBy, getDocs, addDoc, updateDoc, deleteDoc, doc, Timestamp, writeBatch } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, getDownloadURL, deleteObject } from '@angular/fire/storage';
+import { Storage, ref, uploadBytesResumable, getDownloadURL, deleteObject, UploadTask } from '@angular/fire/storage';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Catalog {
@@ -60,14 +60,31 @@ export class CatalogService {
     name: string, 
     description: string = '',
     version: string = '',
-    uploadedBy: string = ''
+    uploadedBy: string = '',
+    onProgress?: (progress: number) => void
   ): Promise<void> {
     try {
-      // Upload file to Storage
+      // Upload file to Storage with progress tracking
       const timestamp = Date.now();
       const filename = `catalog-${timestamp}-${file.name}`;
       const storageRef = ref(this.storage, `catalogs/${filename}`);
-      await uploadBytes(storageRef, file);
+      
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      
+      // Track upload progress
+      await new Promise<void>((resolve, reject) => {
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            if (onProgress) {
+              onProgress(progress);
+            }
+          },
+          (error) => reject(error),
+          () => resolve()
+        );
+      });
+      
       const fileUrl = await getDownloadURL(storageRef);
       
       // Get all catalogs and mark them as not latest

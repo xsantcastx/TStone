@@ -62,7 +62,7 @@
           {{producto.specs?.size || producto.size || '160×320cm'}} · {{producto.grosor}}
         </p>
         @if (producto.price) {
-          <p class="text-2xl font-semibold text-ts-bg mb-4">{{producto.price | currency:'USD':'symbol':'1.2-2'}}</p>
+          <p class="text-2xl font-semibold text-ts-bg mb-4">{{producto.price | currency:'EUR':'symbol':'1.2-2'}}</p>
         }
         <p class="text-lg text-ts-accent font-medium mb-8">Superficie porcelánica de gran formato</p>
         
@@ -203,7 +203,7 @@
                 {{relacionado.specs?.size || relacionado.size || '160×320cm'}} · {{relacionado.grosor}}
               </p>
               @if (relacionado.price) {
-                <p class="text-lg font-semibold text-ts-bg mb-4">{{relacionado.price | currency:'USD':'symbol':'1.2-2'}}</p>
+                <p class="text-lg font-semibold text-ts-bg mb-4">{{relacionado.price | currency:'EUR':'symbol':'1.2-2'}}</p>
               }
               <a [routerLink]="['/productos', relacionado.grosor, relacionado.slug]" 
                  class="text-ts-accent hover:underline font-medium">

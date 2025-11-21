@@ -17,6 +17,7 @@ export class CatalogsAdminPage {
   
   catalogs$ = this.catalogService.catalogs$;
   isUploading = signal(false);
+  uploadProgress = signal(0);
   
   // Form fields
   catalogName = signal('');
@@ -50,13 +51,19 @@ export class CatalogsAdminPage {
     }
 
     this.isUploading.set(true);
+    this.uploadProgress.set(0);
     
     try {
       await this.catalogService.uploadCatalog(
         this.selectedFile,
         this.catalogName(),
         this.catalogDescription(),
-        this.catalogVersion()
+        this.catalogVersion(),
+        '',
+        (progress) => {
+          this.uploadProgress.set(Math.round(progress));
+          this.cdr.detectChanges();
+        }
       );
       
       // Reset form
@@ -77,6 +84,7 @@ export class CatalogsAdminPage {
       alert('Error al subir el catálogo');
     } finally {
       this.isUploading.set(false);
+      this.uploadProgress.set(0);
       this.cdr.detectChanges(); // Force UI update
     }
   }

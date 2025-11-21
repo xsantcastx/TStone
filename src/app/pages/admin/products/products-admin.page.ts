@@ -809,8 +809,8 @@ export class ProductsAdminComponent implements OnInit {
         grosor,
         size: formData.size,
         imageUrl: coverImageUrl, // Use the actual download URL, not Media ID
-        price: formData.price ? parseFloat(formData.price) : undefined,
-        stock: formData.stock ? parseInt(formData.stock) : undefined,
+        price: formData.price !== null && formData.price !== undefined && formData.price !== '' ? parseFloat(formData.price) : undefined,
+        stock: formData.stock !== null && formData.stock !== undefined && formData.stock !== '' ? parseInt(formData.stock) : undefined,
         sku: formData.sku || undefined,
         active: status === 'published'
       };
