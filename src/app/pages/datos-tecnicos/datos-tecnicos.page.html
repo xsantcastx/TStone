@@ -276,29 +276,68 @@
         
         @if (acordeonesAbiertos['packing']) {
           <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
-            <div class="overflow-x-auto mt-6">
-              <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
-                <thead>
-                  <tr class="border-b border-gray-200 bg-gray-50">
-                    <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.thickness' | translate }}</th>
-                    <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.pieces_per_pallet' | translate }}</th>
-                    <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.approx_weight' | translate }}</th>
-                    <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.pallet_dimensions' | translate }}</th>
-                    <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.volume' | translate }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (pack of datosTecnicos.packing; track pack.grosor) {
-                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                      <td class="py-4 px-6 font-medium text-ts-accent">{{pack.grosor}}</td>
-                      <td class="py-4 px-6 text-gray-700">{{pack.piezasPorPallet}}</td>
-                      <td class="py-4 px-6 text-gray-700">{{pack.pesoAprox}}</td>
-                      <td class="py-4 px-6 text-gray-700">{{pack.dimensionesPallet}}</td>
-                      <td class="py-4 px-6 text-gray-700">{{pack.volumen}}</td>
+            <!-- Información por Pieza Individual -->
+            <div class="mt-6 mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"></path>
+                </svg>
+                Información por Pieza
+              </h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
+                  <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Grosor</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Superficie por Pieza</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Peso Aprox. por Pieza</th>
                     </tr>
-                  }
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    @for (pack of datosTecnicos.packing; track pack.grosor) {
+                      <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td class="py-4 px-6 font-medium text-ts-accent">{{pack.grosor}}</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.superficie}}</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.pesoAprox}}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Información por Pallet -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                Información por Pallet
+              </h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
+                  <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Grosor</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Piezas por Pallet</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Superficie Total</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Peso Total Pallet</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Dimensiones Pallet</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (pack of datosTecnicos.packing; track pack.grosor) {
+                      <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td class="py-4 px-6 font-medium text-ts-accent">{{pack.grosor}}</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.piezasPorPallet}} piezas</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.superficiePallet}}</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.pesoPallet}}</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.dimensionesPallet}}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         }
@@ -512,6 +551,57 @@
           </div>
         }
       </div>
+
+      <!-- 8. Tests de Producto -->
+      @if (datosTecnicos.testResults && datosTecnicos.testResults.length > 0) {
+        <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+          <button 
+            (click)="toggleAcordeon('testResults')"
+            class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-ts-accent/10 rounded-full flex items-center justify-center group-hover:bg-ts-accent/20 transition-colors">
+                <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+              </div>
+              <h2 class="font-serif text-2xl text-black">Tests de Producto</h2>
+            </div>
+            <svg 
+              class="w-6 h-6 transition-transform duration-300"
+              [class.rotate-180]="acordeonesAbiertos['testResults']"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          @if (acordeonesAbiertos['testResults']) {
+            <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
+              <div class="overflow-x-auto mt-6">
+                <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
+                  <thead>
+                    <tr class="border-b border-gray-200 bg-gray-50">
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Nombre del Test</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Valor Prescrito</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Valor Obtenido</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Norma</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (test of datosTecnicos.testResults; track test.nombre) {
+                      <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td class="py-4 px-6 font-medium text-gray-900">{{test.nombre}}</td>
+                        <td class="py-4 px-6 text-gray-700">{{test.valorPrescrito}}</td>
+                        <td class="py-4 px-6 text-ts-accent font-medium">{{test.valorObtenido}}</td>
+                        <td class="py-4 px-6 text-gray-600 text-xs">{{test.norma || '-'}}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+        </div>
+      }
 
     </div>
   </section>

@@ -1,9 +1,10 @@
 import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { DataService, DatosTecnicosData } from '../../core/services/data.service';
+import { DatosTecnicosData } from '../../core/services/data.service';
 import { ImageLightboxComponent } from '../../shared/components/image-lightbox/image-lightbox.component';
 import { CatalogDownloadComponent } from '../../shared/components/catalog-download/catalog-download.component';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-datos-tecnicos-page',
@@ -20,7 +21,7 @@ export class DatosTecnicosPageComponent implements OnInit {
   
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
-  private dataService = inject(DataService);
+  private firestore = inject(Firestore);
   private cdr = inject(ChangeDetectorRef);
   
   acordeonesAbiertos: { [key: string]: boolean } = {
@@ -30,7 +31,8 @@ export class DatosTecnicosPageComponent implements OnInit {
     packing: false,
     bordes: false,
     fijaciones: false,
-    mantenimiento: false
+    mantenimiento: false,
+    testResults: false
   };
 
   // Fallback data for immediate display
@@ -92,23 +94,29 @@ export class DatosTecnicosPageComponent implements OnInit {
       {
         grosor: '12mm',
         piezasPorPallet: 10,
-        pesoAprox: '~350kg',
+        pesoAprox: '~35kg',
         dimensionesPallet: '165 x 325 x 45 cm',
-        volumen: '2,4 m³'
+        superficie: '5,25 m²',
+        superficiePallet: '52,5 m²',
+        pesoPallet: '~350kg'
       },
       {
         grosor: '15mm',
         piezasPorPallet: 8,
-        pesoAprox: '~360kg',
+        pesoAprox: '~45kg',
         dimensionesPallet: '165 x 325 x 50 cm',
-        volumen: '2,7 m³'
+        superficie: '5,25 m²',
+        superficiePallet: '42 m²',
+        pesoPallet: '~360kg'
       },
       {
         grosor: '20mm',
         piezasPorPallet: 6,
-        pesoAprox: '~380kg',
+        pesoAprox: '~63kg',
         dimensionesPallet: '165 x 325 x 55 cm',
-        volumen: '3,0 m³'
+        superficie: '5,25 m²',
+        superficiePallet: '31,5 m²',
+        pesoPallet: '~380kg'
       }
     ],
     acabadosBordes: [
@@ -153,7 +161,8 @@ export class DatosTecnicosPageComponent implements OnInit {
         'Cepillos metálicos',
         'Limpiadores con amoniaco'
       ]
-    }
+    },
+    testResults: []
   };
 
   ngOnInit() {
@@ -167,22 +176,24 @@ export class DatosTecnicosPageComponent implements OnInit {
     }
   }
 
-  private loadDatosTecnicos() {
-    this.dataService.getDatosTecnicos().subscribe({
-      next: (data) => {
-        // Only update if we have actual data
-        if (data.acabadosSuperficie.length > 0) {
-          this.datosTecnicos = data;
-        }
-        this.isLoading = false;
-        this.cdr.detectChanges(); // Force change detection
-      },
-      error: () => {
-        // Keep fallback data on error
-        this.isLoading = false;
-        this.cdr.detectChanges(); // Force change detection
+  private async loadDatosTecnicos() {
+    try {
+      const docRef = doc(this.firestore, 'content', 'datos-tecnicos');
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data() as DatosTecnicosData;
+        this.datosTecnicos = data;
       }
-    });
+      
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error loading datos tecnicos:', error);
+      // Keep fallback data on error
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    }
   }
 
   toggleAcordeon(seccion: string) {
