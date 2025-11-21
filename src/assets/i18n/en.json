@@ -114,6 +114,18 @@
   },
   "gallery": {
     "title": "Project Gallery",
+    "hero": {
+      "featured": "Featured",
+      "premium_project": "Premium Project",
+      "quality_surfaces": "High-quality porcelain surfaces",
+      "previous_slide": "Previous slide",
+      "next_slide": "Next slide",
+      "go_to_slide": "Go to slide"
+    },
+    "filters": {
+      "all": "All",
+      "count": "{{count}} photos"
+    },
     "categories": {
       "kitchens": "Kitchens",
       "bathrooms": "Bathrooms",
@@ -122,13 +134,77 @@
       "others": "Others"
     },
     "tags": {
-      "kitchen": "Kitchen",
-      "bathroom": "Bathroom",
-      "facade": "Facade",
-      "industrial": "Industrial",
-      "other": "Other"
+      "kitchen": "Kitchens",
+      "bathroom": "Bathrooms",
+      "facade": "Facades",
+      "industrial": "Industry",
+      "other": "Others"
+    },
+    "loading_more": "Loading more images...",
+    "end_message": "You've seen all images ({{count}} photos)",
+    "empty": {
+      "title": "No photos available",
+      "description": "No images found in this category."
+    },
+    "lightbox": {
+      "close": "Close",
+      "previous": "Previous image",
+      "next": "Next image",
+      "project": "Project",
+      "photo": "Photo",
+      "of": "of"
     },
     "viewProject": "View Project"
+  },
+  "contactPage": {
+    "hero": {
+      "title": "Contact",
+      "subtitle": "Tell us about your project and we'll help you make it a reality"
+    },
+    "form": {
+      "title": "Send us your inquiry",
+      "name_label": "Full name",
+      "name_placeholder": "Your full name",
+      "email_label": "Email",
+      "email_placeholder": "your@email.com",
+      "phone_label": "Phone",
+      "phone_placeholder": "+34 123 456 789",
+      "company_label": "Company",
+      "company_placeholder": "Your company name (optional)",
+      "message_label": "Message",
+      "message_placeholder": "Tell us about your project...",
+      "privacy_label": "I accept the processing of my personal data according to the privacy policy",
+      "submit_button": "Send message",
+      "submitting_button": "Sending...",
+      "success_title": "Thank you for your message!",
+      "success_message": "We'll get back to you as soon as possible.",
+      "error_title": "There was an error sending the message",
+      "error_message": "Please try again later.",
+      "required": "required"
+    },
+    "info": {
+      "title": "Contact information",
+      "address_label": "Address",
+      "phone_label": "Phone",
+      "email_label": "Email",
+      "hours_label": "Hours",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "closed": "Closed"
+    },
+    "samples": {
+      "title": "Need samples?",
+      "description": "Request physical samples of our materials to see and feel TopStone quality",
+      "button": "Request samples"
+    },
+    "map": {
+      "title": "Location"
+    }
   },
   "technical": {
     "title": "Technical Data",
@@ -162,7 +238,20 @@
       "pieces_per_pallet": "Pieces/Pallet",
       "approx_weight": "Approx. Weight",
       "pallet_dimensions": "Pallet Dimensions",
-      "volume": "Volume"
+      "volume": "Volume",
+      "test_name": "Test Name",
+      "prescribed_value": "Prescribed Value",
+      "obtained_value": "Obtained Value",
+      "standard": "Standard",
+      "surface_per_piece": "Surface per Piece",
+      "weight_per_piece": "Approx. Weight per Piece",
+      "pieces_per_pallet": "Pieces per Pallet",
+      "total_surface": "Total Surface",
+      "total_weight": "Total Pallet Weight",
+      "pallet_dimensions": "Pallet Dimensions",
+      "piece_info": "Information per Piece",
+      "pallet_info": "Information per Pallet",
+      "pieces": "pieces"
     },
     "sections": {
       "finishes": "Finishes",

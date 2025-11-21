@@ -114,6 +114,18 @@
   },
   "gallery": {
     "title": "Galerie de Projets",
+    "hero": {
+      "featured": "En Vedette",
+      "premium_project": "Projet Premium",
+      "quality_surfaces": "Surfaces en porcelaine de haute qualité",
+      "previous_slide": "Diapositive précédente",
+      "next_slide": "Diapositive suivante",
+      "go_to_slide": "Aller à la diapositive"
+    },
+    "filters": {
+      "all": "Tous",
+      "count": "{{count}} photos"
+    },
     "categories": {
       "kitchens": "Cuisines",
       "bathrooms": "Salles de Bain",
@@ -122,13 +134,77 @@
       "others": "Autres"
     },
     "tags": {
-      "kitchen": "Cuisine",
-      "bathroom": "Salle de Bain",
-      "facade": "Façade",
-      "industrial": "Industriel",
-      "other": "Autre"
+      "kitchen": "Cuisines",
+      "bathroom": "Salles de Bain",
+      "facade": "Façades",
+      "industrial": "Industrie",
+      "other": "Autres"
+    },
+    "loading_more": "Chargement de plus d'images...",
+    "end_message": "Vous avez vu toutes les images ({{count}} photos)",
+    "empty": {
+      "title": "Aucune photo disponible",
+      "description": "Aucune image trouvée dans cette catégorie."
+    },
+    "lightbox": {
+      "close": "Fermer",
+      "previous": "Image précédente",
+      "next": "Image suivante",
+      "project": "Projet",
+      "photo": "Photo",
+      "of": "de"
     },
     "viewProject": "Voir le Projet"
+  },
+  "contactPage": {
+    "hero": {
+      "title": "Contact",
+      "subtitle": "Parlez-nous de votre projet et nous vous aiderons à le réaliser"
+    },
+    "form": {
+      "title": "Envoyez-nous votre demande",
+      "name_label": "Nom complet",
+      "name_placeholder": "Votre nom complet",
+      "email_label": "Email",
+      "email_placeholder": "votre@email.com",
+      "phone_label": "Téléphone",
+      "phone_placeholder": "+34 123 456 789",
+      "company_label": "Entreprise",
+      "company_placeholder": "Nom de votre entreprise (optionnel)",
+      "message_label": "Message",
+      "message_placeholder": "Parlez-nous de votre projet...",
+      "privacy_label": "J'accepte le traitement de mes données personnelles conformément à la politique de confidentialité",
+      "submit_button": "Envoyer le message",
+      "submitting_button": "Envoi en cours...",
+      "success_title": "Merci pour votre message!",
+      "success_message": "Nous vous répondrons dans les plus brefs délais.",
+      "error_title": "Une erreur s'est produite lors de l'envoi du message",
+      "error_message": "Veuillez réessayer plus tard.",
+      "required": "obligatoire"
+    },
+    "info": {
+      "title": "Informations de contact",
+      "address_label": "Adresse",
+      "phone_label": "Téléphone",
+      "email_label": "Email",
+      "hours_label": "Horaires",
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche",
+      "closed": "Fermé"
+    },
+    "samples": {
+      "title": "Besoin d'échantillons?",
+      "description": "Demandez des échantillons physiques de nos matériaux pour voir et sentir la qualité TopStone",
+      "button": "Demander des échantillons"
+    },
+    "map": {
+      "title": "Localisation"
+    }
   },
   "technical": {
     "title": "Données Techniques",
@@ -162,7 +238,20 @@
       "pieces_per_pallet": "Pièces/Palette",
       "approx_weight": "Poids Approx.",
       "pallet_dimensions": "Dimensions Palette",
-      "volume": "Volume"
+      "volume": "Volume",
+      "test_name": "Nom du Test",
+      "prescribed_value": "Valeur Prescrite",
+      "obtained_value": "Valeur Obtenue",
+      "standard": "Norme",
+      "surface_per_piece": "Surface par Pièce",
+      "weight_per_piece": "Poids Approx. par Pièce",
+      "pieces_per_pallet": "Pièces par Palette",
+      "total_surface": "Surface Totale",
+      "total_weight": "Poids Total Palette",
+      "pallet_dimensions": "Dimensions Palette",
+      "piece_info": "Informations par Pièce",
+      "pallet_info": "Informations par Palette",
+      "pieces": "pièces"
     },
     "sections": {
       "finishes": "Finitions",

@@ -282,15 +282,15 @@
                 <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"></path>
                 </svg>
-                Información por Pieza
+                {{ 'technical.table.piece_info' | translate }}
               </h3>
               <div class="overflow-x-auto">
                 <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
                   <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Grosor</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Superficie por Pieza</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Peso Aprox. por Pieza</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.thickness' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.surface_per_piece' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.weight_per_piece' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -312,24 +312,24 @@
                 <svg class="w-5 h-5 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                 </svg>
-                Información por Pallet
+                {{ 'technical.table.pallet_info' | translate }}
               </h3>
               <div class="overflow-x-auto">
                 <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
                   <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Grosor</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Piezas por Pallet</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Superficie Total</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Peso Total Pallet</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Dimensiones Pallet</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.thickness' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.pieces_per_pallet' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.total_surface' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.total_weight' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.pallet_dimensions' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>
                     @for (pack of datosTecnicos.packing; track pack.grosor) {
                       <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                         <td class="py-4 px-6 font-medium text-ts-accent">{{pack.grosor}}</td>
-                        <td class="py-4 px-6 text-gray-700">{{pack.piezasPorPallet}} piezas</td>
+                        <td class="py-4 px-6 text-gray-700">{{pack.piezasPorPallet}} {{ 'technical.table.pieces' | translate }}</td>
                         <td class="py-4 px-6 text-gray-700">{{pack.superficiePallet}}</td>
                         <td class="py-4 px-6 text-gray-700">{{pack.pesoPallet}}</td>
                         <td class="py-4 px-6 text-gray-700">{{pack.dimensionesPallet}}</td>
@@ -580,10 +580,10 @@
                 <table class="w-full text-sm bg-white rounded-xl overflow-hidden border border-gray-200">
                   <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Nombre del Test</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Valor Prescrito</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Valor Obtenido</th>
-                      <th class="text-left py-4 px-6 font-semibold text-gray-900">Norma</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.test_name' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.prescribed_value' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.obtained_value' | translate }}</th>
+                      <th class="text-left py-4 px-6 font-semibold text-gray-900">{{ 'technical.table.standard' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>

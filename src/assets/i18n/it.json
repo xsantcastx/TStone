@@ -114,6 +114,18 @@
   },
   "gallery": {
     "title": "Galleria di Progetti",
+    "hero": {
+      "featured": "In Evidenza",
+      "premium_project": "Progetto Premium",
+      "quality_surfaces": "Superfici in porcellana di alta qualità",
+      "previous_slide": "Diapositiva precedente",
+      "next_slide": "Diapositiva successiva",
+      "go_to_slide": "Vai alla diapositiva"
+    },
+    "filters": {
+      "all": "Tutti",
+      "count": "{{count}} foto"
+    },
     "categories": {
       "kitchens": "Cucine",
       "bathrooms": "Bagni",
@@ -122,13 +134,77 @@
       "others": "Altri"
     },
     "tags": {
-      "kitchen": "Cucina",
-      "bathroom": "Bagno",
-      "facade": "Facciata",
-      "industrial": "Industriale",
-      "other": "Altro"
+      "kitchen": "Cucine",
+      "bathroom": "Bagni",
+      "facade": "Facciate",
+      "industrial": "Industria",
+      "other": "Altri"
+    },
+    "loading_more": "Caricamento di più immagini...",
+    "end_message": "Hai visto tutte le immagini ({{count}} foto)",
+    "empty": {
+      "title": "Nessuna foto disponibile",
+      "description": "Nessuna immagine trovata in questa categoria."
+    },
+    "lightbox": {
+      "close": "Chiudi",
+      "previous": "Immagine precedente",
+      "next": "Immagine successiva",
+      "project": "Progetto",
+      "photo": "Foto",
+      "of": "di"
     },
     "viewProject": "Vedi il Progetto"
+  },
+  "contactPage": {
+    "hero": {
+      "title": "Contatto",
+      "subtitle": "Raccontaci del tuo progetto e ti aiuteremo a realizzarlo"
+    },
+    "form": {
+      "title": "Inviaci la tua richiesta",
+      "name_label": "Nome completo",
+      "name_placeholder": "Il tuo nome completo",
+      "email_label": "Email",
+      "email_placeholder": "tua@email.com",
+      "phone_label": "Telefono",
+      "phone_placeholder": "+34 123 456 789",
+      "company_label": "Azienda",
+      "company_placeholder": "Nome della tua azienda (opzionale)",
+      "message_label": "Messaggio",
+      "message_placeholder": "Raccontaci del tuo progetto...",
+      "privacy_label": "Accetto il trattamento dei miei dati personali secondo la politica sulla privacy",
+      "submit_button": "Invia messaggio",
+      "submitting_button": "Invio in corso...",
+      "success_title": "Grazie per il tuo messaggio!",
+      "success_message": "Ti risponderemo il prima possibile.",
+      "error_title": "Si è verificato un errore durante l'invio del messaggio",
+      "error_message": "Riprova più tardi.",
+      "required": "obbligatorio"
+    },
+    "info": {
+      "title": "Informazioni di contatto",
+      "address_label": "Indirizzo",
+      "phone_label": "Telefono",
+      "email_label": "Email",
+      "hours_label": "Orari",
+      "monday": "Lunedì",
+      "tuesday": "Martedì",
+      "wednesday": "Mercoledì",
+      "thursday": "Giovedì",
+      "friday": "Venerdì",
+      "saturday": "Sabato",
+      "sunday": "Domenica",
+      "closed": "Chiuso"
+    },
+    "samples": {
+      "title": "Hai bisogno di campioni?",
+      "description": "Richiedi campioni fisici dei nostri materiali per vedere e sentire la qualità TopStone",
+      "button": "Richiedi campioni"
+    },
+    "map": {
+      "title": "Posizione"
+    }
   },
   "technical": {
     "title": "Dati Tecnici",
@@ -162,7 +238,20 @@
       "pieces_per_pallet": "Pezzi/Pallet",
       "approx_weight": "Peso Approx.",
       "pallet_dimensions": "Dimensioni Pallet",
-      "volume": "Volume"
+      "volume": "Volume",
+      "test_name": "Nome del Test",
+      "prescribed_value": "Valore Prescritto",
+      "obtained_value": "Valore Ottenuto",
+      "standard": "Norma",
+      "surface_per_piece": "Superficie per Pezzo",
+      "weight_per_piece": "Peso Approx. per Pezzo",
+      "pieces_per_pallet": "Pezzi per Pallet",
+      "total_surface": "Superficie Totale",
+      "total_weight": "Peso Totale Pallet",
+      "pallet_dimensions": "Dimensioni Pallet",
+      "piece_info": "Informazioni per Pezzo",
+      "pallet_info": "Informazioni per Pallet",
+      "pieces": "pezzi"
     },
     "sections": {
       "finishes": "Finiture",

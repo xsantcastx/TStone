@@ -2,6 +2,7 @@ import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { TranslateModule } from '@ngx-translate/core';
 import { EmailService } from '../../services/email.service';
 import { AnalyticsService } from '../../services/analytics.service';
 import { SettingsService } from '../../services/settings.service';
@@ -19,7 +20,7 @@ interface ContactFormData {
 @Component({
   selector: 'app-contacto-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './contacto.page.html',
   styleUrl: './contacto.page.scss'
 })

@@ -114,6 +114,18 @@
   },
   "gallery": {
     "title": "Galería de Proyectos",
+    "hero": {
+      "featured": "Destacado",
+      "premium_project": "Proyecto Premium",
+      "quality_surfaces": "Superficies porcelánicas de alta calidad",
+      "previous_slide": "Diapositiva anterior",
+      "next_slide": "Siguiente diapositiva",
+      "go_to_slide": "Ir a la diapositiva"
+    },
+    "filters": {
+      "all": "Todos",
+      "count": "{{count}} fotos"
+    },
     "categories": {
       "kitchens": "Cocinas",
       "bathrooms": "Baños",
@@ -122,13 +134,77 @@
       "others": "Otros"
     },
     "tags": {
-      "kitchen": "Cocina",
-      "bathroom": "Baño",
-      "facade": "Fachada",
-      "industrial": "Industrial",
-      "other": "Otro"
+      "kitchen": "Cocinas",
+      "bathroom": "Baños",
+      "facade": "Fachadas",
+      "industrial": "Industria",
+      "other": "Otros"
+    },
+    "loading_more": "Cargando más imágenes...",
+    "end_message": "Has visto todas las imágenes ({{count}} fotos)",
+    "empty": {
+      "title": "No hay fotos disponibles",
+      "description": "No se encontraron imágenes en esta categoría."
+    },
+    "lightbox": {
+      "close": "Cerrar",
+      "previous": "Imagen anterior",
+      "next": "Siguiente imagen",
+      "project": "Proyecto",
+      "photo": "Foto",
+      "of": "de"
     },
     "viewProject": "Ver Proyecto"
+  },
+  "contactPage": {
+    "hero": {
+      "title": "Contacto",
+      "subtitle": "Cuéntanos tu proyecto y te ayudaremos a hacerlo realidad"
+    },
+    "form": {
+      "title": "Envíanos tu consulta",
+      "name_label": "Nombre completo",
+      "name_placeholder": "Tu nombre completo",
+      "email_label": "Email",
+      "email_placeholder": "tu@email.com",
+      "phone_label": "Teléfono",
+      "phone_placeholder": "+34 123 456 789",
+      "company_label": "Empresa",
+      "company_placeholder": "Nombre de tu empresa (opcional)",
+      "message_label": "Mensaje",
+      "message_placeholder": "Cuéntanos sobre tu proyecto...",
+      "privacy_label": "Acepto el tratamiento de mis datos personales según la política de privacidad",
+      "submit_button": "Enviar mensaje",
+      "submitting_button": "Enviando...",
+      "success_title": "¡Gracias por tu mensaje!",
+      "success_message": "Nos pondremos en contacto contigo lo antes posible.",
+      "error_title": "Hubo un error al enviar el mensaje",
+      "error_message": "Por favor, inténtalo de nuevo más tarde.",
+      "required": "obligatorio"
+    },
+    "info": {
+      "title": "Información de contacto",
+      "address_label": "Dirección",
+      "phone_label": "Teléfono",
+      "email_label": "Email",
+      "hours_label": "Horarios",
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo",
+      "closed": "Cerrado"
+    },
+    "samples": {
+      "title": "¿Necesitas muestras?",
+      "description": "Solicita muestras físicas de nuestros materiales para ver y sentir la calidad TopStone",
+      "button": "Solicitar muestras"
+    },
+    "map": {
+      "title": "Ubicación"
+    }
   },
   "technical": {
     "title": "Datos Técnicos",
@@ -162,7 +238,20 @@
       "pieces_per_pallet": "Piezas/Pallet",
       "approx_weight": "Peso Aprox.",
       "pallet_dimensions": "Dimensiones Pallet",
-      "volume": "Volumen"
+      "volume": "Volumen",
+      "test_name": "Nombre del Test",
+      "prescribed_value": "Valor Prescrito",
+      "obtained_value": "Valor Obtenido",
+      "standard": "Norma",
+      "surface_per_piece": "Superficie por Pieza",
+      "weight_per_piece": "Peso Aprox. por Pieza",
+      "pieces_per_pallet": "Piezas por Pallet",
+      "total_surface": "Superficie Total",
+      "total_weight": "Peso Total Pallet",
+      "pallet_dimensions": "Dimensiones Pallet",
+      "piece_info": "Información por Pieza",
+      "pallet_info": "Información por Pallet",
+      "pieces": "piezas"
     },
     "sections": {
       "finishes": "Acabados",

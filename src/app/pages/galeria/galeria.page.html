@@ -16,9 +16,9 @@
         @if (showCarouselOverlay) {
           <div class="carousel-overlay">
             <div class="carousel-caption">
-              <span class="eyebrow">Destacado</span>
-              <h2>{{ slide.altText || 'Proyecto Premium' }}</h2>
-              <p>{{ slide.caption || 'Superficies porcelánicas de alta calidad' }}</p>
+              <span class="eyebrow">{{ 'gallery.hero.featured' | translate }}</span>
+              <h2>{{ slide.altText || ('gallery.hero.premium_project' | translate) }}</h2>
+              <p>{{ slide.caption || ('gallery.hero.quality_surfaces' | translate) }}</p>
             </div>
           </div>
         }
@@ -31,7 +31,7 @@
           type="button"
           (click)="goToSlide(i)"
           [class.active]="i === currentSlideIndex"
-          [attr.aria-label]="'Go to slide ' + (i + 1)">
+          [attr.aria-label]="('gallery.hero.go_to_slide' | translate) + ' ' + (i + 1)">
         </button>
       }
     </div>
@@ -40,7 +40,7 @@
       type="button"
       class="carousel-nav carousel-nav--prev"
       (click)="prevSlide()"
-      aria-label="Previous slide">
+      [attr.aria-label]="'gallery.hero.previous_slide' | translate">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
       </svg>
@@ -49,7 +49,7 @@
       type="button"
       class="carousel-nav carousel-nav--next"
       (click)="nextSlide()"
-      aria-label="Next slide">
+      [attr.aria-label]="'gallery.hero.next_slide' | translate">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
       </svg>
@@ -66,7 +66,7 @@
         (click)="filtrarPorCategoria('todos')"
         class="gallery-pill"
         [class.gallery-pill--active]="categoriaActiva === 'todos'">
-        <span>Todos</span>
+        <span>{{ 'gallery.filters.all' | translate }}</span>
         <span class="count">{{ getImageCountByTag('todos') }}</span>
       </button>
       
@@ -129,22 +129,22 @@
       @if (isLoadingMore) {
         <div class="loading-more">
           <div class="spinner"></div>
-          <p>Cargando más imágenes...</p>
+          <p>{{ 'gallery.loading_more' | translate }}</p>
         </div>
       }
       
       <!-- End Message -->
       @if (!hasMoreImages && displayedImages.length > 0) {
         <div class="end-message">
-          <p>Has visto todas las imágenes ({{ displayedImages.length }} fotos)</p>
+          <p>{{ 'gallery.end_message' | translate: {count: displayedImages.length} }}</p>
         </div>
       }
     }
     
     @if (!isLoading && displayedImages.length === 0) {
       <div class="text-center py-24">
-        <h3>No hay fotos disponibles</h3>
-        <p>No se encontraron imágenes en esta categoría.</p>
+        <h3>{{ 'gallery.empty.title' | translate }}</h3>
+        <p>{{ 'gallery.empty.description' | translate }}</p>
       </div>
     }
   </div>
@@ -166,7 +166,7 @@
       <button 
         class="lightbox-close"
         (click)="cerrarModal()"
-        aria-label="Cerrar">
+        [attr.aria-label]="'gallery.lightbox.close' | translate">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -177,7 +177,7 @@
         <button 
           class="lightbox-nav lightbox-nav--prev"
           (click)="anteriorImagen(); $event.stopPropagation()"
-          aria-label="Imagen anterior">
+          [attr.aria-label]="'gallery.lightbox.previous' | translate">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
           </svg>
@@ -188,7 +188,7 @@
         <button 
           class="lightbox-nav lightbox-nav--next"
           (click)="siguienteImagen(); $event.stopPropagation()"
-          aria-label="Siguiente imagen">
+          [attr.aria-label]="'gallery.lightbox.next' | translate">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
@@ -206,14 +206,14 @@
       <!-- Info Panel -->
       <div class="lightbox-info">
         <div class="lightbox-header">
-          <h2>{{ selectedImage.altText || 'Proyecto' }}</h2>
+          <h2>{{ selectedImage.altText || ('gallery.lightbox.project' | translate) }}</h2>
           <p>{{ selectedImage.caption || '' }}</p>
         </div>
         
         <div class="lightbox-details">
           <div class="detail-item">
-            <div class="detail-label">Foto</div>
-            <div class="detail-value">{{ selectedImageIndex + 1 }} / {{ displayedImages.length }}</div>
+            <div class="detail-label">{{ 'gallery.lightbox.photo' | translate }}</div>
+            <div class="detail-value">{{ selectedImageIndex + 1 }} {{ 'gallery.lightbox.of' | translate }} {{ displayedImages.length }}</div>
           </div>
         </div>
       </div>
