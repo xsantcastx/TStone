@@ -544,6 +544,11 @@ export class ProductsAdminComponent implements OnInit {
     this.columnFilterOpen = null;
   }
 
+  getCategoryName(categoryId: string): string {
+    const category = this.categories.find(c => c.id === categoryId);
+    return category ? category.name : '';
+  }
+
   openCreateModal() {
     this.isEditMode = false;
     this.selectedProduct = null;
