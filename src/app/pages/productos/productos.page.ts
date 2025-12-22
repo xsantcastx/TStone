@@ -192,12 +192,28 @@ export class ProductosPageComponent implements OnInit {
 
     this.filteredProducts = filtered;
     
-    // Group by thickness
-    this.productos12mm = filtered.filter(p => p.grosor === '12mm' || p.specs?.grosor === '12mm');
-    this.productos15mm = filtered.filter(p => p.grosor === '15mm' || p.specs?.grosor === '15mm');
-    this.productos20mm = filtered.filter(p => p.grosor === '20mm' || p.specs?.grosor === '20mm');
+    // Group by thickness - prioritize main grosor field over specs
+    this.productos12mm = filtered.filter(p => {
+      const thickness = p.grosor || p.specs?.grosor;
+      return thickness === '12mm';
+    });
+    this.productos15mm = filtered.filter(p => {
+      const thickness = p.grosor || p.specs?.grosor;
+      return thickness === '15mm';
+    });
+    this.productos20mm = filtered.filter(p => {
+      const thickness = p.grosor || p.specs?.grosor;
+      return thickness === '20mm';
+    });
     
     console.log('Filter applied - 12mm:', this.productos12mm.length, '15mm:', this.productos15mm.length, '20mm:', this.productos20mm.length);
+    
+    // Debug: Log any products that might have inconsistent thickness data
+    filtered.forEach(p => {
+      if (p.grosor && p.specs?.grosor && p.grosor !== p.specs.grosor) {
+        console.warn('⚠️ Product has inconsistent thickness:', p.name, 'grosor:', p.grosor, 'specs.grosor:', p.specs.grosor);
+      }
+    });
     
     // Force change detection after filtering
     this.cdr.detectChanges();

@@ -232,17 +232,6 @@
                 <p class="text-sm text-neutral-600 mb-4">
                   {{producto.specs?.size || producto.size || '162×324cm'}} · {{producto.grosor}}
                 </p>
-                @if (producto.price) {
-                  <p class="text-lg font-semibold text-ts-bg mb-4">{{producto.price | currency:'EUR':'symbol':'1.2-2'}}</p>
-                }
-                @if (producto.stock !== undefined && producto.stock !== null) {
-                  <p class="text-sm text-neutral-600 mb-4">
-                    {{ 'productsPage.stock.label' | translate }}:
-                    <span [class.text-green-600]="producto.stock > 0" [class.text-red-600]="producto.stock === 0">
-                      {{producto.stock}} {{ 'productsPage.stock.units' | translate }}
-                    </span>
-                  </p>
-                }
                 <div class="flex items-center justify-between">
                   <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                      class="text-ts-accent hover:underline font-medium transition-colors">
