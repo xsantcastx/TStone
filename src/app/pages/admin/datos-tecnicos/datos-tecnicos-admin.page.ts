@@ -7,8 +7,11 @@ import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { AuthService } from '../../../services/auth.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
+import { DatosTecnicosTranslationService } from '../../../services/datos-tecnicos-translation.service';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento, TestResult } from '../../../core/services/data.service';
+import { LanguageService, Language } from '../../../core/services/language.service';
+import { LanguageCode, TranslatedTextMap } from '../../../models/product';
 
 @Component({
   selector: 'app-datos-tecnicos-admin',
@@ -23,15 +26,27 @@ export class DatosTecnicosAdminComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private imageOptimization = inject(ImageOptimizationService);
+  private languageService = inject(LanguageService);
+  private translationService = inject(DatosTecnicosTranslationService);
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
+
+  // Translation state
+  isTranslating = signal(false);
+  translationProgress = signal('');
+  showTranslationModal = signal(false);
 
   datosTecnicos = signal<DatosTecnicosData>({
     acabadosSuperficie: [],
     fichasTecnicas: [],
     especificacionesTecnicas: {},
+    especificacionesTecnicasTranslations: {},
     packing: [],
+    packingDescripcion: '',
+    packingDescripcionTranslations: {},
     acabadosBordes: [],
-    fijacionesFachada: { descripcion: '', imagen: '', ventajas: [] },
-    mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] },
+    fijacionesFachada: { descripcion: '', imagen: '', alt: '', ventajas: [], altTranslations: {}, descripcionTranslations: {} },
+    mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [], limpiezaTranslations: {}, frecuenciaTranslations: {} },
     testResults: []
   });
 
@@ -115,10 +130,14 @@ export class DatosTecnicosAdminComponent implements OnInit {
     const current = this.datosTecnicos();
     const specs = { ...current.especificacionesTecnicas };
     delete specs[key];
-    
+
+    const specTranslations = { ...(current.especificacionesTecnicasTranslations || {}) };
+    delete specTranslations[key];
+
     this.datosTecnicos.set({
       ...current,
-      especificacionesTecnicas: specs
+      especificacionesTecnicas: specs,
+      especificacionesTecnicasTranslations: specTranslations
     });
   }
 
@@ -130,6 +149,30 @@ export class DatosTecnicosAdminComponent implements OnInit {
     this.datosTecnicos.set({
       ...current,
       especificacionesTecnicas: specs
+    });
+  }
+
+  updateSpecTranslation(key: string, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const specTranslations = { ...(current.especificacionesTecnicasTranslations || {}) };
+    const translations: TranslatedTextMap = { ...(specTranslations[key] || {}) };
+    const trimmed = value.trim();
+
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+
+    if (Object.keys(translations).length > 0) {
+      specTranslations[key] = translations;
+    } else {
+      delete specTranslations[key];
+    }
+
+    this.datosTecnicos.set({
+      ...current,
+      especificacionesTecnicasTranslations: specTranslations
     });
   }
 
@@ -145,7 +188,7 @@ export class DatosTecnicosAdminComponent implements OnInit {
       ...current,
       acabadosSuperficie: [
         ...current.acabadosSuperficie,
-        { nombre: '', descripcion: '', imagen: '' }
+        { nombre: '', descripcion: '', descripcionTranslations: {}, imagen: '', alt: '', altTranslations: {} }
       ]
     });
   }
@@ -163,6 +206,40 @@ export class DatosTecnicosAdminComponent implements OnInit {
     const acabados = [...current.acabadosSuperficie];
     acabados[index] = { ...acabados[index], [field]: value };
     
+    this.datosTecnicos.set({
+      ...current,
+      acabadosSuperficie: acabados
+    });
+  }
+
+  updateAcabadoAlt(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const acabados = [...current.acabadosSuperficie];
+    const target = acabados[index];
+    if (!target) return;
+
+    acabados[index] = this.updateAltTranslations(target, lang, value);
+    this.datosTecnicos.set({
+      ...current,
+      acabadosSuperficie: acabados
+    });
+  }
+
+  updateAcabadoDescripcionTranslation(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const acabados = [...current.acabadosSuperficie];
+    const target = acabados[index];
+    if (!target) return;
+
+    const translations: TranslatedTextMap = { ...(target.descripcionTranslations || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    acabados[index] = { ...target, descripcionTranslations: translations };
+
     this.datosTecnicos.set({
       ...current,
       acabadosSuperficie: acabados
@@ -219,7 +296,7 @@ export class DatosTecnicosAdminComponent implements OnInit {
       ...current,
       fichasTecnicas: [
         ...current.fichasTecnicas,
-        { nombre: '', url: '', tamano: '', descripcion: '' }
+        { nombre: '', url: '', tamano: '', descripcion: '', descripcionTranslations: {} }
       ]
     });
   }
@@ -237,6 +314,27 @@ export class DatosTecnicosAdminComponent implements OnInit {
     const fichas = [...current.fichasTecnicas];
     fichas[index] = { ...fichas[index], [field]: value };
     
+    this.datosTecnicos.set({
+      ...current,
+      fichasTecnicas: fichas
+    });
+  }
+
+  updateFichaDescripcionTranslation(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const fichas = [...current.fichasTecnicas];
+    const target = fichas[index];
+    if (!target) return;
+
+    const translations: TranslatedTextMap = { ...(target.descripcionTranslations || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    fichas[index] = { ...target, descripcionTranslations: translations };
+
     this.datosTecnicos.set({
       ...current,
       fichasTecnicas: fichas
@@ -274,6 +372,31 @@ export class DatosTecnicosAdminComponent implements OnInit {
     });
   }
 
+  updatePackingDescripcion(value: string): void {
+    const current = this.datosTecnicos();
+    this.datosTecnicos.set({
+      ...current,
+      packingDescripcion: value
+    });
+  }
+
+  updatePackingDescripcionTranslation(lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const translations: TranslatedTextMap = { ...(current.packingDescripcionTranslations || {}) };
+    const trimmed = value.trim();
+
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+
+    this.datosTecnicos.set({
+      ...current,
+      packingDescripcionTranslations: translations
+    });
+  }
+
   // Acabados Bordes
   addBorde(): void {
     const current = this.datosTecnicos();
@@ -281,7 +404,7 @@ export class DatosTecnicosAdminComponent implements OnInit {
       ...current,
       acabadosBordes: [
         ...current.acabadosBordes,
-        { nombre: '', descripcion: '', imagen: '' }
+        { nombre: '', descripcion: '', descripcionTranslations: {}, imagen: '', alt: '', altTranslations: {} }
       ]
     });
   }
@@ -299,6 +422,40 @@ export class DatosTecnicosAdminComponent implements OnInit {
     const bordes = [...current.acabadosBordes];
     bordes[index] = { ...bordes[index], [field]: value };
     
+    this.datosTecnicos.set({
+      ...current,
+      acabadosBordes: bordes
+    });
+  }
+
+  updateBordeAlt(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const bordes = [...current.acabadosBordes];
+    const target = bordes[index];
+    if (!target) return;
+
+    bordes[index] = this.updateAltTranslations(target, lang, value);
+    this.datosTecnicos.set({
+      ...current,
+      acabadosBordes: bordes
+    });
+  }
+
+  updateBordeDescripcionTranslation(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const bordes = [...current.acabadosBordes];
+    const target = bordes[index];
+    if (!target) return;
+
+    const translations: TranslatedTextMap = { ...(target.descripcionTranslations || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    bordes[index] = { ...target, descripcionTranslations: translations };
+
     this.datosTecnicos.set({
       ...current,
       acabadosBordes: bordes
@@ -356,6 +513,36 @@ export class DatosTecnicosAdminComponent implements OnInit {
       fijacionesFachada: {
         ...current.fijacionesFachada,
         [field]: value
+      }
+    });
+  }
+
+  updateFachadaAlt(lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const updated = this.updateAltTranslations(current.fijacionesFachada, lang, value);
+    this.datosTecnicos.set({
+      ...current,
+      fijacionesFachada: updated
+    });
+  }
+
+  updateFachadaDescripcionTranslation(lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const target = current.fijacionesFachada;
+    const translations: TranslatedTextMap = { ...(target.descripcionTranslations || {}) };
+    const trimmed = value.trim();
+
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+
+    this.datosTecnicos.set({
+      ...current,
+      fijacionesFachada: {
+        ...target,
+        descripcionTranslations: translations
       }
     });
   }
@@ -440,6 +627,26 @@ export class DatosTecnicosAdminComponent implements OnInit {
     });
   }
 
+  updateMantenimientoTranslation(field: 'limpiezaTranslations' | 'frecuenciaTranslations', lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const translations: TranslatedTextMap = { ...(current.mantenimiento[field] || {}) };
+    const trimmed = value.trim();
+
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+
+    this.datosTecnicos.set({
+      ...current,
+      mantenimiento: {
+        ...current.mantenimiento,
+        [field]: translations
+      }
+    });
+  }
+
   addProducto(): void {
     if (this.editingProducto.trim()) {
       const current = this.datosTecnicos();
@@ -497,7 +704,7 @@ export class DatosTecnicosAdminComponent implements OnInit {
       ...current,
       testResults: [
         ...(current.testResults || []),
-        { nombre: '', valorPrescrito: '', valorObtenido: '', norma: '' }
+        { nombre: '', valorPrescrito: '', valorObtenido: '', norma: '', nombreTranslations: {} }
       ]
     });
   }
@@ -521,8 +728,101 @@ export class DatosTecnicosAdminComponent implements OnInit {
     });
   }
 
+  updateTestNombreTranslation(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const tests = [...(current.testResults || [])];
+    const target = tests[index];
+    if (!target) return;
+
+    const translations: TranslatedTextMap = { ...(target.nombreTranslations || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+
+    tests[index] = { ...target, nombreTranslations: translations };
+
+    this.datosTecnicos.set({
+      ...current,
+      testResults: tests
+    });
+  }
+
+  private updateAltTranslations<T extends { alt?: string; altTranslations?: TranslatedTextMap }>(
+    item: T,
+    lang: Language,
+    value: string
+  ): T {
+    const updated = { ...item };
+    const translations: TranslatedTextMap = { ...(updated.altTranslations || {}) };
+    const trimmed = value.trim();
+
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+
+    updated.altTranslations = translations;
+    if (lang === this.defaultLanguage || !updated.alt) {
+      updated.alt = trimmed;
+    }
+
+    return updated;
+  }
+
   // Helper method to convert string to number in template
   toNumber(value: string): number {
     return Number(value);
+  }
+
+  // ============================================================
+  // TRANSLATION MIGRATION METHODS
+  // ============================================================
+
+  openTranslationModal(): void {
+    this.showTranslationModal.set(true);
+    this.translationProgress.set('');
+  }
+
+  closeTranslationModal(): void {
+    this.showTranslationModal.set(false);
+    this.translationProgress.set('');
+  }
+
+  async runDatosTecnicosTranslation(): Promise<void> {
+    if (this.isTranslating()) return;
+
+    const confirm = window.confirm(
+      'This will auto-translate all Spanish content in Datos Técnicos to English, French, and Italian.\n\n' +
+      'Existing translations will be overwritten.\n\n' +
+      'Continue?'
+    );
+
+    if (!confirm) return;
+
+    this.isTranslating.set(true);
+    this.translationProgress.set('Starting technical data translation...');
+
+    try {
+      const result = await this.translationService.migrateDatosTecnicos();
+
+      if (result.success) {
+        this.translationProgress.set(`✅ ${result.message}`);
+        
+        // Reload data to show translations
+        await this.loadDatosTecnicos();
+      } else {
+        this.translationProgress.set(`❌ ${result.message}`);
+      }
+
+    } catch (error) {
+      console.error('Translation error:', error);
+      this.translationProgress.set(`❌ Translation failed: ${error}`);
+    } finally {
+      this.isTranslating.set(false);
+    }
   }
 }

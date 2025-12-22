@@ -1,0 +1,153 @@
+<div class="legal-page">
+  <div class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 text-ts-ink">{{ 'legal.notice.title' | translate }}</h1>
+      <p class="text-gray-600">{{ 'legal.notice.lastUpdated' | translate }}: {{ currentDate | date:'longDate' }}</p>
+    </header>
+
+    <!-- Content -->
+    <div class="prose max-w-none">
+      <!-- Introduction -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.intro.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.intro.content' | translate }}</p>
+      </section>
+
+      <!-- Company Information -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.company.title' | translate }}</h2>
+        <ul class="list-none mb-4">
+          <li class="mb-2"><strong>{{ 'legal.notice.company.name' | translate }}:</strong> TopStone S.L.</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.cif' | translate }}:</strong> [CIF/NIF]</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.address' | translate }}:</strong> [Dirección completa]</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.city' | translate }}:</strong> [Ciudad, CP]</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.country' | translate }}:</strong> España</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.email' | translate }}:</strong> info&#64;topstone.com</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.phone' | translate }}:</strong> [Teléfono]</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.registry' | translate }}:</strong> [Registro Mercantil]</li>
+        </ul>
+      </section>
+
+      <!-- Purpose -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.purpose.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.purpose.description' | translate }}</p>
+      </section>
+
+      <!-- General Conditions -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.conditions.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.conditions.description' | translate }}</p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.notice.conditions.free' | translate }}</li>
+          <li>{{ 'legal.notice.conditions.registration' | translate }}</li>
+          <li>{{ 'legal.notice.conditions.accurate' | translate }}</li>
+          <li>{{ 'legal.notice.conditions.lawful' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Intellectual Property -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.intellectual.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.intellectual.copyright' | translate }}</p>
+        <p class="mb-4">{{ 'legal.notice.intellectual.trademarks' | translate }}</p>
+        <p class="mb-4">{{ 'legal.notice.intellectual.restrictions' | translate }}</p>
+      </section>
+
+      <!-- User Responsibilities -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.responsibilities.title' | translate }}</h2>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.notice.responsibilities.equipment' | translate }}</li>
+          <li>{{ 'legal.notice.responsibilities.information' | translate }}</li>
+          <li>{{ 'legal.notice.responsibilities.lawful' | translate }}</li>
+          <li>{{ 'legal.notice.responsibilities.noHarm' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Liability Exclusion -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.liability.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.liability.information' | translate }}</p>
+        <p class="mb-4">{{ 'legal.notice.liability.availability' | translate }}</p>
+        <p class="mb-4">{{ 'legal.notice.liability.links' | translate }}</p>
+      </section>
+
+      <!-- External Links -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.links.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.links.description' | translate }}</p>
+      </section>
+
+      <!-- Data Protection -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.dataProtection.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.dataProtection.gdpr' | translate }}</p>
+        <p class="mb-4">{{ 'legal.notice.dataProtection.lopdgdd' | translate }}</p>
+        <p class="mb-4">
+          <a [routerLink]="['/privacy']" class="text-ts-bronze hover:underline">
+            {{ 'legal.notice.dataProtection.privacyLink' | translate }}
+          </a>
+        </p>
+      </section>
+
+      <!-- Cookies -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.cookies.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.cookies.description' | translate }}</p>
+        <p class="mb-4">
+          <a [routerLink]="['/cookies']" class="text-ts-bronze hover:underline">
+            {{ 'legal.notice.cookies.link' | translate }}
+          </a>
+        </p>
+      </section>
+
+      <!-- Applicable Law -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.law.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.law.jurisdiction' | translate }}</p>
+        <p class="mb-4">{{ 'legal.notice.law.disputes' | translate }}</p>
+      </section>
+
+      <!-- Modification -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.modification.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.modification.description' | translate }}</p>
+      </section>
+
+      <!-- Contact -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.contact.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.notice.contact.description' | translate }}</p>
+        <p>
+          <a [routerLink]="['/contacto']" class="text-ts-bronze hover:underline">
+            {{ 'legal.notice.contact.link' | translate }}
+          </a>
+        </p>
+      </section>
+
+      <!-- Related Policies -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.related.title' | translate }}</h2>
+        <ul class="list-disc pl-6">
+          <li>
+            <a [routerLink]="['/privacy']" class="text-ts-bronze hover:underline">
+              {{ 'legal.notice.related.privacy' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/cookies']" class="text-ts-bronze hover:underline">
+              {{ 'legal.notice.related.cookies' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/terms']" class="text-ts-bronze hover:underline">
+              {{ 'legal.notice.related.terms' | translate }}
+            </a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>

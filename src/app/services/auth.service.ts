@@ -28,6 +28,8 @@ export interface UserProfile {
   company?: string;
   phone?: string;
   role: 'client' | 'admin';
+  priceTier?: 'standard' | 'premium' | 'vip' | 'custom';  // Price tier for discounts
+  customDiscount?: number;  // Custom discount percentage (0-100)
   createdAt: Date;
   updatedAt?: Date;
   disabled?: boolean;

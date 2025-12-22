@@ -3,6 +3,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Firestore, collection, query, where, getDocs, QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { Media } from '../../models/media';
+import { LanguageService, Language } from '../../core/services/language.service';
+import { LanguageCode, TranslatedTextMap } from '../../models/product';
 
 interface Tag {
   id?: string;
@@ -57,6 +59,9 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private isBrowser = isPlatformBrowser(this.platformId);
   private cdr = inject(ChangeDetectorRef);
+  private languageService = inject(LanguageService);
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
 
   constructor(
     private firestore: Firestore
@@ -240,6 +245,38 @@ export class GaleriaPageComponent implements OnInit, OnDestroy {
       return this.allImages.length;
     }
     return this.allImages.filter(image => image.tags && image.tags.includes(tagSlug)).length;
+  }
+
+  getLocalizedAlt(media?: Media | null, fallback: string = 'Gallery image'): string {
+    if (!media) {
+      return fallback;
+    }
+    return this.pickLocalizedText(media.altTextTranslations, media.altText || fallback);
+  }
+
+  private pickLocalizedText(translations?: TranslatedTextMap, fallback: string = ''): string {
+    if (!translations) {
+      return fallback;
+    }
+
+    const current = translations[this.languageService.getCurrentLanguage() as LanguageCode];
+    if (current && current.trim().length > 0) {
+      return current.trim();
+    }
+
+    const primary = translations[this.defaultLanguage as LanguageCode];
+    if (primary && primary.trim().length > 0) {
+      return primary.trim();
+    }
+
+    for (const lang of this.languages) {
+      const value = translations[lang.code as LanguageCode];
+      if (value && value.trim().length > 0) {
+        return value.trim();
+      }
+    }
+
+    return fallback;
   }
 
   abrirImagen(image: Media, index: number) {

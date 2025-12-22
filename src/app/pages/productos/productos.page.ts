@@ -8,6 +8,8 @@ import { MediaService } from '../../services/media.service';
 import { CategoryService } from '../../services/category.service';
 import { MaterialService } from '../../services/material.service';
 import { CartService } from '../../services/cart.service';
+import { AuthService, UserProfile } from '../../services/auth.service';
+import { PricingService } from '../../services/pricing.service';
 import { Product } from '../../models/product';
 import { Category, Material } from '../../models/catalog';
 import { Media } from '../../models/media';
@@ -27,6 +29,8 @@ export class ProductosPageComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private materialService = inject(MaterialService);
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private pricingService = inject(PricingService);
   private cdr = inject(ChangeDetectorRef);
   
   // Firestore products
@@ -37,6 +41,9 @@ export class ProductosPageComponent implements OnInit {
   productos12mm: Product[] = [];
   productos15mm: Product[] = [];
   productos20mm: Product[] = [];
+  
+  // User profile for pricing
+  currentUser: UserProfile | null = null;
   
   // Filter options
   categories: Category[] = [];
@@ -52,6 +59,16 @@ export class ProductosPageComponent implements OnInit {
     // Load filter options and products in parallel
     if (isPlatformBrowser(this.platformId)) {
       console.log('🚀 Productos page initializing...');
+      
+      // Subscribe to user profile for personalized pricing
+      this.authService.userProfile$.subscribe(profile => {
+        this.currentUser = profile;
+        // Re-apply pricing when user changes
+        if (this.allProducts.length > 0) {
+          this.applyFilters();
+        }
+      });
+      
       await Promise.all([
         this.loadFilterOptions(),
         this.loadProducts()
@@ -192,16 +209,19 @@ export class ProductosPageComponent implements OnInit {
 
     this.filteredProducts = filtered;
     
+    // Apply personalized pricing to filtered products
+    const productsWithPricing = this.pricingService.applyPersonalizedPricing(filtered, this.currentUser);
+    
     // Group by thickness - prioritize main grosor field over specs
-    this.productos12mm = filtered.filter(p => {
+    this.productos12mm = productsWithPricing.filter(p => {
       const thickness = p.grosor || p.specs?.grosor;
       return thickness === '12mm';
     });
-    this.productos15mm = filtered.filter(p => {
+    this.productos15mm = productsWithPricing.filter(p => {
       const thickness = p.grosor || p.specs?.grosor;
       return thickness === '15mm';
     });
-    this.productos20mm = filtered.filter(p => {
+    this.productos20mm = productsWithPricing.filter(p => {
       const thickness = p.grosor || p.specs?.grosor;
       return thickness === '20mm';
     });
@@ -242,6 +262,10 @@ export class ProductosPageComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     this.cartService.add(product, 1);
+  }
+
+  getPricingInfo(product: Product) {
+    return this.pricingService.getPersonalizedPrice(product, this.currentUser);
   }
 
   get hasFilters(): boolean {

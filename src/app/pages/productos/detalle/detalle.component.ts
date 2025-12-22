@@ -33,8 +33,13 @@ export class DetalleComponent implements OnInit, OnDestroy {
   
   producto: Product | undefined;
   productosRelacionados: Product[] = [];
+  previousProduct: Product | undefined;
+  nextProduct: Product | undefined;
   coverImage: Media | undefined;
   galleryImages: Media[] = [];
+  allProductImages: Media[] = [];
+  currentImageIndex = 0;
+  currentDisplayImage: Media | undefined;
   grosor = '';
   loading = true;
   lightboxOpen = false;
@@ -95,11 +100,21 @@ export class DetalleComponent implements OnInit, OnDestroy {
           this.galleryImages = await this.mediaService.getMediaByIds(this.producto.galleryImageIds);
           }
           
+          // Build all product images array (cover + gallery)
+          this.allProductImages = [];
+          if (this.coverImage) {
+            this.allProductImages.push(this.coverImage);
+          }
+          this.allProductImages = [...this.allProductImages, ...this.galleryImages];
+          this.currentImageIndex = 0;
+          this.currentDisplayImage = this.allProductImages[0];
+          
           // Update page title and meta tags
           this.updateSEO();
           
-          // Load related products
+          // Load related products and navigation
           await this.loadProductosRelacionados(products);
+          await this.loadProductNavigation(products);
         } else {
           // Product not found or not published - redirect to 404
           this.router.navigate(['/404']);
@@ -165,6 +180,54 @@ export class DetalleComponent implements OnInit, OnDestroy {
     );
   }
 
+  private async loadProductNavigation(todosLosProductos: Product[]) {
+    if (!this.producto) return;
+    
+    // Get all published products from the same thickness, sorted by name
+    const sameThickness = todosLosProductos
+      .filter(p => 
+        p.status === 'published' &&
+        p.grosor === this.producto!.grosor
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+    
+    // Find current product index
+    const currentIndex = sameThickness.findIndex(p => p.id === this.producto!.id);
+    
+    if (currentIndex === -1) return;
+    
+    // Get previous product (circular - wraps to last if at beginning)
+    const prevIndex = currentIndex === 0 ? sameThickness.length - 1 : currentIndex - 1;
+    const prevProduct = sameThickness[prevIndex];
+    
+    // Get next product (circular - wraps to first if at end)
+    const nextIndex = currentIndex === sameThickness.length - 1 ? 0 : currentIndex + 1;
+    const nextProduct = sameThickness[nextIndex];
+    
+    // Load cover images for navigation products
+    if (prevProduct) {
+      this.previousProduct = await this.loadProductImage(prevProduct);
+    }
+    if (nextProduct) {
+      this.nextProduct = await this.loadProductImage(nextProduct);
+    }
+  }
+
+  private async loadProductImage(product: Product): Promise<Product> {
+    if (product.coverImage) {
+      const isMediaId = !product.coverImage.includes('http');
+      if (isMediaId) {
+        const media = await this.mediaService.getMediaById(product.coverImage);
+        if (media) {
+          return { ...product, imageUrl: media.url };
+        }
+      } else {
+        return { ...product, imageUrl: product.coverImage };
+      }
+    }
+    return product;
+  }
+
   private updateSEO() {
     if (!this.producto) return;
     
@@ -202,6 +265,13 @@ export class DetalleComponent implements OnInit, OnDestroy {
     return fallback;
   }
 
+  getMediaAlt(media?: Media | null, fallback: string = ''): string {
+    if (!media) {
+      return fallback;
+    }
+    return this.getLocalizedText(media.altTextTranslations, media.altText || fallback);
+  }
+
   goBack() {
     if (this.grosor) {
       this.router.navigate(['/productos', this.grosor]);
@@ -210,15 +280,43 @@ export class DetalleComponent implements OnInit, OnDestroy {
     }
   }
 
-  openLightbox(imageUrl?: string, altText?: string) {
-    this.currentLightboxImage = imageUrl || this.coverImage?.url || '';
-    this.currentLightboxAlt = altText || this.producto?.name || '';
-    this.lightboxOpen = true;
+  openLightbox(media?: Media | null, fallbackAlt?: string) {
+    const target = media || this.coverImage;
+    this.currentLightboxImage = target?.url || '';
+    const altFallback = fallbackAlt || this.producto?.name || '';
+    this.currentLightboxAlt = this.getMediaAlt(target, altFallback);
+    this.lightboxOpen = !!this.currentLightboxImage;
+  }
+
+  nextGalleryImage() {
+    if (this.allProductImages.length <= 1) return;
+    
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.allProductImages.length;
+    this.currentDisplayImage = this.allProductImages[this.currentImageIndex];
+  }
+
+  previousGalleryImage() {
+    if (this.allProductImages.length <= 1) return;
+    
+    this.currentImageIndex = this.currentImageIndex === 0 
+      ? this.allProductImages.length - 1 
+      : this.currentImageIndex - 1;
+    this.currentDisplayImage = this.allProductImages[this.currentImageIndex];
   }
 
   addToCart() {
     if (!this.producto) return;
     
     this.cartService.add(this.producto, 1);
+  }
+
+  openSpecialOffersContact() {
+    // Navigate to contact page with special offers pre-filled
+    this.router.navigate(['/contacto'], {
+      queryParams: {
+        subject: 'Consulta sobre ofertas y promociones especiales',
+        product: this.producto?.name || ''
+      }
+    });
   }
 }

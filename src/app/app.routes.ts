@@ -43,6 +43,27 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/cart/cart.page').then(m => m.CartPage),
     title: 'TopStone | Carrito'
   },
+  // Legal Pages
+  {
+    path: 'privacy',
+    loadComponent: () => import('./pages/privacy/privacy.page').then(m => m.PrivacyPageComponent),
+    title: 'TopStone | Política de Privacidad'
+  },
+  {
+    path: 'cookies',
+    loadComponent: () => import('./pages/cookies/cookies.page').then(m => m.CookiesPageComponent),
+    title: 'TopStone | Política de Cookies'
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./pages/terms/terms.page').then(m => m.TermsPageComponent),
+    title: 'TopStone | Términos de Servicio'
+  },
+  {
+    path: 'legal',
+    loadComponent: () => import('./pages/legal/legal.page').then(m => m.LegalPageComponent),
+    title: 'TopStone | Aviso Legal'
+  },
   // Client Area Routes
   {
     path: 'client/login',

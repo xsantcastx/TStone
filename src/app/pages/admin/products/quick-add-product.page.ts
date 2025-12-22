@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -36,6 +36,7 @@ export class QuickAddProductComponent implements OnInit {
   private mediaService = inject(MediaService);
   private imageOptimization = inject(ImageOptimizationService);
   private languageService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
 
   categories: Category[] = [];
   materials: Material[] = [];
@@ -140,6 +141,12 @@ export class QuickAddProductComponent implements OnInit {
 
   private async loadProductForEdit(productId: string) {
     try {
+      // Clear existing previews first
+      this.coverPreview = null;
+      this.galleryPreviews = [];
+      this.existingCoverImageId = '';
+      this.existingGalleryImageIds = [];
+      
       const product = await firstValueFrom(this.productsService.getProduct(productId));
       if (!product) {
         this.errorMessage = 'Product not found';
@@ -190,17 +197,32 @@ export class QuickAddProductComponent implements OnInit {
       if (product.galleryImageIds && product.galleryImageIds.length > 0) {
         this.existingGalleryImageIds = product.galleryImageIds;
         
+        console.log('Loading gallery images for product:', product.galleryImageIds);
+        
         // Load gallery image URLs for preview
         try {
-          for (const mediaId of product.galleryImageIds) {
-            const media = await this.mediaService.getMediaById(mediaId);
+          const galleryMediaPromises = product.galleryImageIds.map(mediaId => 
+            this.mediaService.getMediaById(mediaId)
+          );
+          
+          const galleryMedias = await Promise.all(galleryMediaPromises);
+          
+          for (const media of galleryMedias) {
             if (media?.url) {
               this.galleryPreviews.push(media.url);
+              console.log('Added gallery preview:', media.url);
             }
           }
+          
+          console.log('Total gallery previews loaded:', this.galleryPreviews.length);
+          
+          // Use setTimeout to defer change detection to next cycle
+          setTimeout(() => this.cdr.markForCheck(), 0);
         } catch (error) {
-          console.warn('Could not load gallery images:', error);
+          console.error('Could not load gallery images:', error);
         }
+      } else {
+        console.log('No gallery images found for product');
       }
 
       // Load specs
@@ -427,7 +449,19 @@ export class QuickAddProductComponent implements OnInit {
       reader.readAsDataURL(file);
     });
   }  removeGalleryImage(index: number) {
-    this.galleryFiles.splice(index, 1);
+    // Check if this is an existing image or a newly uploaded one
+    const totalExistingImages = this.existingGalleryImageIds.length;
+    
+    if (index < totalExistingImages) {
+      // Removing an existing image - remove from existingGalleryImageIds
+      this.existingGalleryImageIds.splice(index, 1);
+    } else {
+      // Removing a newly uploaded file - remove from galleryFiles
+      const fileIndex = index - totalExistingImages;
+      this.galleryFiles.splice(fileIndex, 1);
+    }
+    
+    // Always remove from previews
     this.galleryPreviews.splice(index, 1);
   }
 

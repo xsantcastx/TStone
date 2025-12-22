@@ -212,7 +212,7 @@
       <!-- CTA Galería -->
       <div class="relative rounded-2xl overflow-hidden group">
         <img [src]="galleryImage1?.url || 'assets/Bathroom.jpeg'" 
-             [alt]="galleryImage1?.altText || ('home.gallery.projects_alt' | translate)"
+             [alt]="getLocalizedAlt(galleryImage1, ('home.gallery.projects_alt' | translate))"
              class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"/>
         <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div class="text-center text-white">
@@ -228,7 +228,7 @@
       <!-- CTA Contacto -->
       <div class="relative rounded-2xl overflow-hidden group">
         <img [src]="galleryImage2?.url || 'assets/Bathroom2.jpeg'" 
-             [alt]="galleryImage2?.altText || ('home.gallery.contact_alt' | translate)"
+             [alt]="getLocalizedAlt(galleryImage2, ('home.gallery.contact_alt' | translate))"
              class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"/>
         <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div class="text-center text-white">

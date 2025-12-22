@@ -584,7 +584,413 @@
     "links": {
       "privacy": "Privacy policy",
       "terms": "Terms & conditions",
-      "cookies": "Cookies"
+      "cookies": "Cookies",
+      "legal": "Legal Notice"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated",
+      "intro": {
+        "title": "Introduction",
+        "content": "At TopStone, we respect your privacy and are committed to protecting your personal data. This privacy policy describes how we collect, use, share, and protect your information when you use our website and services."
+      },
+      "controller": {
+        "title": "Data Controller",
+        "company": "Company",
+        "address": "Address",
+        "email": "Email",
+        "phone": "Phone"
+      },
+      "dataCollected": {
+        "title": "Data We Collect",
+        "personal": {
+          "title": "Personal Information",
+          "name": "Name and surname",
+          "email": "Email address",
+          "phone": "Phone number",
+          "company": "Company name",
+          "address": "Postal address"
+        },
+        "usage": {
+          "title": "Usage Data",
+          "ip": "IP address",
+          "browser": "Browser type and version",
+          "device": "Device used",
+          "pages": "Pages visited",
+          "interactions": "Interactions with the site"
+        }
+      },
+      "dataUse": {
+        "title": "How We Use Your Data",
+        "orders": "Process and manage orders and requests",
+        "communication": "Communicate with you about our products and services",
+        "customerService": "Provide customer support",
+        "improvements": "Improve our website and services",
+        "marketing": "Send marketing communications (with your consent)",
+        "legal": "Comply with legal obligations"
+      },
+      "legalBasis": {
+        "title": "Legal Basis for Processing",
+        "consent": "Consent: You have given explicit consent",
+        "contract": "Contract performance: Necessary to fulfill your order",
+        "legal": "Legal obligation: Required by law",
+        "legitimate": "Legitimate interest: To improve our services"
+      },
+      "cookies": {
+        "title": "Cookies and Similar Technologies",
+        "description": "We use cookies and similar technologies to improve your experience, analyze site usage, and personalize content.",
+        "link": "See our complete Cookie Policy"
+      },
+      "analytics": {
+        "title": "Google Analytics",
+        "description": "We use Google Analytics 4 with Google Consent Mode v2 to analyze site usage. Data is collected anonymously and only when you give explicit consent."
+      },
+      "sharing": {
+        "title": "Data Sharing",
+        "providers": "Service providers (hosting, email, analytics)",
+        "legal": "Authorities when required by law",
+        "business": "Business transfers (mergers, acquisitions)"
+      },
+      "rights": {
+        "title": "Your Rights",
+        "access": {
+          "title": "Access",
+          "description": "Request a copy of your personal data"
+        },
+        "rectification": {
+          "title": "Rectification",
+          "description": "Correct inaccurate or incomplete data"
+        },
+        "erasure": {
+          "title": "Erasure",
+          "description": "Request deletion of your data"
+        },
+        "restriction": {
+          "title": "Restriction",
+          "description": "Restrict processing of your data"
+        },
+        "portability": {
+          "title": "Portability",
+          "description": "Receive your data in a structured format"
+        },
+        "objection": {
+          "title": "Objection",
+          "description": "Object to processing of your data"
+        },
+        "withdraw": {
+          "title": "Withdraw consent",
+          "description": "Withdraw your consent at any time"
+        },
+        "contact": "To exercise any of these rights, contact us through our contact form."
+      },
+      "retention": {
+        "title": "Data Retention",
+        "description": "We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected, including legal, accounting, or reporting obligations."
+      },
+      "security": {
+        "title": "Security",
+        "description": "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction."
+      },
+      "children": {
+        "title": "Children's Privacy",
+        "description": "Our services are not intended for individuals under 16 years of age. We do not knowingly collect personal information from children."
+      },
+      "changes": {
+        "title": "Changes to This Policy",
+        "description": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the 'Last updated' date."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "If you have questions about this privacy policy or how we handle your personal data, contact us:",
+        "link": "Contact form"
+      }
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "lastUpdated": "Last updated",
+      "intro": {
+        "title": "Introduction",
+        "content": "This cookie policy explains what cookies are, how we use them, what types of cookies we employ, and how you can manage your preferences."
+      },
+      "whatAre": {
+        "title": "What Are Cookies?",
+        "description": "Cookies are small text files that are stored on your device when you visit a website. They help us improve your experience and provide essential functionalities."
+      },
+      "types": {
+        "title": "Types of Cookies We Use",
+        "necessary": {
+          "title": "Necessary Cookies",
+          "description": "Essential for the operation of the site. Cannot be disabled.",
+          "consent": "Stores your cookie consent preferences",
+          "language": "Saves your preferred language",
+          "cart": "Keeps products in your shopping cart"
+        },
+        "analytics": {
+          "title": "Analytics Cookies",
+          "description": "Help us understand how visitors interact with our site using Google Analytics 4.",
+          "ga": "Main Google Analytics cookie to distinguish users",
+          "gaId": "Stores information about session state",
+          "gid": "Registers a unique ID to generate statistical data",
+          "gat": "Used to throttle request rate"
+        },
+        "preferences": {
+          "title": "Preference Cookies",
+          "description": "Allow remembering information that changes the way the site behaves or looks, such as your preferred language."
+        },
+        "marketing": {
+          "title": "Marketing Cookies",
+          "description": "We currently do not use marketing cookies, but this may change in the future. We will always request your explicit consent."
+        }
+      },
+      "duration": {
+        "title": "Cookie Duration",
+        "session": {
+          "title": "Session cookies",
+          "description": "Deleted when you close your browser"
+        },
+        "persistent": {
+          "title": "Persistent cookies",
+          "description": "Remain on your device until they expire or you delete them"
+        }
+      },
+      "googleAnalytics": {
+        "title": "Google Analytics and Consent Mode v2",
+        "description": "We use Google Analytics 4 with Consent Mode v2, which respects your privacy preferences. We collect information about:",
+        "pages": "Pages visited and time spent",
+        "source": "Traffic source and search keywords",
+        "device": "Device type and operating system",
+        "time": "Aggregated demographic data (approximate age, gender)",
+        "interactions": "Site interactions (clicks, downloads)",
+        "privacyLink": "Google's Privacy Policy"
+      },
+      "consent": {
+        "title": "Consent Management",
+        "description": "We implement a consent system that complies with GDPR and ePrivacy:",
+        "defaultDenied": "By default, all optional cookies are disabled",
+        "explicit": "We request your explicit consent for analytics and marketing cookies",
+        "granular": "You can choose which types of cookies to accept",
+        "persistent": "Your preferences are saved and respected in future visits",
+        "withdraw": "You can change or withdraw your consent at any time"
+      },
+      "manage": {
+        "title": "How to Manage Cookies",
+        "description": "You have several options to manage cookies:",
+        "banner": {
+          "title": "Cookie Banner",
+          "description": "Use our cookie consent banner that appears when you first visit the site to configure your preferences."
+        },
+        "browser": {
+          "title": "Browser Settings",
+          "instructions": "View instructions"
+        }
+      },
+      "impact": {
+        "title": "Impact of Disabling Cookies",
+        "description": "Disabling certain cookies may affect your experience on the site. Some functionalities may not be available."
+      },
+      "updates": {
+        "title": "Updates to This Policy",
+        "description": "We may occasionally update this cookie policy. Any changes will be effective immediately after publication on this page."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "If you have questions about our cookie policy:",
+        "link": "Contact form"
+      },
+      "related": {
+        "title": "Related Policies",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated",
+      "intro": {
+        "title": "Introduction",
+        "content": "Welcome to TopStone. These terms of service govern the use of our website and the purchase of our products. By using our services, you accept these terms in their entirety."
+      },
+      "acceptance": {
+        "title": "Acceptance of Terms",
+        "description": "By accessing or using our website, you agree to be bound by these terms of service. If you do not agree with any part of these terms, you should not use our services."
+      },
+      "services": {
+        "title": "Our Services",
+        "description": "TopStone offers the following services:",
+        "catalog": "Catalog of porcelain surface products",
+        "orders": "Order and quote management",
+        "quotes": "Personalized quote requests",
+        "technical": "Access to technical sheets and documentation",
+        "support": "Technical advice and customer service"
+      },
+      "accounts": {
+        "title": "User Accounts",
+        "description": "To access certain functionalities, you must create an account. You are responsible for:",
+        "accurate": "Providing accurate and complete information",
+        "confidential": "Maintaining the confidentiality of your password",
+        "responsible": "All activities that occur under your account",
+        "notify": "Notifying us immediately of any unauthorized use"
+      },
+      "orders": {
+        "title": "Orders and Pricing",
+        "pricing": "Prices displayed on our website are subject to change without notice. Personalized prices will be confirmed via formal quote.",
+        "confirmation": "An order is considered confirmed once you receive our written confirmation.",
+        "modification": "We reserve the right to refuse or cancel orders in exceptional circumstances.",
+        "cancellation": "Cancellations are subject to our cancellation policy and may incur charges."
+      },
+      "payment": {
+        "title": "Payment",
+        "methods": "We accept various payment methods as agreed upon in each transaction.",
+        "timing": "Payment must be made according to the terms agreed in the order confirmation.",
+        "terms": "Payment terms may vary depending on the customer and order volume."
+      },
+      "delivery": {
+        "title": "Delivery",
+        "shipping": "Shipping costs and terms will be communicated before order confirmation.",
+        "timing": "Delivery times are estimated and not guaranteed unless expressly agreed.",
+        "inspection": "It is your responsibility to inspect products upon receipt and notify of any damage within 48 hours."
+      },
+      "returns": {
+        "title": "Returns and Refunds",
+        "policy": "Due to the nature of our products, returns are subject to case-by-case evaluation.",
+        "conditions": "Damaged or defective products will be replaced according to our manufacturer's warranty.",
+        "custom": "Custom or special production orders are non-refundable."
+      },
+      "warranties": {
+        "title": "Warranties",
+        "manufacturer": "Our products are backed by the manufacturer's warranties specified in the technical sheets.",
+        "installation": "Warranties do not cover damage caused by incorrect installation or inappropriate use.",
+        "limitation": "We do not offer additional warranties beyond those of the manufacturer unless expressly agreed."
+      },
+      "intellectual": {
+        "title": "Intellectual Property",
+        "ownership": "All content on this website, including texts, images, logos, and designs, is the property of TopStone or its licensors.",
+        "license": "You are granted a limited license to access and use the site for legitimate personal or commercial purposes.",
+        "prohibited": "Copying, modifying, distributing, or reproducing any content without express authorization is prohibited."
+      },
+      "conduct": {
+        "title": "User Conduct",
+        "description": "By using our services, you agree to:",
+        "lawful": "Use the site only for lawful purposes",
+        "accurate": "Provide true and accurate information",
+        "noHarm": "Not damage, disable, or overload the site",
+        "noInterference": "Not interfere with site security",
+        "noUnauthorized": "Not access unauthorized areas"
+      },
+      "liability": {
+        "title": "Limitation of Liability",
+        "disclaimer": "To the extent permitted by law, TopStone will not be liable for indirect, incidental, or consequential damages.",
+        "limitation": "Our total liability will not exceed the amount paid for the product or service in question."
+      },
+      "indemnification": {
+        "title": "Indemnification",
+        "description": "You agree to indemnify and hold TopStone harmless from any claim arising from your use of the site or violation of these terms."
+      },
+      "disputes": {
+        "title": "Dispute Resolution",
+        "governing": "These terms are governed by the laws of Spain.",
+        "jurisdiction": "Any dispute will be submitted to the exclusive jurisdiction of the courts of Castellón, Spain."
+      },
+      "changes": {
+        "title": "Changes to These Terms",
+        "description": "We reserve the right to modify these terms at any time. Changes will take effect immediately after publication."
+      },
+      "severability": {
+        "title": "Severability",
+        "description": "If any provision of these terms is deemed invalid, the other provisions will remain valid and enforceable."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "For questions about these terms of service:",
+        "link": "Contact form"
+      }
+    },
+    "notice": {
+      "title": "Legal Notice",
+      "lastUpdated": "Last updated",
+      "intro": {
+        "title": "Legal Information",
+        "content": "In compliance with Law 34/2002, of July 11, on Information Society Services and Electronic Commerce (LSSI-CE), TopStone informs users of the following legal information."
+      },
+      "company": {
+        "title": "Company Information",
+        "name": "Business Name",
+        "cif": "Tax ID",
+        "address": "Address",
+        "city": "City and Postal Code",
+        "country": "Country",
+        "email": "Email",
+        "phone": "Phone",
+        "registry": "Commercial Registry"
+      },
+      "purpose": {
+        "title": "Website Purpose",
+        "description": "This website is intended for the presentation of large-format porcelain surface products, order management, and provision of services related to our business sector."
+      },
+      "conditions": {
+        "title": "General Terms of Use",
+        "description": "Access to and use of this website implies acceptance of the following conditions:",
+        "free": "Access to the website is free except for the cost of the connection",
+        "registration": "Some functionalities require prior registration",
+        "accurate": "The user agrees to provide truthful and updated information",
+        "lawful": "Use of the site must be lawful and comply with these terms"
+      },
+      "intellectual": {
+        "title": "Intellectual and Industrial Property",
+        "copyright": "All content on this website (texts, images, designs, logos, structure) is protected by intellectual and industrial property rights.",
+        "trademarks": "Trademarks, trade names, or distinctive signs are the property of TopStone or third parties who have authorized their use.",
+        "restrictions": "Reproduction, distribution, public communication, and transformation are prohibited without express authorization."
+      },
+      "responsibilities": {
+        "title": "User Responsibilities",
+        "equipment": "Have the necessary equipment and programs to access the site",
+        "information": "Provide truthful information and keep it updated",
+        "lawful": "Make lawful use of the site and its contents",
+        "noHarm": "Not perform activities that may damage or overload the site"
+      },
+      "liability": {
+        "title": "Limitation of Liability",
+        "information": "TopStone does not guarantee the accuracy, currency, or completeness of the published information.",
+        "availability": "We do not guarantee continuous availability of the site or absence of errors.",
+        "links": "We are not responsible for the content of third-party websites linked."
+      },
+      "links": {
+        "title": "External Links",
+        "description": "Links to third-party websites are provided for your convenience only. TopStone is not responsible for their content or privacy practices."
+      },
+      "dataProtection": {
+        "title": "Data Protection",
+        "gdpr": "Personal data processing is carried out in accordance with Regulation (EU) 2016/679 (GDPR).",
+        "lopdgdd": "We also comply with Organic Law 3/2018, of December 5, on Protection of Personal Data and guarantee of digital rights (LOPDGDD).",
+        "privacyLink": "See our complete Privacy Policy"
+      },
+      "cookies": {
+        "title": "Cookies",
+        "description": "This website uses cookies to improve user experience and analyze site traffic.",
+        "link": "See our Cookie Policy"
+      },
+      "law": {
+        "title": "Applicable Law",
+        "jurisdiction": "These terms are governed by Spanish legislation.",
+        "disputes": "For any controversy, the parties submit to the Courts and Tribunals of Castellón, Spain."
+      },
+      "modification": {
+        "title": "Modification of Legal Notice",
+        "description": "TopStone reserves the right to modify this legal notice at any time. Changes will be effective from their publication on the website."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "For any inquiry related to this legal notice:",
+        "link": "Contact form"
+      },
+      "related": {
+        "title": "Related Documents",
+        "privacy": "Privacy Policy",
+        "cookies": "Cookie Policy",
+        "terms": "Terms of Service"
+      }
     }
   }
 }

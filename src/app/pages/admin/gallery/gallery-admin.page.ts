@@ -9,9 +9,11 @@ import { AuthService } from '../../../services/auth.service';
 import { MediaService } from '../../../services/media.service';
 import { ProductsService } from '../../../services/products.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
-import { Product } from '../../../models/product';
+import { GalleryTranslationMigrationService } from '../../../services/gallery-translation-migration.service';
+import { Product, LanguageCode, TranslatedTextMap } from '../../../models/product';
 import { Media, MediaTag, GALLERY_TAGS, MediaCreateInput } from '../../../models/media';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
+import { LanguageService, Language } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-gallery-admin',
@@ -29,6 +31,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
   private productsService = inject(ProductsService);
   private imageOptimization = inject(ImageOptimizationService);
   private cdr = inject(ChangeDetectorRef);
+  private galleryTranslationService = inject(GalleryTranslationMigrationService);
 
   mediaList: Media[] = [];
   products: Product[] = [];
@@ -62,16 +65,35 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
   totalToUpload = 0;
 
   availableTags = GALLERY_TAGS;
+  private languageService = inject(LanguageService);
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
+
+  // Translation migration
+  isTranslating = false;
+  translationProgress = '';
+  showTranslationModal = false;
+
+  // Helper methods need to be defined before constructor
+  private createTranslationFormGroup(initialValue: string = ''): FormGroup {
+    const config: Record<string, any[]> = {};
+    this.languages.forEach(lang => {
+      config[lang.code] = [initialValue];
+    });
+    return this.fb.group(config);
+  }
 
   constructor() {
     this.uploadForm = this.fb.group({
       altText: [''],
+      altTextTranslations: this.createTranslationFormGroup(),
       tags: [[]],
       relatedProductIds: [[]]
     });
 
     this.editForm = this.fb.group({
       altText: [''],
+      altTextTranslations: this.createTranslationFormGroup(),
       tags: [[]],
       relatedProductIds: [[]]
     });
@@ -158,7 +180,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(media =>
-        media.altText?.toLowerCase().includes(term) ||
+        this.matchesAltText(media, term) ||
         media.tags.some(tag => tag.toLowerCase().includes(term))
       );
     }
@@ -189,6 +211,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     this.showUploadModal = true;
     this.uploadForm.reset({
       altText: '',
+      altTextTranslations: this.buildTranslationResetValue(),
       tags: [],
       relatedProductIds: []
     });
@@ -207,6 +230,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
   closeUploadModal(): void {
     this.showUploadModal = false;
     this.uploadForm.reset();
+    this.uploadForm.setControl('altTextTranslations', this.createTranslationFormGroup());
     this.selectedFile = null;
     this.selectedFiles = [];
     this.revokePreviewUrl();
@@ -226,6 +250,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
       tags: media.tags || [],
       relatedProductIds: this.extractProductIds(media.relatedEntityIds || [])
     });
+    this.patchTranslationGroup(this.editForm, 'altTextTranslations', media.altTextTranslations, media.altText || '');
     this.successMessage = '';
     this.errorMessage = '';
   }
@@ -234,6 +259,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     this.showEditModal = false;
     this.mediaToEdit = null;
     this.editForm.reset();
+    this.editForm.setControl('altTextTranslations', this.createTranslationFormGroup());
     this.errorMessage = '';
   }
 
@@ -388,6 +414,7 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     const tags: MediaTag[] = formValue.tags || [];
     const relatedProductIds: string[] = formValue.relatedProductIds || [];
     const sharedAltText = formValue.altText || '';
+    const altTranslations = this.normalizeTranslations(formValue.altTextTranslations);
 
     this.isUploading = true;
     this.isSaving = true;
@@ -428,10 +455,10 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
             continue;
           }
 
-          // For multiple files, append number to alt text if provided
-          const altText = this.selectedFiles.length > 1 && sharedAltText
-            ? `${sharedAltText} (${i + 1}/${this.selectedFiles.length})`
-            : sharedAltText;
+          // For multiple files, append number to alt texts if provided
+          const altText = this.appendNumbering(sharedAltText, i, this.selectedFiles.length);
+          const translatedAltText = this.applyNumberingToTranslations(altTranslations, i, this.selectedFiles.length);
+          const primaryAlt = this.getPrimaryTranslation(translatedAltText, altText || file.name);
 
           const mediaInput: Omit<MediaCreateInput, 'url'> = {
             filename: optimizedFile.name,
@@ -442,7 +469,8 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
             mimeType: optimizedFile.type,
             uploadedBy: currentUser.uid,
             tags: tags as string[],
-            altText: altText,
+            altText: primaryAlt,
+            altTextTranslations: translatedAltText,
             relatedEntityIds: relatedProductIds.map(id => `products/${id}`),
             relatedEntityType: 'gallery'
           };
@@ -505,6 +533,8 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     const formValue = this.editForm.value;
     const tags: MediaTag[] = formValue.tags || [];
     const relatedProductIds: string[] = formValue.relatedProductIds || [];
+    const altTranslations = this.normalizeTranslations(formValue.altTextTranslations);
+    const primaryAlt = this.getPrimaryTranslation(altTranslations, formValue.altText || '');
 
     this.isSaving = true;
     this.errorMessage = '';
@@ -512,7 +542,8 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     try {
       await this.mediaService.updateMedia(this.mediaToEdit.id, {
         tags: tags as string[],
-        altText: formValue.altText || '',
+        altText: primaryAlt,
+        altTextTranslations: altTranslations,
         relatedEntityIds: relatedProductIds.map(id => `products/${id}`)
       });
 
@@ -611,6 +642,100 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
     }
   }
 
+  private buildTranslationResetValue(initialValue: string = ''): Record<string, string> {
+    const values: Record<string, string> = {};
+    this.languages.forEach(lang => {
+      values[lang.code] = initialValue;
+    });
+    return values;
+  }
+
+  private normalizeTranslations(raw: Record<string, string> | undefined): TranslatedTextMap {
+    const normalized: TranslatedTextMap = {};
+    if (!raw) {
+      return normalized;
+    }
+
+    this.languages.forEach(lang => {
+      const value = raw[lang.code];
+      if (value && value.toString().trim().length > 0) {
+        normalized[lang.code as LanguageCode] = value.toString().trim();
+      }
+    });
+
+    return normalized;
+  }
+
+  private getPrimaryTranslation(translations: TranslatedTextMap, fallback: string = ''): string {
+    const primary = translations[this.defaultLanguage as LanguageCode];
+    if (primary && primary.trim().length > 0) {
+      return primary.trim();
+    }
+
+    for (const lang of this.languages) {
+      const candidate = translations[lang.code as LanguageCode];
+      if (candidate && candidate.trim().length > 0) {
+        return candidate.trim();
+      }
+    }
+
+    return fallback;
+  }
+
+  private appendNumbering(value: string | undefined, index: number, total: number): string {
+    if (!value) {
+      return '';
+    }
+    if (total <= 1) {
+      return value;
+    }
+    return `${value} (${index + 1}/${total})`;
+  }
+
+  private applyNumberingToTranslations(translations: TranslatedTextMap, index: number, total: number): TranslatedTextMap {
+    const numbered: TranslatedTextMap = {};
+    Object.entries(translations || {}).forEach(([lang, value]) => {
+      const numberedValue = this.appendNumbering(value, index, total);
+      if (numberedValue.trim()) {
+        numbered[lang as LanguageCode] = numberedValue.trim();
+      }
+    });
+    return numbered;
+  }
+
+  getLocalizedAlt(media: Media, fallback: string = 'Gallery media'): string {
+    const translations = media.altTextTranslations || {};
+    const localized = this.getPrimaryTranslation(translations, media.altText || fallback);
+    return localized || fallback;
+  }
+
+  private matchesAltText(media: Media, term: string): boolean {
+    if (media.altText && media.altText.toLowerCase().includes(term)) {
+      return true;
+    }
+
+    const translations = media.altTextTranslations || {};
+    return Object.values(translations).some(value => value?.toLowerCase().includes(term));
+  }
+
+  private patchTranslationGroup(
+    form: FormGroup,
+    groupName: 'altTextTranslations',
+    translations?: TranslatedTextMap,
+    fallback: string = ''
+  ): void {
+    const group = form.get(groupName) as FormGroup | null;
+    if (!group) return;
+
+    const patch: Record<string, string> = {};
+    this.languages.forEach(lang => {
+      const value = translations?.[lang.code as LanguageCode];
+      patch[lang.code] = value ?? (lang.code === this.defaultLanguage ? fallback : '');
+    });
+
+    group.patchValue(patch, { emitEvent: false });
+  }
+
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       const control = formGroup.get(key);
@@ -626,4 +751,79 @@ export class GalleryAdminComponent implements OnInit, OnDestroy {
   get editAltText() { return this.editForm.get('altText'); }
   get editTags() { return this.editForm.get('tags'); }
   get editRelatedProductIds() { return this.editForm.get('relatedProductIds'); }
+
+  // ============================================================
+  // TRANSLATION MIGRATION METHODS
+  // ============================================================
+
+  openTranslationModal() {
+    this.showTranslationModal = true;
+    this.translationProgress = '';
+  }
+
+  closeTranslationModal() {
+    this.showTranslationModal = false;
+    this.translationProgress = '';
+  }
+
+  async runGalleryImageTranslation() {
+    if (this.isTranslating) return;
+
+    const confirm = window.confirm(
+      'This will auto-translate Spanish content in gallery images to English, French, and Italian.\n\n' +
+      'Images that already have translations will be skipped.\n\n' +
+      'Continue?'
+    );
+
+    if (!confirm) return;
+
+    this.isTranslating = true;
+    this.translationProgress = 'Starting gallery image translation...';
+
+    try {
+      const stats = await this.galleryTranslationService.migrateAllGalleryImages();
+
+      this.translationProgress = 
+        `✅ Gallery images translation complete!\n\n` +
+        `Success: ${stats.success} images\n` +
+        `Failed: ${stats.failed} images\n` +
+        `Skipped: ${stats.skipped} images (already translated)`;
+
+    } catch (error) {
+      console.error('Gallery translation error:', error);
+      this.translationProgress = `❌ Translation failed: ${error}`;
+    } finally {
+      this.isTranslating = false;
+    }
+  }
+
+  async runGalleryCategoryTranslation() {
+    if (this.isTranslating) return;
+
+    const confirm = window.confirm(
+      'This will translate gallery category names and descriptions.\n\n' +
+      'Continue?'
+    );
+
+    if (!confirm) return;
+
+    this.isTranslating = true;
+    this.translationProgress = 'Starting gallery category translation...';
+
+    try {
+      const stats = await this.galleryTranslationService.migrateGalleryCategories();
+
+      this.translationProgress = 
+        `✅ Gallery categories translation complete!\n\n` +
+        `Success: ${stats.success} categories\n` +
+        `Failed: ${stats.failed} categories\n` +
+        `Skipped: ${stats.skipped} categories (already translated)`;
+
+    } catch (error) {
+      console.error('Category translation error:', error);
+      this.translationProgress = `❌ Translation failed: ${error}`;
+    } finally {
+      this.isTranslating = false;
+    }
+  }
 }

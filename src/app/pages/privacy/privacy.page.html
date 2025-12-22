@@ -1,0 +1,150 @@
+<div class="privacy-page">
+  <div class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 text-ts-ink">{{ 'legal.privacy.title' | translate }}</h1>
+      <p class="text-gray-600">{{ 'legal.privacy.lastUpdated' | translate }}: {{ currentDate | date:'longDate' }}</p>
+    </header>
+
+    <!-- Content -->
+    <div class="prose max-w-none">
+      <!-- Introduction -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.intro.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.intro.content' | translate }}</p>
+      </section>
+
+      <!-- Data Controller -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.controller.title' | translate }}</h2>
+        <div class="mb-4">
+          <p><strong>{{ 'legal.privacy.controller.company' | translate }}:</strong> TopStone</p>
+          <p><strong>{{ 'legal.privacy.controller.address' | translate }}:</strong> [Dirección completa]</p>
+          <p><strong>{{ 'legal.privacy.controller.email' | translate }}:</strong> info&#64;topstone.com</p>
+          <p><strong>{{ 'legal.privacy.controller.phone' | translate }}:</strong> [Teléfono]</p>
+        </div>
+      </section>
+
+      <!-- Data We Collect -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.dataCollected.title' | translate }}</h2>
+        
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.privacy.dataCollected.personal.title' | translate }}</h3>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.privacy.dataCollected.personal.name' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.personal.email' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.personal.phone' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.personal.company' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.personal.address' | translate }}</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.privacy.dataCollected.usage.title' | translate }}</h3>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.privacy.dataCollected.usage.ip' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.usage.browser' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.usage.device' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.usage.pages' | translate }}</li>
+          <li>{{ 'legal.privacy.dataCollected.usage.interactions' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- How We Use Data -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.dataUse.title' | translate }}</h2>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.privacy.dataUse.orders' | translate }}</li>
+          <li>{{ 'legal.privacy.dataUse.communication' | translate }}</li>
+          <li>{{ 'legal.privacy.dataUse.customerService' | translate }}</li>
+          <li>{{ 'legal.privacy.dataUse.improvements' | translate }}</li>
+          <li>{{ 'legal.privacy.dataUse.marketing' | translate }}</li>
+          <li>{{ 'legal.privacy.dataUse.legal' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Legal Basis -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.legalBasis.title' | translate }}</h2>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.privacy.legalBasis.consent' | translate }}</li>
+          <li>{{ 'legal.privacy.legalBasis.contract' | translate }}</li>
+          <li>{{ 'legal.privacy.legalBasis.legal' | translate }}</li>
+          <li>{{ 'legal.privacy.legalBasis.legitimate' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Cookies & Analytics -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.cookies.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.cookies.description' | translate }}</p>
+        <p class="mb-4">
+          <a [routerLink]="['/cookies']" class="text-ts-bronze hover:underline">
+            {{ 'legal.privacy.cookies.link' | translate }}
+          </a>
+        </p>
+        
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.privacy.analytics.title' | translate }}</h3>
+        <p class="mb-4">{{ 'legal.privacy.analytics.description' | translate }}</p>
+      </section>
+
+      <!-- Data Sharing -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.sharing.title' | translate }}</h2>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.privacy.sharing.providers' | translate }}</li>
+          <li>{{ 'legal.privacy.sharing.legal' | translate }}</li>
+          <li>{{ 'legal.privacy.sharing.business' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Your Rights -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.rights.title' | translate }}</h2>
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>{{ 'legal.privacy.rights.access.title' | translate }}:</strong> {{ 'legal.privacy.rights.access.description' | translate }}</li>
+          <li><strong>{{ 'legal.privacy.rights.rectification.title' | translate }}:</strong> {{ 'legal.privacy.rights.rectification.description' | translate }}</li>
+          <li><strong>{{ 'legal.privacy.rights.erasure.title' | translate }}:</strong> {{ 'legal.privacy.rights.erasure.description' | translate }}</li>
+          <li><strong>{{ 'legal.privacy.rights.restriction.title' | translate }}:</strong> {{ 'legal.privacy.rights.restriction.description' | translate }}</li>
+          <li><strong>{{ 'legal.privacy.rights.portability.title' | translate }}:</strong> {{ 'legal.privacy.rights.portability.description' | translate }}</li>
+          <li><strong>{{ 'legal.privacy.rights.objection.title' | translate }}:</strong> {{ 'legal.privacy.rights.objection.description' | translate }}</li>
+          <li><strong>{{ 'legal.privacy.rights.withdraw.title' | translate }}:</strong> {{ 'legal.privacy.rights.withdraw.description' | translate }}</li>
+        </ul>
+        <p class="mt-4">{{ 'legal.privacy.rights.contact' | translate }}</p>
+      </section>
+
+      <!-- Data Retention -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.retention.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.retention.description' | translate }}</p>
+      </section>
+
+      <!-- Security -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.security.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.security.description' | translate }}</p>
+      </section>
+
+      <!-- Children's Privacy -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.children.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.children.description' | translate }}</p>
+      </section>
+
+      <!-- Changes to Policy -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.changes.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.changes.description' | translate }}</p>
+      </section>
+
+      <!-- Contact -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.privacy.contact.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.privacy.contact.description' | translate }}</p>
+        <p>
+          <a [routerLink]="['/contacto']" class="text-ts-bronze hover:underline">
+            {{ 'legal.privacy.contact.link' | translate }}
+          </a>
+        </p>
+      </section>
+    </div>
+  </div>
+</div>

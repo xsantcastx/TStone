@@ -6,6 +6,8 @@ import { Firestore, collection, query, where, getDocs, limit, orderBy } from '@a
 import { Product } from '../../models/product';
 import { Media } from '../../models/media';
 import { HomeHeroComponent } from '../../features/home/home-hero/home-hero.component';
+import { LanguageService, Language } from '../../core/services/language.service';
+import { LanguageCode, TranslatedTextMap } from '../../models/product';
 
 @Component({
   selector: 'app-home-page',
@@ -18,6 +20,9 @@ export class HomePageComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private firestore = inject(Firestore);
   private cdr = inject(ChangeDetectorRef);
+  private languageService = inject(LanguageService);
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
   
   isLoading = false;
   productos12mm: Product[] = [];
@@ -134,5 +139,37 @@ export class HomePageComponent implements OnInit {
     } catch (error) {
       console.error('Error loading gallery images:', error);
     }
+  }
+
+  getLocalizedAlt(media: Media | null, fallback: string): string {
+    if (!media) {
+      return fallback;
+    }
+    return this.pickLocalizedText(media.altTextTranslations, media.altText || fallback);
+  }
+
+  private pickLocalizedText(translations?: TranslatedTextMap, fallback: string = ''): string {
+    if (!translations) {
+      return fallback;
+    }
+
+    const current = translations[this.languageService.getCurrentLanguage() as LanguageCode];
+    if (current && current.trim().length > 0) {
+      return current.trim();
+    }
+
+    const primary = translations[this.defaultLanguage as LanguageCode];
+    if (primary && primary.trim().length > 0) {
+      return primary.trim();
+    }
+
+    for (const lang of this.languages) {
+      const value = translations[lang.code as LanguageCode];
+      if (value && value.trim().length > 0) {
+        return value.trim();
+      }
+    }
+
+    return fallback;
   }
 }

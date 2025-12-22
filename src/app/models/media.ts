@@ -3,6 +3,7 @@
  * Represents uploaded media (images, videos) with metadata and storage references
  * Used by: Products (cover + gallery), Gallery Admin
  */
+import { TranslatedTextMap } from './product';
 
 export interface Media {
   /** Firestore document ID */
@@ -42,6 +43,9 @@ export interface Media {
   /** Alt text for accessibility */
   altText?: string;
 
+  /** Per-language alt text for accessibility/i18n */
+  altTextTranslations?: TranslatedTextMap;
+
   /** Caption or description */
   caption?: string;
 
@@ -67,6 +71,7 @@ export interface MediaCreateInput {
   uploadedBy: string;
   tags: string[];
   altText?: string;
+  altTextTranslations?: TranslatedTextMap;
   caption?: string;
   relatedEntityIds?: string[];
   relatedEntityType?: 'product' | 'gallery' | 'other';

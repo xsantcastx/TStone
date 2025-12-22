@@ -9,6 +9,7 @@ import { CategoryService } from '../../../services/category.service';
 import { MaterialService } from '../../../services/material.service';
 import { StorageService } from '../../../services/storage.service';
 import { MediaService } from '../../../services/media.service';
+import { ProductTranslationMigrationService } from '../../../services/product-translation-migration.service';
 import { LanguageCode, Product, TranslatedTextMap } from '../../../models/product';
 import { Category, Material, TemplateComposition } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
@@ -44,6 +45,7 @@ export class ProductsAdminComponent implements OnInit {
   private mediaService = inject(MediaService);
   private cdr = inject(ChangeDetectorRef);
   private languageService = inject(LanguageService);
+  private translationMigrationService = inject(ProductTranslationMigrationService);
 
   readonly languages = this.languageService.languages;
   readonly defaultLanguage: Language = 'es';
@@ -116,6 +118,11 @@ export class ProductsAdminComponent implements OnInit {
   // Template availability warnings
   templateWarnings: string[] = [];
   showTemplateWarning = false;
+
+  // Translation migration
+  isTranslating = false;
+  translationProgress = '';
+  showTranslationModal = false;
 
   constructor() {
     this.productForm = this.fb.group({
@@ -1387,5 +1394,97 @@ export class ProductsAdminComponent implements OnInit {
     }
     
     return blockers;
+  }
+
+  // ============================================================
+  // TRANSLATION MIGRATION METHODS
+  // ============================================================
+
+  /**
+   * Open translation migration modal
+   */
+  openTranslationModal() {
+    this.showTranslationModal = true;
+    this.translationProgress = '';
+  }
+
+  /**
+   * Close translation migration modal
+   */
+  closeTranslationModal() {
+    this.showTranslationModal = false;
+    this.translationProgress = '';
+  }
+
+  /**
+   * Run translation migration for all products
+   */
+  async runTranslationMigration() {
+    if (this.isTranslating) return;
+
+    const confirm = window.confirm(
+      'This will auto-translate Spanish product content to English, French, and Italian.\n\n' +
+      'Products that already have translations will be skipped.\n\n' +
+      'Continue?'
+    );
+
+    if (!confirm) return;
+
+    this.isTranslating = true;
+    this.translationProgress = 'Starting translation migration...';
+
+    try {
+      const stats = await this.translationMigrationService.migrateAllProducts();
+
+      this.translationProgress = 
+        `✅ Migration complete!\n\n` +
+        `Success: ${stats.success} products\n` +
+        `Failed: ${stats.failed} products\n` +
+        `Skipped: ${stats.skipped} products (already translated)`;
+
+      // Reload products to show updated data
+      await this.loadProducts();
+      
+    } catch (error) {
+      console.error('Translation migration error:', error);
+      this.translationProgress = `❌ Migration failed: ${error}`;
+    } finally {
+      this.isTranslating = false;
+    }
+  }
+
+  /**
+   * Re-translate all products (force update)
+   */
+  async retranslateAll() {
+    if (this.isTranslating) return;
+
+    const confirm = window.confirm(
+      'This will RE-TRANSLATE all products, overwriting existing translations.\n\n' +
+      'This action cannot be undone!\n\n' +
+      'Continue?'
+    );
+
+    if (!confirm) return;
+
+    this.isTranslating = true;
+    this.translationProgress = 'Re-translating all products...';
+
+    try {
+      const stats = await this.translationMigrationService.retranslateAll();
+
+      this.translationProgress = 
+        `✅ Re-translation complete!\n\n` +
+        `Success: ${stats.success} products\n` +
+        `Failed: ${stats.failed} products`;
+
+      await this.loadProducts();
+      
+    } catch (error) {
+      console.error('Re-translation error:', error);
+      this.translationProgress = `❌ Re-translation failed: ${error}`;
+    } finally {
+      this.isTranslating = false;
+    }
   }
 }

@@ -58,18 +58,7 @@
             </svg>
             {{ 'technical.surface_finishes' | translate }}
           </button>
-          <button 
-            (click)="openAccordionExclusive('fichas')"
-            [class.bg-ts-accent]="acordeonesAbiertos['fichas']"
-            [class.border-ts-accent]="acordeonesAbiertos['fichas']"
-            [class.bg-white]="!acordeonesAbiertos['fichas']"
-            [class.border-gray-300]="!acordeonesAbiertos['fichas']"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            {{ 'technical.datasheets' | translate }}
-          </button>
+          <!-- Datasheets button removed -->
           <button 
             (click)="openAccordionExclusive('packing')"
             [class.bg-ts-accent]="acordeonesAbiertos['packing']"
@@ -186,7 +175,7 @@
                   <div class="relative overflow-hidden rounded-xl mb-4">
                     <img 
                       [src]="acabado.imagen" 
-                      [alt]="acabado.nombre" 
+                      [alt]="getLocalizedAlt(acabado.altTranslations, acabado.alt || acabado.nombre)" 
                       class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                       (error)="$event.target.src='/assets/productos/placeholder.jpg'">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -196,7 +185,7 @@
                     </div>
                   </div>
                   <h3 class="font-semibold text-lg mb-2 text-black">{{acabado.nombre}}</h3>
-                  <p class="text-sm text-gray-600 leading-relaxed">{{acabado.descripcion}}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed">{{ getLocalizedDescription(acabado) }}</p>
                 </div>
               }
             </div>
@@ -204,54 +193,7 @@
         }
       </div>
 
-      <!-- 3. Fichas Técnicas -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
-        <button 
-          (click)="toggleAcordeon('fichas')"
-          class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-ts-accent/10 rounded-full flex items-center justify-center group-hover:bg-ts-accent/20 transition-colors">
-              <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-            </div>
-            <h2 class="font-serif text-2xl text-black">{{ 'technical.datasheets' | translate }}</h2>
-          </div>
-          <svg 
-            class="w-6 h-6 transition-transform duration-300"
-            [class.rotate-180]="acordeonesAbiertos['fichas']"
-            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        
-        @if (acordeonesAbiertos['fichas']) {
-          <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
-            <div class="space-y-4 mt-6">
-              @for (ficha of datosTecnicos.fichasTecnicas; track ficha.nombre) {
-                <div class="flex items-center justify-between p-5 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-300">
-                  <div class="flex-1">
-                    <h3 class="font-semibold text-lg text-gray-900 mb-1">{{ficha.nombre}}</h3>
-                    <p class="text-sm text-gray-600">{{ficha.descripcion}}</p>
-                  </div>
-                  <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-600 bg-gray-200 px-3 py-1 rounded-full font-medium">{{ficha.tamano}}</span>
-                    <a 
-                      [href]="ficha.url" 
-                      target="_blank" 
-                      class="inline-flex items-center gap-2 px-5 py-2.5 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 transition-all duration-300 transform hover:scale-105 shadow-sm font-medium">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                      </svg>
-                      {{ 'common.download' | translate }}
-                    </a>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
-        }
-      </div>
+      <!-- 3. Fichas Técnicas - REMOVED -->
 
       <!-- 4. Información de Embalaje -->
       <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
@@ -372,7 +314,7 @@
                   <div class="relative overflow-hidden rounded-xl mb-4 bg-gray-100">
                     <img 
                       [src]="borde.imagen" 
-                      [alt]="borde.nombre" 
+                      [alt]="getLocalizedAlt(borde.altTranslations, borde.alt || borde.nombre)" 
                       class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                       (error)="$event.target.src='/assets/productos/placeholder.jpg'">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -382,7 +324,7 @@
                     </div>
                   </div>
                   <h3 class="font-semibold text-lg mb-2 text-black">{{borde.nombre}}</h3>
-                  <p class="text-sm text-gray-600 leading-relaxed">{{borde.descripcion}}</p>
+                  <p class="text-sm text-gray-600 leading-relaxed">{{ getLocalizedDescription(borde) }}</p>
                 </div>
               }
             </div>
@@ -415,14 +357,14 @@
           <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
             <div class="mt-6">
               <div class="mb-6">
-                <p class="text-gray-700 leading-relaxed">{{datosTecnicos.fijacionesFachada.descripcion}}</p>
+                <p class="text-gray-700 leading-relaxed">{{ getLocalizedDescription(datosTecnicos.fijacionesFachada) }}</p>
               </div>
               
               <div class="mb-6 cursor-pointer" (click)="openLightbox(datosTecnicos.fijacionesFachada.imagen)">
                 <div class="relative overflow-hidden rounded-xl group">
                   <img 
                     [src]="datosTecnicos.fijacionesFachada.imagen" 
-                    alt="Sistema de fijación" 
+                    [alt]="getLocalizedAlt(datosTecnicos.fijacionesFachada.altTranslations, datosTecnicos.fijacionesFachada.alt || 'Sistema de fijaciA3n')"
                     class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                     (error)="$event.target.src='/assets/productos/placeholder.jpg'">
                   <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -490,7 +432,7 @@
                   </svg>
                   {{ 'technical.cleaning_instructions' | translate }}
                 </h3>
-                <p class="text-gray-700 leading-relaxed">{{datosTecnicos.mantenimiento.limpieza}}</p>
+                <p class="text-gray-700 leading-relaxed">{{ getLocalizedText(datosTecnicos.mantenimiento.limpiezaTranslations, datosTecnicos.mantenimiento.limpieza) }}</p>
               </div>
 
               <!-- Frecuencia -->
@@ -501,7 +443,7 @@
                   </svg>
                   {{ 'technical.cleaning_frequency' | translate }}
                 </h3>
-                <p class="text-gray-700 leading-relaxed">{{datosTecnicos.mantenimiento.frecuencia}}</p>
+                <p class="text-gray-700 leading-relaxed">{{ getLocalizedText(datosTecnicos.mantenimiento.frecuenciaTranslations, datosTecnicos.mantenimiento.frecuencia) }}</p>
               </div>
 
               <!-- Productos Recomendados vs Evitar -->

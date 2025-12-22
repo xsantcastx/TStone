@@ -12,7 +12,11 @@ export interface Product {
   imageUrl: string;        // Main product image URL (legacy or computed from coverImage)
   description?: string;    // Product description
   descriptionTranslations?: TranslatedTextMap; // Per-language description
-  price?: number;          // Price per unit
+  price?: number;          // Base price per unit
+  priceStandard?: number;  // Standard tier price
+  pricePremium?: number;   // Premium tier price
+  priceVIP?: number;       // VIP tier price
+  customPrices?: { [userId: string]: number };  // User-specific custom prices
   stock?: number;          // Available stock
   sku?: string;            // SKU code
   features?: string[];     // Product features

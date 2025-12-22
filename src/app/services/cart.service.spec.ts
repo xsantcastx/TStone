@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { CartService } from '../../services/cart.service';
-import { Product, CartState } from '../../models/product';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { CartService } from './cart.service';
+import { Product, CartState } from '../models/product';
+import { take } from 'rxjs';
 
 describe('CartService', () => {
   let service: CartService;
@@ -11,7 +13,9 @@ describe('CartService', () => {
     // Clear localStorage before each test
     localStorage.clear();
     
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()]
+    });
     service = TestBed.inject(CartService);
     
     // Mock products
@@ -46,9 +50,9 @@ describe('CartService', () => {
 
   describe('add()', () => {
     it('should add a product to the cart', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items.length).toBe(1);
         expect(cart.items[0].product.id).toBe('prod-1');
         expect(cart.items[0].qty).toBe(1);
@@ -57,10 +61,10 @@ describe('CartService', () => {
     });
 
     it('should increment quantity if product already exists', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       service.add(mockProduct1, 2);
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items.length).toBe(1);
         expect(cart.items[0].qty).toBe(3);
         done();
@@ -68,10 +72,10 @@ describe('CartService', () => {
     });
 
     it('should add multiple different products', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       service.add(mockProduct2, 2);
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items.length).toBe(2);
         expect(cart.items[0].product.id).toBe('prod-1');
         expect(cart.items[1].product.id).toBe('prod-2');
@@ -80,7 +84,7 @@ describe('CartService', () => {
     });
 
     it('should persist to localStorage', () => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       
       const stored = JSON.parse(localStorage.getItem('ts_cart_v1') || '{}');
       expect(stored.items.length).toBe(1);
@@ -90,11 +94,11 @@ describe('CartService', () => {
 
   describe('remove()', () => {
     it('should remove a product from the cart', (done) => {
-      service.add(mockProduct1, 1);
-      service.add(mockProduct2, 1);
+      service.add(mockProduct1);
+      service.add(mockProduct2);
       service.remove('prod-1');
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items.length).toBe(1);
         expect(cart.items[0].product.id).toBe('prod-2');
         done();
@@ -102,10 +106,10 @@ describe('CartService', () => {
     });
 
     it('should handle removing non-existent product', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       service.remove('non-existent');
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items.length).toBe(1);
         done();
       });
@@ -114,10 +118,10 @@ describe('CartService', () => {
 
   describe('updateQty()', () => {
     it('should update quantity of existing product', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       service.updateQty('prod-1', 5);
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items[0].qty).toBe(5);
         done();
       });
@@ -127,18 +131,18 @@ describe('CartService', () => {
       service.add(mockProduct1, 5);
       service.updateQty('prod-1', 0);
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items[0].qty).toBe(1);
         done();
       });
     });
 
     it('should not update quantity for non-existent product', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       const initialQty = service.snapshot().items[0].qty;
       service.updateQty('non-existent', 10);
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items[0].qty).toBe(initialQty);
         done();
       });
@@ -147,18 +151,18 @@ describe('CartService', () => {
 
   describe('clear()', () => {
     it('should remove all items from cart', (done) => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       service.add(mockProduct2, 2);
       service.clear();
       
-      service.cart$.subscribe(cart => {
+      service.cart$.pipe(take(1)).subscribe((cart: CartState) => {
         expect(cart.items.length).toBe(0);
         done();
       });
     });
 
     it('should clear localStorage', () => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       service.clear();
       
       const stored = JSON.parse(localStorage.getItem('ts_cart_v1') || '{}');
@@ -171,14 +175,14 @@ describe('CartService', () => {
       service.add(mockProduct1, 2);
       service.add(mockProduct2, 3);
       
-      service.count$.subscribe(count => {
+      service.count$.pipe(take(1)).subscribe((count: number) => {
         expect(count).toBe(5);
         done();
       });
     });
 
     it('should emit 0 for empty cart', (done) => {
-      service.count$.subscribe(count => {
+      service.count$.pipe(take(1)).subscribe((count: number) => {
         expect(count).toBe(0);
         done();
       });
@@ -187,7 +191,7 @@ describe('CartService', () => {
 
   describe('snapshot()', () => {
     it('should return current cart state', () => {
-      service.add(mockProduct1, 1);
+      service.add(mockProduct1);
       const snapshot = service.snapshot();
       
       expect(snapshot.items.length).toBe(1);
@@ -197,6 +201,9 @@ describe('CartService', () => {
 
   describe('localStorage persistence', () => {
     it('should load cart from localStorage on initialization', () => {
+      // Clear and recreate TestBed to get fresh service instance
+      TestBed.resetTestingModule();
+      
       // Pre-populate localStorage
       const preloadedCart = {
         items: [
@@ -205,18 +212,30 @@ describe('CartService', () => {
       };
       localStorage.setItem('ts_cart_v1', JSON.stringify(preloadedCart));
       
-      // Create new service instance
-      const newService = TestBed.inject(CartService);
+      // Configure new TestBed and create fresh service instance
+      TestBed.configureTestingModule({
+        providers: [provideZonelessChangeDetection()]
+      });
+      
+      const newService: CartService = TestBed.inject(CartService);
       const snapshot = newService.snapshot();
       
       expect(snapshot.items.length).toBe(1);
       expect(snapshot.items[0].qty).toBe(3);
+      expect(snapshot.items[0].product.id).toBe('prod-1');
     });
 
     it('should handle corrupted localStorage data', () => {
+      // Clear and recreate TestBed
+      TestBed.resetTestingModule();
+      
       localStorage.setItem('ts_cart_v1', 'invalid-json{');
       
-      const newService = TestBed.inject(CartService);
+      TestBed.configureTestingModule({
+        providers: [provideZonelessChangeDetection()]
+      });
+      
+      const newService: CartService = TestBed.inject(CartService);
       const snapshot = newService.snapshot();
       
       expect(snapshot.items.length).toBe(0);

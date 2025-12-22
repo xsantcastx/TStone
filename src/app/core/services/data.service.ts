@@ -2,6 +2,7 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, of } from 'rxjs';
+import { TranslatedTextMap } from '../../models/product';
 
 export interface Producto {
   nombre: string;
@@ -20,6 +21,7 @@ export interface ProductosData {
 export interface GaleriaItem {
   src: string;
   alt: string;
+  altTranslations?: TranslatedTextMap;
   producto?: string;
   proyecto?: string;
   ubicacion?: string;
@@ -38,7 +40,10 @@ export interface GaleriaData {
 export interface AcabadoSuperficie {
   nombre: string;
   descripcion: string;
+  descripcionTranslations?: TranslatedTextMap;
   imagen: string;
+  alt?: string;
+  altTranslations?: TranslatedTextMap;
 }
 
 export interface FichaTecnica {
@@ -46,6 +51,7 @@ export interface FichaTecnica {
   url: string;
   tamano: string;
   descripcion: string;
+  descripcionTranslations?: TranslatedTextMap;
 }
 
 export interface PackingInfo {
@@ -61,24 +67,33 @@ export interface PackingInfo {
 export interface AcabadoBorde {
   nombre: string;
   descripcion: string;
+  descripcionTranslations?: TranslatedTextMap;
   imagen: string;
+  alt?: string;
+  altTranslations?: TranslatedTextMap;
 }
 
 export interface FijacionesFachada {
   descripcion: string;
+  descripcionTranslations?: TranslatedTextMap;
   imagen: string;
+  alt?: string;
+  altTranslations?: TranslatedTextMap;
   ventajas: string[];
 }
 
 export interface Mantenimiento {
   limpieza: string;
+  limpiezaTranslations?: TranslatedTextMap;
   frecuencia: string;
+  frecuenciaTranslations?: TranslatedTextMap;
   productos: string[];
   evitar: string[];
 }
 
 export interface TestResult {
   nombre: string;
+  nombreTranslations?: TranslatedTextMap;
   valorPrescrito: string;
   valorObtenido: string;
   norma?: string;
@@ -88,7 +103,10 @@ export interface DatosTecnicosData {
   acabadosSuperficie: AcabadoSuperficie[];
   fichasTecnicas: FichaTecnica[];
   especificacionesTecnicas: Record<string, string>;
+  especificacionesTecnicasTranslations?: Record<string, TranslatedTextMap>;
   packing: PackingInfo[];
+  packingDescripcion?: string;
+  packingDescripcionTranslations?: TranslatedTextMap;
   acabadosBordes: AcabadoBorde[];
   fijacionesFachada: FijacionesFachada;
   mantenimiento: Mantenimiento;
@@ -125,7 +143,10 @@ export class DataService {
         acabadosSuperficie: [],
         fichasTecnicas: [],
         especificacionesTecnicas: {},
+        especificacionesTecnicasTranslations: {},
         packing: [],
+        packingDescripcion: '',
+        packingDescripcionTranslations: {},
         acabadosBordes: [],
         fijacionesFachada: { descripcion: '', imagen: '', ventajas: [] },
         mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] },

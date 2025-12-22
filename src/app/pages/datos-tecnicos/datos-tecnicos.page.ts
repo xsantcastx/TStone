@@ -5,6 +5,8 @@ import { DatosTecnicosData } from '../../core/services/data.service';
 import { ImageLightboxComponent } from '../../shared/components/image-lightbox/image-lightbox.component';
 import { CatalogDownloadComponent } from '../../shared/components/catalog-download/catalog-download.component';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { LanguageService, Language } from '../../core/services/language.service';
+import { LanguageCode, TranslatedTextMap } from '../../models/product';
 
 @Component({
   selector: 'app-datos-tecnicos-page',
@@ -23,6 +25,9 @@ export class DatosTecnicosPageComponent implements OnInit {
   private isBrowser = isPlatformBrowser(this.platformId);
   private firestore = inject(Firestore);
   private cdr = inject(ChangeDetectorRef);
+  private languageService = inject(LanguageService);
+  readonly languages = this.languageService.languages;
+  readonly defaultLanguage: Language = 'es';
   
   acordeonesAbiertos: { [key: string]: boolean } = {
     especificaciones: true, // Start with specifications open
@@ -40,16 +45,19 @@ export class DatosTecnicosPageComponent implements OnInit {
     acabadosSuperficie: [
       {
         nombre: 'Mate',
+        alt: 'Mate',
         descripcion: 'Superficie con bajo brillo, tacto suave y resistencia a las huellas.',
         imagen: '/assets/Modern/image4.jpeg'
       },
       {
         nombre: 'Pulido',
+        alt: 'Pulido',
         descripcion: 'Alto brillo que realza las vetas y aporta luminosidad al espacio.',
         imagen: '/assets/Modern/image3.jpeg'
       },
       {
         nombre: 'Satinado',
+        alt: 'Satinado',
         descripcion: 'Equilibrio perfecto entre mate y pulido, ideal para cualquier ambiente.',
         imagen: '/assets/Modern/image5.jpeg'
       }
@@ -123,22 +131,26 @@ export class DatosTecnicosPageComponent implements OnInit {
       {
         nombre: 'Canto recto',
         descripcion: 'Borde estándar para instalaciones tradicionales',
+        alt: 'Canto recto',
         imagen: '/assets/datos/borde-recto.jpg'
       },
       {
         nombre: 'Biselado',
         descripcion: 'Borde en ángulo para efectos visuales sofisticados',
+        alt: 'Biselado',
         imagen: '/assets/datos/biselado.jpg'
       },
       {
         nombre: 'Radio',
         descripcion: 'Borde redondeado para mayor seguridad y estética suave',
+        alt: 'Radio',
         imagen: '/assets/datos/radio.jpg'
       }
     ],
     fijacionesFachada: {
       descripcion: 'Sistemas de anclaje mecánico certificados para placas de gran formato en fachadas ventiladas.',
       imagen: '/assets/datos/fachada-anclaje.jpg',
+      alt: 'Sistema de fijaciA3n para fachada',
       ventajas: [
         'Instalación rápida y segura',
         'Resistencia a cargas de viento',
@@ -227,6 +239,42 @@ export class DatosTecnicosPageComponent implements OnInit {
   // Get count of open accordions
   getOpenAccordionCount(): number {
     return Object.values(this.acordeonesAbiertos).filter(open => open).length;
+  }
+
+  getLocalizedAlt(translations?: TranslatedTextMap, fallback: string = ''): string {
+    if (!translations) {
+      return fallback;
+    }
+
+    const current = translations[this.languageService.getCurrentLanguage() as LanguageCode];
+    if (current && current.trim().length > 0) {
+      return current.trim();
+    }
+
+    const primary = translations[this.defaultLanguage as LanguageCode];
+    if (primary && primary.trim().length > 0) {
+      return primary.trim();
+    }
+
+    for (const lang of this.languages) {
+      const value = translations[lang.code as LanguageCode];
+      if (value && value.trim().length > 0) {
+        return value.trim();
+      }
+    }
+
+    return fallback;
+  }
+
+  // Get localized text (reusable for descriptions, etc.)
+  getLocalizedText(translations?: TranslatedTextMap, fallback: string = ''): string {
+    return this.getLocalizedAlt(translations, fallback);
+  }
+
+  // Get localized description for acabados, bordes, etc.
+  getLocalizedDescription(item: { descripcion?: string; descripcionTranslations?: TranslatedTextMap }): string {
+    if (!item) return '';
+    return this.getLocalizedText(item.descripcionTranslations, item.descripcion || '');
   }
 
   // Open image in lightbox

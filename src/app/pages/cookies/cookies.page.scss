@@ -1,0 +1,79 @@
+.cookies-page {
+  min-height: calc(100vh - 200px);
+  background: linear-gradient(to bottom, #fafaf9 0%, #f5f3ef 100%);
+
+  header {
+    border-bottom: 2px solid #d6ccc2;
+    padding-bottom: 1.5rem;
+  }
+
+  h1 {
+    color: #0B0B0C;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    color: #1f2937;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    font-weight: 600;
+  }
+
+  h3 {
+    color: #374151;
+    margin-top: 1.5rem;
+    font-weight: 600;
+  }
+
+  a {
+    color: #B08968;
+    text-decoration: underline;
+    text-decoration-color: rgba(176, 137, 104, 0.3);
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #8b6d52;
+      text-decoration-color: #8b6d52;
+    }
+  }
+
+  .prose {
+    color: #374151;
+    
+    p {
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      color: #4b5563;
+    }
+
+    strong {
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    ul {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      
+      li {
+        margin-bottom: 0.75rem;
+        line-height: 1.7;
+        color: #4b5563;
+        
+        &::marker {
+          color: #B08968;
+        }
+      }
+    }
+  }
+
+  section {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+}

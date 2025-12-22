@@ -1,0 +1,169 @@
+<div class="cookies-page">
+  <div class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4 text-ts-ink">{{ 'legal.cookies.title' | translate }}</h1>
+      <p class="text-gray-600">{{ 'legal.cookies.lastUpdated' | translate }}: {{ currentDate | date:'longDate' }}</p>
+    </header>
+
+    <!-- Content -->
+    <div class="prose max-w-none">
+      <!-- Introduction -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.intro.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.intro.content' | translate }}</p>
+      </section>
+
+      <!-- What Are Cookies -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.whatAre.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.whatAre.description' | translate }}</p>
+      </section>
+
+      <!-- Types of Cookies -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.types.title' | translate }}</h2>
+        
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.cookies.types.necessary.title' | translate }}</h3>
+        <p class="mb-4">{{ 'legal.cookies.types.necessary.description' | translate }}</p>
+        <ul class="list-disc pl-6 mb-6">
+          <li><strong>ts_consent:</strong> {{ 'legal.cookies.types.necessary.consent' | translate }}</li>
+          <li><strong>ts_lang:</strong> {{ 'legal.cookies.types.necessary.language' | translate }}</li>
+          <li><strong>ts_cart:</strong> {{ 'legal.cookies.types.necessary.cart' | translate }}</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.cookies.types.analytics.title' | translate }}</h3>
+        <p class="mb-4">{{ 'legal.cookies.types.analytics.description' | translate }}</p>
+        <ul class="list-disc pl-6 mb-6">
+          <li><strong>_ga:</strong> {{ 'legal.cookies.types.analytics.ga' | translate }}</li>
+          <li><strong>_ga_*:</strong> {{ 'legal.cookies.types.analytics.gaId' | translate }}</li>
+          <li><strong>_gid:</strong> {{ 'legal.cookies.types.analytics.gid' | translate }}</li>
+          <li><strong>_gat:</strong> {{ 'legal.cookies.types.analytics.gat' | translate }}</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.cookies.types.preferences.title' | translate }}</h3>
+        <p class="mb-4">{{ 'legal.cookies.types.preferences.description' | translate }}</p>
+
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.cookies.types.marketing.title' | translate }}</h3>
+        <p class="mb-4">{{ 'legal.cookies.types.marketing.description' | translate }}</p>
+      </section>
+
+      <!-- Cookie Duration -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.duration.title' | translate }}</h2>
+        <ul class="list-disc pl-6 mb-4">
+          <li><strong>{{ 'legal.cookies.duration.session.title' | translate }}:</strong> {{ 'legal.cookies.duration.session.description' | translate }}</li>
+          <li><strong>{{ 'legal.cookies.duration.persistent.title' | translate }}:</strong> {{ 'legal.cookies.duration.persistent.description' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Google Analytics -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.googleAnalytics.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.googleAnalytics.description' | translate }}</p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.cookies.googleAnalytics.pages' | translate }}</li>
+          <li>{{ 'legal.cookies.googleAnalytics.time' | translate }}</li>
+          <li>{{ 'legal.cookies.googleAnalytics.source' | translate }}</li>
+          <li>{{ 'legal.cookies.googleAnalytics.device' | translate }}</li>
+          <li>{{ 'legal.cookies.googleAnalytics.interactions' | translate }}</li>
+        </ul>
+        <p class="mb-4">
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="text-ts-bronze hover:underline">
+            {{ 'legal.cookies.googleAnalytics.privacyLink' | translate }}
+          </a>
+        </p>
+      </section>
+
+      <!-- Consent Management -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.consent.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.consent.description' | translate }}</p>
+        <ul class="list-disc pl-6 mb-4">
+          <li>{{ 'legal.cookies.consent.defaultDenied' | translate }}</li>
+          <li>{{ 'legal.cookies.consent.explicit' | translate }}</li>
+          <li>{{ 'legal.cookies.consent.granular' | translate }}</li>
+          <li>{{ 'legal.cookies.consent.persistent' | translate }}</li>
+          <li>{{ 'legal.cookies.consent.withdraw' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Managing Cookies -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.manage.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.manage.description' | translate }}</p>
+        
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.cookies.manage.banner.title' | translate }}</h3>
+        <p class="mb-4">{{ 'legal.cookies.manage.banner.description' | translate }}</p>
+
+        <h3 class="text-xl font-semibold mb-3 text-ts-ink">{{ 'legal.cookies.manage.browser.title' | translate }}</h3>
+        <ul class="list-disc pl-6 mb-4">
+          <li>
+            <strong>Chrome:</strong>
+            <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener" class="text-ts-bronze hover:underline ml-2">
+              {{ 'legal.cookies.manage.browser.instructions' | translate }}
+            </a>
+          </li>
+          <li>
+            <strong>Firefox:</strong>
+            <a href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop" target="_blank" rel="noopener" class="text-ts-bronze hover:underline ml-2">
+              {{ 'legal.cookies.manage.browser.instructions' | translate }}
+            </a>
+          </li>
+          <li>
+            <strong>Safari:</strong>
+            <a href="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac" target="_blank" rel="noopener" class="text-ts-bronze hover:underline ml-2">
+              {{ 'legal.cookies.manage.browser.instructions' | translate }}
+            </a>
+          </li>
+          <li>
+            <strong>Edge:</strong>
+            <a href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener" class="text-ts-bronze hover:underline ml-2">
+              {{ 'legal.cookies.manage.browser.instructions' | translate }}
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Impact of Disabling -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.impact.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.impact.description' | translate }}</p>
+      </section>
+
+      <!-- Updates -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.updates.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.updates.description' | translate }}</p>
+      </section>
+
+      <!-- Contact -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.contact.title' | translate }}</h2>
+        <p class="mb-4">{{ 'legal.cookies.contact.description' | translate }}</p>
+        <p>
+          <a [routerLink]="['/contacto']" class="text-ts-bronze hover:underline">
+            {{ 'legal.cookies.contact.link' | translate }}
+          </a>
+        </p>
+      </section>
+
+      <!-- Related Policies -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.cookies.related.title' | translate }}</h2>
+        <ul class="list-disc pl-6">
+          <li>
+            <a [routerLink]="['/privacy']" class="text-ts-bronze hover:underline">
+              {{ 'legal.cookies.related.privacy' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/terms']" class="text-ts-bronze hover:underline">
+              {{ 'legal.cookies.related.terms' | translate }}
+            </a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>

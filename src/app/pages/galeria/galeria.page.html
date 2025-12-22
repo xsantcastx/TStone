@@ -10,14 +10,15 @@
         <div class="carousel-slide__image">
           <img 
             [src]="slide.url" 
-            [alt]="slide.altText || 'Gallery image'"
+            [alt]="getLocalizedAlt(slide)"
+            loading="eager"
             (error)="$event.target.src='/assets/productos/placeholder.jpg'">
         </div>
         @if (showCarouselOverlay) {
           <div class="carousel-overlay">
             <div class="carousel-caption">
               <span class="eyebrow">{{ 'gallery.hero.featured' | translate }}</span>
-              <h2>{{ slide.altText || ('gallery.hero.premium_project' | translate) }}</h2>
+              <h2>{{ getLocalizedAlt(slide, ('gallery.hero.premium_project' | translate)) }}</h2>
               <p>{{ slide.caption || ('gallery.hero.quality_surfaces' | translate) }}</p>
             </div>
           </div>
@@ -110,14 +111,14 @@
             <div class="grid-item__image">
               <img
                 [src]="image.url"
-                [alt]="image.altText || 'Gallery image'"
+                [alt]="getLocalizedAlt(image)"
                 loading="lazy"
                 (error)="$event.target.src='/assets/productos/placeholder.jpg'"/>
             </div>
             <div class="grid-item__overlay">
               <div class="overlay-content">
-                @if (image.altText || image.caption) {
-                  <p class="image-caption">{{ image.altText || image.caption }}</p>
+                @if (image.altText || image.altTextTranslations || image.caption) {
+                  <p class="image-caption">{{ getLocalizedAlt(image, image.caption || '') }}</p>
                 }
               </div>
             </div>
@@ -199,14 +200,14 @@
       <div class="lightbox-image-container">
         <img 
           [src]="selectedImage.url" 
-          [alt]="selectedImage.altText || 'Gallery image'"
+          [alt]="getLocalizedAlt(selectedImage, 'Gallery image')"
           (error)="$event.target.src='/assets/productos/placeholder.jpg'">
       </div>
       
       <!-- Info Panel -->
       <div class="lightbox-info">
         <div class="lightbox-header">
-          <h2>{{ selectedImage.altText || ('gallery.lightbox.project' | translate) }}</h2>
+          <h2>{{ getLocalizedAlt(selectedImage, ('gallery.lightbox.project' | translate)) }}</h2>
           <p>{{ selectedImage.caption || '' }}</p>
         </div>
         

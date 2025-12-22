@@ -123,9 +123,10 @@ import { SettingsService } from '../../../services/settings.service';
               {{ (settings$ | async)?.footerText || ('footer.copyright' | translate) }}
             </p>
             <div class="flex gap-6 text-sm">
-              <a href="#" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.privacy' | translate }}</a>
-              <a href="#" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.terms' | translate }}</a>
-              <a href="#" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.cookies' | translate }}</a>
+              <a routerLink="/privacy" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.privacy' | translate }}</a>
+              <a routerLink="/terms" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.terms' | translate }}</a>
+              <a routerLink="/cookies" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.cookies' | translate }}</a>
+              <a routerLink="/legal" class="text-ts-ink-soft hover:text-ts-accent transition-colors">{{ 'footer.links.legal' | translate }}</a>
             </div>
           </div>
         </div>
