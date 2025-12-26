@@ -34,6 +34,11 @@ export const routes: Routes = [
     title: 'TopStone | Datos Técnicos'
   },
   {
+    path: 'promociones',
+    loadComponent: () => import('./pages/promociones/promociones.page').then(m => m.PromocionesPageComponent),
+    title: 'TopStone | Promociones'
+  },
+  {
     path: 'contacto',
     loadComponent: () => import('./pages/contacto/contacto.page').then(m => m.ContactoPageComponent),
     title: 'TopStone | Contacto'

@@ -46,6 +46,15 @@ export interface AcabadoSuperficie {
   altTranslations?: TranslatedTextMap;
 }
 
+export interface PromocionMarketing {
+  nombre: string;
+  descripcion: string;
+  descripcionTranslations?: TranslatedTextMap;
+  imagen: string;
+  alt?: string;
+  altTranslations?: TranslatedTextMap;
+}
+
 export interface FichaTecnica {
   nombre: string;
   url: string;
@@ -111,6 +120,7 @@ export interface DatosTecnicosData {
   fijacionesFachada: FijacionesFachada;
   mantenimiento: Mantenimiento;
   testResults: TestResult[];
+  promocionMarketing: PromocionMarketing[];
 }
 
 @Injectable({
@@ -150,7 +160,8 @@ export class DataService {
         acabadosBordes: [],
         fijacionesFachada: { descripcion: '', imagen: '', ventajas: [] },
         mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [] },
-        testResults: []
+        testResults: [],
+        promocionMarketing: []
       });
     }
     return this.http.get<DatosTecnicosData>('/assets/data/datos_tecnicos.json');

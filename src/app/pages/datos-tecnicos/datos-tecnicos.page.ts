@@ -32,6 +32,7 @@ export class DatosTecnicosPageComponent implements OnInit {
   acordeonesAbiertos: { [key: string]: boolean } = {
     especificaciones: true, // Start with specifications open
     acabados: false,
+    promocion: false,
     fichas: false,
     packing: false,
     bordes: false,
@@ -62,6 +63,7 @@ export class DatosTecnicosPageComponent implements OnInit {
         imagen: '/assets/Modern/image5.jpeg'
       }
     ],
+    promocionMarketing: [],
     fichasTecnicas: [
       {
         nombre: 'Ficha técnica general TopStone',
@@ -227,8 +229,14 @@ export class DatosTecnicosPageComponent implements OnInit {
   }
 
   // Helper method to get object entries for template
-  getObjectEntries(obj: Record<string, string>): Array<{key: string, value: string}> {
-    return Object.entries(obj).map(([key, value]) => ({ key, value }));
+  getObjectEntries(
+    obj: Record<string, string>,
+    translations?: Record<string, TranslatedTextMap>
+  ): Array<{key: string, value: string}> {
+    return Object.entries(obj).map(([key, value]) => ({
+      key,
+      value: this.getLocalizedText(translations?.[key], value)
+    }));
   }
 
   // Check if any accordion is open

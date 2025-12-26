@@ -7,7 +7,8 @@ import {
   AcabadoSuperficie, 
   FichaTecnica, 
   AcabadoBorde,
-  TestResult
+  TestResult,
+  PromocionMarketing
 } from '../core/services/data.service';
 
 @Injectable({
@@ -41,6 +42,12 @@ export class DatosTecnicosTranslationService {
         updates.acabadosSuperficie = await this.translateAcabados(data.acabadosSuperficie);
       }
 
+      // 1b. Translate promocion y marketing
+      if (data.promocionMarketing && data.promocionMarketing.length > 0) {
+        console.log('Translating promocion y marketing...');
+        updates.promocionMarketing = await this.translatePromociones(data.promocionMarketing);
+      }
+
       // 2. Translate fichas técnicas
       if (data.fichasTecnicas && data.fichasTecnicas.length > 0) {
         console.log('Translating fichas técnicas...');
@@ -65,10 +72,18 @@ export class DatosTecnicosTranslationService {
         const descripcionTranslations = await this.translationService.translateToAllLanguages(
           data.fijacionesFachada.descripcion
         );
-        updates.fijacionesFachada = {
+        const updatedFachada = {
           ...data.fijacionesFachada,
           descripcionTranslations
         };
+
+        if (data.fijacionesFachada.alt) {
+          updatedFachada.altTranslations = await this.translationService.translateToAllLanguages(
+            data.fijacionesFachada.alt
+          );
+        }
+
+        updates.fijacionesFachada = updatedFachada;
       }
 
       // 6. Translate mantenimiento
@@ -184,6 +199,28 @@ export class DatosTecnicosTranslationService {
 
       translated.push({
         ...borde,
+        descripcionTranslations,
+        altTranslations
+      });
+
+      await this.delay(500);
+    }
+
+    return translated;
+  }
+
+  private async translatePromociones(promos: PromocionMarketing[]): Promise<PromocionMarketing[]> {
+    const translated: PromocionMarketing[] = [];
+
+    for (const promo of promos) {
+      const descripcionTranslations = promo.descripcion ?
+        await this.translationService.translateToAllLanguages(promo.descripcion) : {};
+
+      const altTranslations = promo.alt ?
+        await this.translationService.translateToAllLanguages(promo.alt) : {};
+
+      translated.push({
+        ...promo,
         descripcionTranslations,
         altTranslations
       });

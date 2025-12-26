@@ -123,6 +123,9 @@ export class ProductsAdminComponent implements OnInit {
   isTranslating = false;
   translationProgress = '';
   showTranslationModal = false;
+  
+  // Promotion discount calculator
+  promotionDiscount: number | null = null;
 
   constructor() {
     this.productForm = this.fb.group({
@@ -133,13 +136,24 @@ export class ProductsAdminComponent implements OnInit {
       seoTitleTranslations: this.createTranslationFormGroup(),
       seoMetaTranslations: this.createTranslationFormGroup(),
       price: ['', [Validators.min(0)]],
+      promotionPrice: ['', [Validators.min(0)]],
       stock: ['', [Validators.min(0)]],
       size: ['160×320cm', [Validators.required]],
       sku: [''],
       finish: ['Pulido'],
       usage: ['Cocinas, Baños, Fachadas'], // Comma-separated
-      active: [true]
+      active: [true],
+      // Promotion fields
+      isPromotion: [false],
+      promotionLabel: [''],
+      promotionLabelTranslations: this.createTranslationFormGroup(),
+      promotionDiscount: [0, [Validators.min(0), Validators.max(100)]],
+      promotionStartDate: [''],
+      promotionEndDate: ['']
     });
+    
+    // Setup promotion price watchers
+    this.setupPromotionPriceWatchers();
   }
 
   async ngOnInit() {
@@ -1002,6 +1016,8 @@ export class ProductsAdminComponent implements OnInit {
         ? formData.usage.split(',').map((u: string) => u.trim()).filter((u: string) => u.length > 0)
         : [];
 
+      const promotionLabelTranslations = this.normalizeTranslations(formData.promotionLabelTranslations);
+
       const productData: any = {
         name: formData.name,
         slug,
@@ -1038,6 +1054,14 @@ export class ProductsAdminComponent implements OnInit {
         descriptionLocked: this.descriptionLocked,
         specsLocked: this.specsLocked,
         seoLocked: this.seoLocked,
+        // Promotion fields
+        isPromotion: formData.isPromotion || false,
+        promotionPrice: formData.promotionPrice !== null && formData.promotionPrice !== undefined && formData.promotionPrice !== '' ? parseFloat(formData.promotionPrice) : undefined,
+        promotionLabel: formData.promotionLabel || undefined,
+        promotionLabelTranslations: Object.keys(promotionLabelTranslations).length ? promotionLabelTranslations : undefined,
+        promotionDiscount: formData.promotionDiscount !== null && formData.promotionDiscount !== undefined && formData.promotionDiscount !== '' ? parseFloat(formData.promotionDiscount) : undefined,
+        promotionStartDate: formData.promotionStartDate ? new Date(formData.promotionStartDate) : undefined,
+        promotionEndDate: formData.promotionEndDate ? new Date(formData.promotionEndDate) : undefined,
         // Compatibility fields
         grosor,
         size: formData.size,
@@ -1232,6 +1256,44 @@ export class ProductsAdminComponent implements OnInit {
       config[lang.code] = [initialValue];
     });
     return this.fb.group(config);
+  }
+  
+  private setupPromotionPriceWatchers(): void {
+    // Watch for changes in price and promotionPrice
+    this.productForm.get('price')?.valueChanges.subscribe(() => {
+      this.calculatePromotionDiscount();
+    });
+    
+    this.productForm.get('promotionPrice')?.valueChanges.subscribe(() => {
+      this.calculatePromotionDiscount();
+    });
+  }
+  
+  private calculatePromotionDiscount(): void {
+    const price = this.productForm.get('price')?.value;
+    const promotionPrice = this.productForm.get('promotionPrice')?.value;
+    
+    if (price && promotionPrice && promotionPrice < price) {
+      // Calculate discount percentage
+      const discount = Math.round(((price - promotionPrice) / price) * 100);
+      this.promotionDiscount = discount;
+      
+      // Auto-update the promotionDiscount field
+      this.productForm.get('promotionDiscount')?.setValue(discount, { emitEvent: false });
+      
+      // Auto-enable promotion
+      if (!this.productForm.get('isPromotion')?.value) {
+        this.productForm.get('isPromotion')?.setValue(true, { emitEvent: false });
+      }
+    } else {
+      this.promotionDiscount = null;
+      
+      // Clear discount field if promotion price is cleared or invalid
+      if (!promotionPrice || promotionPrice >= price) {
+        this.productForm.get('promotionDiscount')?.setValue(0, { emitEvent: false });
+        // Don't auto-disable promotion - let user control that
+      }
+    }
   }
 
   private setTranslationValue(

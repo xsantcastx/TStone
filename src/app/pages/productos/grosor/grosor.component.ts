@@ -121,7 +121,8 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
           *ngFor="let producto of productosFiltrados" 
           [product]="producto"
           [viewMode]="viewMode"
-          [grosorPath]="grosor">
+          [grosorPath]="grosor"
+          [showPromotionBadge]="true">
         </ts-product-card>
       </div>
       

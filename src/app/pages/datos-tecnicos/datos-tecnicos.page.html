@@ -58,6 +58,20 @@
             </svg>
             {{ 'technical.surface_finishes' | translate }}
           </button>
+          @if (datosTecnicos.promocionMarketing && datosTecnicos.promocionMarketing.length > 0) {
+            <button 
+              (click)="openAccordionExclusive('promocion')"
+              [class.bg-ts-accent]="acordeonesAbiertos['promocion']"
+              [class.border-ts-accent]="acordeonesAbiertos['promocion']"
+              [class.bg-white]="!acordeonesAbiertos['promocion']"
+              [class.border-gray-300]="!acordeonesAbiertos['promocion']"
+              class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+              </svg>
+              Promoción
+            </button>
+          }
           <!-- Datasheets button removed -->
           <button 
             (click)="openAccordionExclusive('packing')"
@@ -135,7 +149,7 @@
         @if (acordeonesAbiertos['especificaciones']) {
           <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
             <div class="grid md:grid-cols-2 gap-4 mt-6">
-              @for (item of getObjectEntries(datosTecnicos.especificacionesTecnicas); track item.key) {
+              @for (item of getObjectEntries(datosTecnicos.especificacionesTecnicas, datosTecnicos.especificacionesTecnicasTranslations); track item.key) {
                 <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-200">
                   <span class="font-medium text-gray-800">{{ 'technical.specs.' + item.key | translate }}:</span>
                   <span class="text-ts-accent font-semibold">{{item.value}}</span>
@@ -192,6 +206,55 @@
           </div>
         }
       </div>
+
+      <!-- 3. Promoción y Marketing -->
+      @if (datosTecnicos.promocionMarketing && datosTecnicos.promocionMarketing.length > 0) {
+        <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+          <button 
+            (click)="toggleAcordeon('promocion')"
+            class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-ts-accent/10 rounded-full flex items-center justify-center group-hover:bg-ts-accent/20 transition-colors">
+                <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                </svg>
+              </div>
+              <h2 class="font-serif text-2xl text-black">Promoción y Marketing</h2>
+            </div>
+            <svg 
+              class="w-6 h-6 transition-transform duration-300"
+              [class.rotate-180]="acordeonesAbiertos['promocion']"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          @if (acordeonesAbiertos['promocion']) {
+            <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
+              <div class="grid md:grid-cols-3 gap-6 mt-6">
+                @for (promo of datosTecnicos.promocionMarketing; track promo.nombre) {
+                  <div class="group cursor-pointer" (click)="openLightbox(promo.imagen)">
+                    <div class="relative overflow-hidden rounded-xl mb-4">
+                      <img 
+                        [src]="promo.imagen" 
+                        [alt]="getLocalizedAlt(promo.altTranslations, promo.alt || promo.nombre)" 
+                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                        (error)="$event.target.src='/assets/productos/placeholder.jpg'">
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2 text-black">{{promo.nombre}}</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ getLocalizedDescription(promo) }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
 
       <!-- 3. Fichas Técnicas - REMOVED -->
 
@@ -531,7 +594,7 @@
                   <tbody>
                     @for (test of datosTecnicos.testResults; track test.nombre) {
                       <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td class="py-4 px-6 font-medium text-gray-900">{{test.nombre}}</td>
+                        <td class="py-4 px-6 font-medium text-gray-900">{{ getLocalizedText(test.nombreTranslations, test.nombre) }}</td>
                         <td class="py-4 px-6 text-gray-700">{{test.valorPrescrito}}</td>
                         <td class="py-4 px-6 text-ts-accent font-medium">{{test.valorObtenido}}</td>
                         <td class="py-4 px-6 text-gray-600 text-xs">{{test.norma || '-'}}</td>

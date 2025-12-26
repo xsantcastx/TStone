@@ -3,12 +3,21 @@
     <div class="flex h-16 items-center justify-between">
       <!-- Logo -->
       <a routerLink="/" class="flex items-center gap-3 flex-shrink-0">
-        @if (scrolled) {
-          <img [src]="(settings$ | async)?.logoDarkUrl || (settings$ | async)?.logoUrl || 'assets/topstone-logotype-horizontal.svg'" 
-               alt="TopStone" class="h-10 sm:h-12 w-auto" />
+        @if (settings$ | async; as settings) {
+          @if (scrolled) {
+            <img [src]="settings.logoDarkUrl || settings.logoUrl || '/assets/logos/topstone-logo-dark.svg'" 
+                 alt="TopStone" 
+                 class="h-10 sm:h-12 w-auto"
+                 onerror="this.onerror=null; this.src='/favicon.ico';" />
+          } @else {
+            <img [src]="settings.logoLightUrl || settings.logoUrl || '/assets/logos/topstone-logo-light.svg'" 
+                 alt="TopStone" 
+                 class="h-10 sm:h-12 w-auto"
+                 onerror="this.onerror=null; this.src='/favicon.ico';" />
+          }
         } @else {
-          <img [src]="(settings$ | async)?.logoLightUrl || (settings$ | async)?.logoUrl || 'assets/topstone-logotype-horizontal.svg'" 
-               alt="TopStone" class="h-10 sm:h-12 w-auto" />
+          <!-- Loading placeholder -->
+          <div class="h-10 sm:h-12 w-32 bg-gray-200 animate-pulse rounded"></div>
         }
       </a>
 
@@ -34,6 +43,11 @@
         <a routerLink="/productos" routerLinkActive="text-ts-accent" 
            class="hover:text-ts-accent transition-colors">
           {{ 'nav.products' | translate }}
+        </a>
+
+        <a routerLink="/promociones" routerLinkActive="text-ts-accent" 
+           class="hover:text-ts-accent transition-colors">
+          {{ 'nav.promotions' | translate }}
         </a>
 
         <a routerLink="/galeria" routerLinkActive="text-ts-accent" 
@@ -212,8 +226,14 @@
   <!-- Mobile/Tablet drawer header -->
   <div class="flex items-center justify-between p-6 border-b border-neutral-200">
     <div class="flex items-center gap-3">
-      <img [src]="(settings$ | async)?.logoDarkUrl || (settings$ | async)?.logoUrl || 'assets/topstone-mark-dark.svg'" 
-           alt="TopStone" class="h-8 w-auto object-contain" />
+      @if (settings$ | async; as settings) {
+        <img [src]="settings.logoDarkUrl || settings.logoUrl || '/assets/logos/topstone-logo-dark.svg'" 
+             alt="TopStone" 
+             class="h-8 w-auto object-contain"
+             onerror="this.onerror=null; this.src='/favicon.ico';" />
+      } @else {
+        <div class="h-8 w-24 bg-gray-200 animate-pulse rounded"></div>
+      }
     </div>
     <button (click)="closeMobile()" class="p-2 hover:bg-neutral-100 rounded-lg">
       <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -262,6 +282,11 @@
           </div>
         </div>
       </details>
+      
+      <a routerLink="/promociones" (click)="closeMobile()" 
+         class="text-lg font-medium hover:text-ts-accent transition-colors">
+        {{ 'nav.promotions' | translate }}
+      </a>
       
       <a routerLink="/galeria" (click)="closeMobile()" 
          class="text-lg font-medium hover:text-ts-accent transition-colors">

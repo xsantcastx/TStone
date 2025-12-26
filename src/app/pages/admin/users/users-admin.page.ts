@@ -165,14 +165,13 @@ export class UsersAdminComponent implements OnInit {
   }
 
   getUserInitials(user: UserProfile): string {
-    if (user.displayName) {
-      const parts = user.displayName.split(' ');
-      if (parts.length >= 2) {
-        return (parts[0][0] + parts[1][0]).toUpperCase();
-      }
-      return user.displayName.substring(0, 2).toUpperCase();
+    const name = user.displayName && user.displayName !== 'undefined' ? user.displayName : user.email.split('@')[0];
+    
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return user.email.substring(0, 2).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
   }
 
   formatDate(timestamp: any): string {

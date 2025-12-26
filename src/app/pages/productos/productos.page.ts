@@ -3,6 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { Timestamp } from '@angular/fire/firestore';
 import { ProductsService } from '../../services/products.service';
 import { MediaService } from '../../services/media.service';
 import { CategoryService } from '../../services/category.service';
@@ -10,7 +11,8 @@ import { MaterialService } from '../../services/material.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService, UserProfile } from '../../services/auth.service';
 import { PricingService } from '../../services/pricing.service';
-import { Product } from '../../models/product';
+import { LanguageService } from '../../core/services/language.service';
+import { Product, LanguageCode } from '../../models/product';
 import { Category, Material } from '../../models/catalog';
 import { Media } from '../../models/media';
 import { CatalogDownloadComponent } from '../../shared/components/catalog-download/catalog-download.component';
@@ -31,6 +33,7 @@ export class ProductosPageComponent implements OnInit {
   private cartService = inject(CartService);
   private authService = inject(AuthService);
   private pricingService = inject(PricingService);
+  private languageService = inject(LanguageService);
   private cdr = inject(ChangeDetectorRef);
   
   // Firestore products
@@ -278,5 +281,35 @@ export class ProductosPageComponent implements OnInit {
 
   get filteredProductsCount(): number {
     return this.filteredProducts.length;
+  }
+
+  isPromotionActive(product: Product): boolean {
+    if (!product.isPromotion) return false;
+    
+    const now = new Date();
+    const start = this.toDate(product.promotionStartDate);
+    const end = this.toDate(product.promotionEndDate);
+    
+    if (start && now < start) return false;
+    if (end && now > end) return false;
+    
+    return true;
+  }
+
+  getPromotionLabel(product: Product): string {
+    const currentLang = this.languageService.getCurrentLanguage() as LanguageCode;
+    
+    if (product.promotionLabelTranslations && product.promotionLabelTranslations[currentLang]) {
+      return product.promotionLabelTranslations[currentLang] || 'Oferta';
+    }
+    
+    return product.promotionLabel || 'Oferta';
+  }
+
+  private toDate(value: Date | Timestamp | undefined): Date | null {
+    if (!value) return null;
+    if (value instanceof Date) return value;
+    if (value instanceof Timestamp) return value.toDate();
+    return null;
   }
 }

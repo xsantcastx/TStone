@@ -78,6 +78,9 @@ export class QuickAddProductComponent implements OnInit {
   readonly languages = this.languageService.languages;
   readonly defaultLanguage: Language = 'es';
   activeDescriptionLang: Language = this.defaultLanguage;
+  
+  // Promotion discount calculator
+  promotionDiscount: number | null = null;
   activeSeoTitleLang: Language = this.defaultLanguage;
   activeSeoMetaLang: Language = this.defaultLanguage;
 
@@ -92,16 +95,27 @@ export class QuickAddProductComponent implements OnInit {
       categoryId: ['', Validators.required],
       materialId: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
+      promotionPrice: ['', [Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
       sku: [''],
       size: ['162×324cm', Validators.required],
       finish: ['Pulido'],
       usage: ['Cocinas, Baños, Fachadas'],
+      // Promotion fields
+      isPromotion: [false],
+      promotionLabel: [''],
+      promotionLabelTranslations: this.createTranslationFormGroup(),
+      promotionDiscount: [0, [Validators.min(0), Validators.max(100)]],
+      promotionStartDate: [''],
+      promotionEndDate: [''],
       // SEO fields
       metaTitleTranslations: this.createTranslationFormGroup(),
       metaDescriptionTranslations: this.createTranslationFormGroup(),
       slug: ['']
     });
+    
+    // Setup promotion price watchers
+    this.setupPromotionPriceWatchers();
   }
 
   async ngOnInit() {
@@ -328,6 +342,43 @@ export class QuickAddProductComponent implements OnInit {
     });
     return this.fb.group(config);
   }
+  
+  private setupPromotionPriceWatchers(): void {
+    // Watch for changes in price and promotionPrice
+    this.productForm.get('price')?.valueChanges.subscribe(() => {
+      this.calculatePromotionDiscount();
+    });
+    
+    this.productForm.get('promotionPrice')?.valueChanges.subscribe(() => {
+      this.calculatePromotionDiscount();
+    });
+  }
+  
+  private calculatePromotionDiscount(): void {
+    const price = this.productForm.get('price')?.value;
+    const promotionPrice = this.productForm.get('promotionPrice')?.value;
+    
+    if (price && promotionPrice && promotionPrice < price) {
+      // Calculate discount percentage
+      const discount = Math.round(((price - promotionPrice) / price) * 100);
+      this.promotionDiscount = discount;
+      
+      // Auto-update the promotionDiscount field
+      this.productForm.get('promotionDiscount')?.setValue(discount, { emitEvent: false });
+      
+      // Auto-enable promotion
+      if (!this.productForm.get('isPromotion')?.value) {
+        this.productForm.get('isPromotion')?.setValue(true, { emitEvent: false });
+      }
+    } else {
+      this.promotionDiscount = null;
+      
+      // Clear discount field if promotion price is cleared or invalid
+      if (!promotionPrice || promotionPrice >= price) {
+        this.productForm.get('promotionDiscount')?.setValue(0, { emitEvent: false });
+      }
+    }
+  }
 
   private getTranslationGroupRawValue(groupName: 'descriptionTranslations' | 'metaTitleTranslations' | 'metaDescriptionTranslations'): Record<string, string> {
     const group = this.productForm.get(groupName) as FormGroup | null;
@@ -530,6 +581,8 @@ export class QuickAddProductComponent implements OnInit {
         ? formValue.usage.split(',').map((u: string) => u.trim()).filter((u: string) => u) 
         : [];
 
+      const promotionLabelTranslations = this.normalizeTranslations(formValue.promotionLabelTranslations);
+
       const productData: Partial<Product> = {
         name: formValue.title,
         slug: slug,
@@ -560,7 +613,15 @@ export class QuickAddProductComponent implements OnInit {
           ogImage: coverImageUrl
         },
         seoTitleTranslations: Object.keys(metaTitleTranslations).length ? metaTitleTranslations : undefined,
-        seoMetaTranslations: Object.keys(metaDescriptionTranslations).length ? metaDescriptionTranslations : undefined
+        seoMetaTranslations: Object.keys(metaDescriptionTranslations).length ? metaDescriptionTranslations : undefined,
+        // Promotion fields
+        isPromotion: formValue.isPromotion || false,
+        promotionPrice: formValue.promotionPrice !== null && formValue.promotionPrice !== undefined && formValue.promotionPrice !== '' ? parseFloat(formValue.promotionPrice) : undefined,
+        promotionLabel: formValue.promotionLabel || undefined,
+        promotionLabelTranslations: Object.keys(promotionLabelTranslations).length ? promotionLabelTranslations : undefined,
+        promotionDiscount: formValue.promotionDiscount !== null && formValue.promotionDiscount !== undefined && formValue.promotionDiscount !== '' ? parseFloat(formValue.promotionDiscount) : undefined,
+        promotionStartDate: formValue.promotionStartDate ? new Date(formValue.promotionStartDate) : undefined,
+        promotionEndDate: formValue.promotionEndDate ? new Date(formValue.promotionEndDate) : undefined
       };
 
       this.uploadProgress = 90;

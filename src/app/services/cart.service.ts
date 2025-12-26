@@ -2,6 +2,7 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, map } from 'rxjs';
 import { CartItem, CartState, Product } from '../models/product';
+import { FirestoreProduct } from './product-firestore.service';
 
 const LS_KEY = 'ts_cart_v1';
 
@@ -32,11 +33,11 @@ export class CartService {
     }
   }
 
-  add(product: Product, qty = 1) {
+  add(product: Product | FirestoreProduct, qty = 1) {
     const s = structuredClone(this.state$.value);
     const found = s.items.find(i => i.product.id === product.id);
     if (found) found.qty += qty;
-    else s.items.push({ product, qty });
+    else s.items.push({ product: product as Product, qty });
     this.save(s); this.state$.next(s);
   }
   remove(productId: string) {

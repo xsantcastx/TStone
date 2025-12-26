@@ -131,6 +131,17 @@
           class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
           Tests de Producto
         </button>
+        <button
+          (click)="activeTab.set('promocion')"
+          [class.border-ts-accent]="activeTab() === 'promocion'"
+          [class.text-white]="activeTab() === 'promocion'"
+          [class.bg-ts-accent]="activeTab() === 'promocion'"
+          [class.bg-white]="activeTab() !== 'promocion'"
+          [class.border-gray-300]="activeTab() !== 'promocion'"
+          [style.color]="activeTab() !== 'promocion' ? '#000000 !important' : ''"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Promoción
+        </button>
       </div>
 
       <!-- Especificaciones Tab -->
@@ -270,7 +281,7 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
                 </div>
                 <div class="mb-4">
-                  <label class="block text-sm font-medium text-black mb-2">DescripciA3n por idioma</label>
+                  <label class="block text-sm font-medium text-black mb-2">Descripción por idioma</label>
                   <div class="grid sm:grid-cols-2 gap-3">
                     @for (lang of languages; track lang.code) {
                       <div class="space-y-1">
@@ -285,7 +296,7 @@
                           [value]="acabado.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? acabado.descripcion : '')"
                           (input)="updateAcabadoDescripcionTranslation($index, lang.code, $any($event.target).value)"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
-                          placeholder="DescripciA3n en {{ lang.name }}"></textarea>
+                          placeholder="Descripción en {{ lang.name }}"></textarea>
                       </div>
                     }
                   </div>
@@ -337,7 +348,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
-              AA�adir Ficha
+              Añadir Ficha
             </button>
           </div>
 
@@ -371,7 +382,7 @@
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-black mb-1">DescripciA3n</label>
+                    <label class="block text-sm font-medium text-black mb-1">Descripción</label>
                     <input
                       type="text"
                       [value]="ficha.descripcion"
@@ -379,7 +390,7 @@
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
                   </div>
                   <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-black mb-2">DescripciA3n por idioma</label>
+                    <label class="block text-sm font-medium text-black mb-2">Descripción por idioma</label>
                     <div class="grid sm:grid-cols-2 gap-3">
                       @for (lang of languages; track lang.code) {
                         <div class="space-y-1">
@@ -394,7 +405,7 @@
                             [value]="ficha.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? ficha.descripcion : '')"
                             (input)="updateFichaDescripcionTranslation($index, lang.code, $any($event.target).value)"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
-                            placeholder="DescripciA3n en {{ lang.name }}"></textarea>
+                            placeholder="Descripción en {{ lang.name }}"></textarea>
                         </div>
                       }
                     </div>
@@ -418,18 +429,18 @@
       @if (activeTab() === 'packing') {
         <div>
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-serif font-bold text-black">InformaciA3n de Embalaje</h2>
+            <h2 class="text-xl font-serif font-bold text-black">Información de Embalaje</h2>
             <button
               (click)="addPacking()"
               class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 flex items-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
-              AA�adir Embalaje
+              Añadir Embalaje
             </button>
           </div>
           <div class="mb-6">
-            <label class="block text-sm font-medium text-black mb-2">DescripciA3n de Embalaje</label>
+            <label class="block text-sm font-medium text-black mb-2">Descripción de Embalaje</label>
             <textarea
               [value]="datosTecnicos().packingDescripcion"
               (input)="updatePackingDescripcion($any($event.target).value)"
@@ -438,7 +449,7 @@
           </div>
 
           <div class="mb-6">
-            <label class="block text-sm font-medium text-black mb-2">DescripciA3n por idioma</label>
+            <label class="block text-sm font-medium text-black mb-2">Descripción por idioma</label>
             <div class="grid sm:grid-cols-2 gap-3">
               @for (lang of languages; track lang.code) {
                 <div class="space-y-1">
@@ -453,7 +464,7 @@
                     [value]="datosTecnicos().packingDescripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? (datosTecnicos().packingDescripcion || '') : '')"
                     (input)="updatePackingDescripcionTranslation(lang.code, $any($event.target).value)"
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
-                    placeholder="DescripciA3n en {{ lang.name }}"></textarea>
+                    placeholder="Descripción en {{ lang.name }}"></textarea>
                 </div>
               }
             </div>
@@ -504,7 +515,7 @@
                       type="text"
                       [value]="pack.superficie"
                       (input)="updatePacking($index, 'superficie', $any($event.target).value)"
-                      placeholder="ej: 51,84 mAi"
+                      placeholder="ej: 51,84 m²"
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
                   </div>
                   <div>
@@ -513,7 +524,7 @@
                       type="text"
                       [value]="pack.superficiePallet"
                       (input)="updatePacking($index, 'superficiePallet', $any($event.target).value)"
-                      placeholder="ej: 5,36 mAi"
+                      placeholder="ej: 5,36 m²"
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
                   </div>
                   <div>
@@ -534,7 +545,7 @@
               </div>
             }
             @empty {
-              <p class="text-center text-gray-500 py-8">No hay informaciA3n de embalaje configurada</p>
+              <p class="text-center text-gray-500 py-8">No hay información de embalaje configurada</p>
             }
           </div>
         </div>
@@ -551,7 +562,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
-              AA�adir Borde
+              Añadir Borde
             </button>
           </div>
 
@@ -582,7 +593,7 @@
                   </div>
                 </div>
                 <div class="mb-4">
-                  <label class="block text-sm font-medium text-black mb-1">DescripciA3n</label>
+                  <label class="block text-sm font-medium text-black mb-1">Descripción</label>
                   <textarea
                     [value]="borde.descripcion"
                     (input)="updateBorde($index, 'descripcion', $any($event.target).value)"
@@ -590,7 +601,7 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
                 </div>
                 <div class="mb-4">
-                  <label class="block text-sm font-medium text-black mb-2">DescripciA3n por idioma</label>
+                  <label class="block text-sm font-medium text-black mb-2">Descripción por idioma</label>
                   <div class="grid sm:grid-cols-2 gap-3">
                     @for (lang of languages; track lang.code) {
                       <div class="space-y-1">
@@ -605,7 +616,7 @@
                           [value]="borde.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? borde.descripcion : '')"
                           (input)="updateBordeDescripcionTranslation($index, lang.code, $any($event.target).value)"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
-                          placeholder="DescripciA3n en {{ lang.name }}"></textarea>
+                          placeholder="Descripción en {{ lang.name }}"></textarea>
                       </div>
                     }
                   </div>
@@ -660,7 +671,7 @@
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
             </div>
             <div>
-              <label class="block text-sm font-medium text-black mb-2">DescripciA3n por idioma</label>
+              <label class="block text-sm font-medium text-black mb-2">Descripción por idioma</label>
               <div class="grid sm:grid-cols-2 gap-3">
                 @for (lang of languages; track lang.code) {
                   <div class="space-y-1">
@@ -675,7 +686,7 @@
                       [value]="datosTecnicos().fijacionesFachada.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? datosTecnicos().fijacionesFachada.descripcion : '')"
                       (input)="updateFachadaDescripcionTranslation(lang.code, $any($event.target).value)"
                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
-                      placeholder="DescripciA3n en {{ lang.name }}"></textarea>
+                      placeholder="Descripción en {{ lang.name }}"></textarea>
                   </div>
                 }
               </div>
@@ -997,6 +1008,112 @@
             }
             @empty {
               <p class="text-center text-gray-500 py-8">No hay tests configurados</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Promoción y Marketing Tab -->
+      @if (activeTab() === 'promocion') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Promoción y Marketing</h2>
+            <button
+              (click)="addPromocion()"
+              class="px-4 py-2 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Añadir Contenido
+            </button>
+          </div>
+
+          <div class="space-y-6">
+            @for (promo of datosTecnicos().promocionMarketing; track $index) {
+              <div class="p-4 border border-gray-200 rounded-xl bg-gray-50">
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      [value]="promo.nombre"
+                      (input)="updatePromocion($index, 'nombre', $any($event.target).value)"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-black mb-1">Imagen</label>
+                    <div class="flex gap-2">
+                      <input
+                        type="file"
+                        (change)="uploadPromocionImage($event, $index)"
+                        accept="image/*"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm">
+                      @if (promo.imagen) {
+                        <img [src]="promo.imagen" alt="Preview" class="w-16 h-16 object-cover rounded-lg">
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-black mb-1">Descripción</label>
+                  <textarea
+                    [value]="promo.descripcion"
+                    (input)="updatePromocion($index, 'descripcion', $any($event.target).value)"
+                    rows="3"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+                </div>
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-black mb-2">Descripción por idioma</label>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    @for (lang of languages; track lang.code) {
+                      <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-semibold text-gray-700">{{ lang.name }} ({{ lang.label }})</span>
+                          @if (lang.code === defaultLanguage) {
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold">Default</span>
+                          }
+                        </div>
+                        <textarea
+                          rows="3"
+                          [value]="promo.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? promo.descripcion : '')"
+                          (input)="updatePromocionDescripcionTranslation($index, lang.code, $any($event.target).value)"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
+                          placeholder="Descripción en {{ lang.name }}"></textarea>
+                      </div>
+                    }
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-black mb-2">Alt text por idioma</label>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    @for (lang of languages; track lang.code) {
+                      <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-semibold text-gray-700">{{ lang.name }} ({{ lang.label }})</span>
+                          @if (lang.code === defaultLanguage) {
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold">Default</span>
+                          }
+                        </div>
+                        <input
+                          type="text"
+                          [value]="promo.altTranslations?.[lang.code] || (lang.code === defaultLanguage ? (promo.alt || promo.nombre) : '')"
+                          (input)="updatePromocionAlt($index, lang.code, $any($event.target).value)"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
+                          placeholder="Texto alternativo en {{ lang.name }}">
+                      </div>
+                    }
+                  </div>
+                  <p class="text-xs text-gray-600 mt-1">Usado para accesibilidad e idiomas.</p>
+                </div>
+                <button
+                  (click)="removePromocion($index)"
+                  class="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  Eliminar Contenido
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay contenido promocional configurado</p>
             }
           </div>
         </div>

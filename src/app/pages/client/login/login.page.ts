@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../services/auth.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, TranslateModule],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })
@@ -21,6 +21,13 @@ export class LoginPageComponent {
   isLoading = false;
   errorMessage = '';
   showPassword = false;
+  
+  // Password reset state
+  showForgotPassword = false;
+  resetEmail = '';
+  isResetting = false;
+  resetSuccess = false;
+  resetError = '';
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -31,6 +38,44 @@ export class LoginPageComponent {
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  openForgotPassword() {
+    this.showForgotPassword = true;
+    this.resetEmail = this.loginForm.get('email')?.value || '';
+    this.resetSuccess = false;
+    this.resetError = '';
+  }
+
+  closeForgotPassword() {
+    this.showForgotPassword = false;
+    this.resetEmail = '';
+    this.resetSuccess = false;
+    this.resetError = '';
+  }
+
+  async sendPasswordReset() {
+    if (!this.resetEmail || !this.resetEmail.includes('@')) {
+      this.resetError = 'client.errors.email_invalid';
+      return;
+    }
+
+    this.isResetting = true;
+    this.resetError = '';
+
+    try {
+      await this.authService.sendPasswordReset(this.resetEmail);
+      this.resetSuccess = true;
+    } catch (error: any) {
+      console.error('Password reset error:', error);
+      if (error.code === 'auth/user-not-found') {
+        this.resetError = 'client.errors.user_not_found';
+      } else {
+        this.resetError = 'client.errors.reset_failed';
+      }
+    } finally {
+      this.isResetting = false;
+    }
   }
 
   async onSubmit() {

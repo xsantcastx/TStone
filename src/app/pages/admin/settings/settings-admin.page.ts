@@ -32,6 +32,13 @@ export class SettingsAdminComponent implements OnInit {
   errorMessage = signal('');
   uploadProgress = signal<number>(0);
   activeTab = signal<'hero' | 'site' | 'maintenance' | 'visual' | 'ecommerce' | 'business'>('hero');
+  
+  // Upload loading states
+  uploadingHeroIndex = signal<number | null>(null);
+  uploadingLogo = signal(false);
+  uploadingLogoLight = signal(false);
+  uploadingLogoDark = signal(false);
+  uploadingFavicon = signal(false);
 
   ngOnInit(): void {
     // Check if user is admin
@@ -72,6 +79,7 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
+      this.uploadingHeroIndex.set(index);
       this.uploadProgress.set(0);
       
       // Optimize image
@@ -111,6 +119,8 @@ export class SettingsAdminComponent implements OnInit {
       this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir la imagen');
       setTimeout(() => this.errorMessage.set(''), 3000);
+    } finally {
+      this.uploadingHeroIndex.set(null);
     }
   }
 
@@ -243,6 +253,7 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
+      this.uploadingLogo.set(true);
       // Optimize image
       const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
         maxWidth: 512,
@@ -266,6 +277,8 @@ export class SettingsAdminComponent implements OnInit {
       console.error('Error uploading logo:', error);
       this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el logo');
+    } finally {
+      this.uploadingLogo.set(false);
     }
   }
 
@@ -280,6 +293,7 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
+      this.uploadingLogoLight.set(true);
       const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
         maxWidth: 512,
         maxHeight: 512,
@@ -302,6 +316,8 @@ export class SettingsAdminComponent implements OnInit {
       console.error('Error uploading logo light:', error);
       this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el logo claro');
+    } finally {
+      this.uploadingLogoLight.set(false);
     }
   }
 
@@ -316,6 +332,7 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
+      this.uploadingLogoDark.set(true);
       const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
         maxWidth: 512,
         maxHeight: 512,
@@ -338,6 +355,8 @@ export class SettingsAdminComponent implements OnInit {
       console.error('Error uploading logo dark:', error);
       this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el logo oscuro');
+    } finally {
+      this.uploadingLogoDark.set(false);
     }
   }
 
@@ -352,6 +371,7 @@ export class SettingsAdminComponent implements OnInit {
     }
 
     try {
+      this.uploadingFavicon.set(true);
       // Optimize favicon
       const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
         maxWidth: 256,
@@ -375,6 +395,8 @@ export class SettingsAdminComponent implements OnInit {
       console.error('Error uploading favicon:', error);
       this.cdr.detectChanges(); // Force UI update
       this.errorMessage.set('Error al subir el favicon');
+    } finally {
+      this.uploadingFavicon.set(false);
     }
   }
 

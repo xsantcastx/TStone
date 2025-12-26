@@ -58,31 +58,22 @@
             {{ 'client.pending' | translate }}
           </button>
           <button
-            (click)="setFilter('processing')"
-            [class.bg-blue-500]="selectedFilter === 'processing'"
-            [class.text-white]="selectedFilter === 'processing'"
-            [class.bg-gray-100]="selectedFilter !== 'processing'"
-            [class.text-gray-700]="selectedFilter !== 'processing'"
+            (click)="setFilter('in-progress')"
+            [class.bg-blue-500]="selectedFilter === 'in-progress'"
+            [class.text-white]="selectedFilter === 'in-progress'"
+            [class.bg-gray-100]="selectedFilter !== 'in-progress'"
+            [class.text-gray-700]="selectedFilter !== 'in-progress'"
             class="px-4 py-2 rounded-xl font-medium transition-all duration-300 whitespace-nowrap">
-            {{ 'client.processing' | translate }}
+            {{ 'client.in_progress' | translate }}
           </button>
           <button
-            (click)="setFilter('shipped')"
-            [class.bg-purple-500]="selectedFilter === 'shipped'"
-            [class.text-white]="selectedFilter === 'shipped'"
-            [class.bg-gray-100]="selectedFilter !== 'shipped'"
-            [class.text-gray-700]="selectedFilter !== 'shipped'"
+            (click)="setFilter('completed')"
+            [class.bg-green-500]="selectedFilter === 'completed'"
+            [class.text-white]="selectedFilter === 'completed'"
+            [class.bg-gray-100]="selectedFilter !== 'completed'"
+            [class.text-gray-700]="selectedFilter !== 'completed'"
             class="px-4 py-2 rounded-xl font-medium transition-all duration-300 whitespace-nowrap">
-            {{ 'client.shipped' | translate }}
-          </button>
-          <button
-            (click)="setFilter('delivered')"
-            [class.bg-green-500]="selectedFilter === 'delivered'"
-            [class.text-white]="selectedFilter === 'delivered'"
-            [class.bg-gray-100]="selectedFilter !== 'delivered'"
-            [class.text-gray-700]="selectedFilter !== 'delivered'"
-            class="px-4 py-2 rounded-xl font-medium transition-all duration-300 whitespace-nowrap">
-            {{ 'client.delivered' | translate }}
+            {{ 'client.completed' | translate }}
           </button>
           <button
             (click)="setFilter('cancelled')"
@@ -132,7 +123,7 @@
                 <div>
                   <div class="flex items-center gap-3 mb-2">
                     <h3 class="text-lg font-semibold text-ts-bg">
-                      {{ 'client.order' | translate }} #{{ order.orderNumber }}
+                      {{ 'client.order' | translate }} #{{ order.id }}
                     </h3>
                     <span [class]="getStatusClass(order.status)" class="px-3 py-1 text-xs font-medium rounded-full">
                       {{ 'client.' + order.status | translate }}
@@ -142,28 +133,23 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
-                    {{ order.date | date:'dd/MM/yyyy' }}
+                    {{ order.createdAt | date:'dd/MM/yyyy' }}
                   </p>
                 </div>
                 <div class="text-left sm:text-right">
-                  <p class="text-2xl font-bold text-ts-accent">
-                    €{{ order.total.toFixed(2) }}
+                  <p class="text-lg font-semibold text-gray-700">
+                    {{ 'client.order_total' | translate }}: {{ order.totalItems }} {{ order.totalItems === 1 ? ('common.item' | translate) : ('common.items' | translate) }}
                   </p>
-                  @if (order.trackingNumber) {
-                    <p class="text-xs text-gray-600 mt-1">
-                      {{ 'client.tracking' | translate }}: {{ order.trackingNumber }}
-                    </p>
-                  }
                 </div>
               </div>
 
               <!-- Order Items -->
               <div class="p-6">
                 <div class="space-y-3">
-                  @for (item of order.items; track item.productId) {
+                  @for (item of order.items; track item.product.id) {
                     <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-xl">
-                      @if (item.image) {
-                        <img [src]="item.image" [alt]="item.productName" class="w-16 h-16 object-cover rounded-lg">
+                      @if (item.product.coverImage) {
+                        <img [src]="item.product.coverImage" [alt]="item.product.name" class="w-16 h-16 object-cover rounded-lg">
                       } @else {
                         <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
                           <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,47 +158,33 @@
                         </div>
                       }
                       <div class="flex-1">
-                        <h4 class="font-medium text-gray-900">{{ item.productName }}</h4>
+                        <h4 class="font-medium text-gray-900">{{ item.product.name }}</h4>
                         <p class="text-sm text-gray-600">
-                          {{ 'client.quantity' | translate }}: {{ item.quantity }} × €{{ item.price.toFixed(2) }}
-                        </p>
-                      </div>
-                      <div class="text-right">
-                        <p class="font-semibold text-gray-900">
-                          €{{ (item.quantity * item.price).toFixed(2) }}
+                          {{ 'client.quantity' | translate }}: {{ item.qty }}
                         </p>
                       </div>
                     </div>
                   }
                 </div>
 
-                @if (order.shippingAddress) {
+                @if (order.message) {
                   <div class="mt-4 p-3 bg-blue-50 rounded-xl">
                     <p class="text-sm font-medium text-blue-900 mb-1 flex items-center gap-2">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
                       </svg>
-                      {{ 'client.shipping_address' | translate }}
+                      {{ 'client.order_message' | translate }}
                     </p>
-                    <p class="text-sm text-blue-700">{{ order.shippingAddress }}</p>
+                    <p class="text-sm text-blue-700">{{ order.message }}</p>
                   </div>
                 }
               </div>
 
               <!-- Order Actions -->
               <div class="px-6 pb-6 flex gap-3">
-                @if (order.status === 'delivered') {
+                @if (order.status === 'completed') {
                   <button class="flex-1 py-2 px-4 bg-ts-accent text-white rounded-xl hover:bg-ts-accent/90 transition-all duration-300 text-sm font-medium">
                     {{ 'client.reorder' | translate }}
-                  </button>
-                  <button class="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300 text-sm font-medium">
-                    {{ 'client.leave_review' | translate }}
-                  </button>
-                }
-                @if (order.status === 'shipped') {
-                  <button class="flex-1 py-2 px-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-all duration-300 text-sm font-medium">
-                    {{ 'client.track_shipment' | translate }}
                   </button>
                 }
                 @if (order.status === 'pending') {
@@ -220,9 +192,6 @@
                     {{ 'client.cancel_order' | translate }}
                   </button>
                 }
-                <button class="py-2 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300 text-sm font-medium">
-                  {{ 'client.download_invoice' | translate }}
-                </button>
               </div>
             </div>
           }

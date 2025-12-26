@@ -7,7 +7,7 @@ export interface Product {
   id?: string;             // Firestore document ID
   name: string;            // "Saint Laurent"
   slug: string;            // "saint-laurent" (URL-friendly)
-  grosor: '12mm' | '15mm' | '20mm';  // Thickness
+  grosor?: '12mm' | '15mm' | '20mm';  // Thickness
   size: string;            // e.g., "160×320cm"
   imageUrl: string;        // Main product image URL (legacy or computed from coverImage)
   description?: string;    // Product description
@@ -41,6 +41,15 @@ export interface Product {
   descriptionLocked?: boolean;
   specsLocked?: boolean;
   seoLocked?: boolean;
+  // Promotion fields
+  // Promotion fields
+  isPromotion?: boolean;   // Whether this product is on promotion
+  promotionPrice?: number; // Promotional/discounted price
+  promotionLabel?: string; // e.g., "Sale", "New", "Limited"
+  promotionLabelTranslations?: TranslatedTextMap; // Translated promotion labels
+  promotionDiscount?: number; // Discount percentage (e.g., 20 for 20% off)
+  promotionStartDate?: Date | Timestamp; // When promotion starts
+  promotionEndDate?: Date | Timestamp;   // When promotion ends
   createdAt?: Timestamp;   // Creation timestamp
   updatedAt?: Timestamp;   // Last update timestamp
 }

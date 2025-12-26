@@ -11,7 +11,8 @@ import {
   query,
   where,
   orderBy,
-  limit
+  limit,
+  Timestamp
 } from '@angular/fire/firestore';
 import { Observable, combineLatest, map } from 'rxjs';
 
@@ -19,6 +20,7 @@ export interface FirestoreProduct {
   id?: string;
   name: string;
   slug: string;
+  sku?: string;
   grosor?: '12mm' | '15mm' | '20mm';
   thickness?: '12mm' | '15mm' | '20mm'; // legacy support
   dimensions?: string;
@@ -30,8 +32,18 @@ export interface FirestoreProduct {
   category?: string;
   price?: number;
   available?: boolean;
+  status?: 'draft' | 'published' | 'archived';
   createdAt?: Date;
   updatedAt?: Date;
+  
+  // Promotion fields
+  isPromotion?: boolean;
+  promotionPrice?: number;
+  promotionLabel?: string;
+  promotionLabelTranslations?: Partial<Record<string, string>>;
+  promotionDiscount?: number;
+  promotionStartDate?: Date | Timestamp;
+  promotionEndDate?: Date | Timestamp;
 }
 
 @Injectable({

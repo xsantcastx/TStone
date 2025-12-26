@@ -9,7 +9,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
 import { DatosTecnicosTranslationService } from '../../../services/datos-tecnicos-translation.service';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
-import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento, TestResult } from '../../../core/services/data.service';
+import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento, TestResult, PromocionMarketing } from '../../../core/services/data.service';
 import { LanguageService, Language } from '../../../core/services/language.service';
 import { LanguageCode, TranslatedTextMap } from '../../../models/product';
 
@@ -47,14 +47,15 @@ export class DatosTecnicosAdminComponent implements OnInit {
     acabadosBordes: [],
     fijacionesFachada: { descripcion: '', imagen: '', alt: '', ventajas: [], altTranslations: {}, descripcionTranslations: {} },
     mantenimiento: { limpieza: '', frecuencia: '', productos: [], evitar: [], limpiezaTranslations: {}, frecuenciaTranslations: {} },
-    testResults: []
+    testResults: [],
+    promocionMarketing: []
   });
 
   isLoading = signal(false);
   isSaving = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
-  activeTab = signal<'specs' | 'acabados' | 'fichas' | 'packing' | 'bordes' | 'fachada' | 'mantenimiento' | 'tests'>('specs');
+  activeTab = signal<'specs' | 'acabados' | 'fichas' | 'packing' | 'bordes' | 'fachada' | 'mantenimiento' | 'tests' | 'promocion'>('specs');
 
   // Editing states
   editingSpec: { key: string; value: string } = { key: '', value: '' };
@@ -80,7 +81,12 @@ export class DatosTecnicosAdminComponent implements OnInit {
       const snapshot = await getDoc(docRef);
       
       if (snapshot.exists()) {
-        this.datosTecnicos.set(snapshot.data() as DatosTecnicosData);
+        const data = snapshot.data() as DatosTecnicosData;
+        // Ensure promocionMarketing is always an array
+        if (!data.promocionMarketing) {
+          data.promocionMarketing = [];
+        }
+        this.datosTecnicos.set(data);
       }
     } catch (error) {
       console.error('Error loading datos tecnicos:', error);
@@ -285,6 +291,115 @@ export class DatosTecnicosAdminComponent implements OnInit {
       setTimeout(() => this.successMessage.set(''), 3000);
     } catch (error) {
       console.error('Error uploading image:', error);
+      this.errorMessage.set('Error al subir la imagen');
+    }
+  }
+
+  // Promoción y Marketing
+  addPromocion(): void {
+    const current = this.datosTecnicos();
+    const currentPromo = current.promocionMarketing || [];
+    this.datosTecnicos.set({
+      ...current,
+      promocionMarketing: [
+        ...currentPromo,
+        { nombre: '', descripcion: '', descripcionTranslations: {}, imagen: '', alt: '', altTranslations: {} }
+      ]
+    });
+  }
+
+  removePromocion(index: number): void {
+    const current = this.datosTecnicos();
+    this.datosTecnicos.set({
+      ...current,
+      promocionMarketing: current.promocionMarketing.filter((_, i) => i !== index)
+    });
+  }
+
+  updatePromocion(index: number, field: keyof PromocionMarketing, value: string): void {
+    const current = this.datosTecnicos();
+    const promociones = [...current.promocionMarketing];
+    promociones[index] = { ...promociones[index], [field]: value };
+    
+    this.datosTecnicos.set({
+      ...current,
+      promocionMarketing: promociones
+    });
+  }
+
+  updatePromocionAlt(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const promociones = [...current.promocionMarketing];
+    const target = promociones[index];
+    if (!target) return;
+
+    promociones[index] = this.updateAltTranslations(target, lang, value);
+    this.datosTecnicos.set({
+      ...current,
+      promocionMarketing: promociones
+    });
+  }
+
+  updatePromocionDescripcionTranslation(index: number, lang: Language, value: string): void {
+    const current = this.datosTecnicos();
+    const promociones = [...current.promocionMarketing];
+    const target = promociones[index];
+    if (!target) return;
+
+    const translations: TranslatedTextMap = { ...(target.descripcionTranslations || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    promociones[index] = { ...target, descripcionTranslations: translations };
+
+    this.datosTecnicos.set({
+      ...current,
+      promocionMarketing: promociones
+    });
+  }
+
+  async uploadPromocionImage(event: Event, index: number): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || !input.files[0]) return;
+
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage.set('Por favor selecciona un archivo de imagen');
+      return;
+    }
+
+    try {
+      // Show optimization in progress
+      this.successMessage.set('Optimizando imagen...');
+      
+      // Optimize image
+      const optimizedFile = await this.imageOptimization.optimizeImageAsFile(file, {
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.85,
+        outputFormat: 'webp'
+      });
+      
+      const reduction = this.imageOptimization.getSizeReduction(file.size, optimizedFile.size);
+      console.log(`Promocion image optimized: ${this.imageOptimization.formatFileSize(file.size)} → ${this.imageOptimization.formatFileSize(optimizedFile.size)} (${reduction}% reduction)`);
+      
+      this.successMessage.set('Subiendo imagen...');
+      
+      const timestamp = Date.now();
+      const filename = `promocion-${timestamp}-${optimizedFile.name}`;
+      const storageRef = ref(this.storage, `datos-tecnicos/promocion/${filename}`);
+      
+      await uploadBytes(storageRef, optimizedFile);
+      const url = await getDownloadURL(storageRef);
+      
+      this.updatePromocion(index, 'imagen', url);
+      this.successMessage.set(`Imagen subida correctamente (${reduction}% más pequeña)`);
+      setTimeout(() => this.successMessage.set(''), 3000);
+    } catch (error) {
+      console.error('Error uploading promocion image:', error);
       this.errorMessage.set('Error al subir la imagen');
     }
   }

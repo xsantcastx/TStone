@@ -642,7 +642,7 @@
                   <input type="text" formControlName="usage" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent text-gray-900 bg-white">
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'admin.price' | translate }}</label>
                   <div class="relative">
@@ -651,9 +651,69 @@
                   </div>
                 </div>
                 <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Precio promoción</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">EUR</span>
+                    <input type="number" formControlName="promotionPrice" min="0" step="0.01" placeholder="Precio rebajado" class="w-full pl-14 pr-4 py-2 border border-ts-accent/30 rounded-xl focus:ring-2 focus:ring-ts-accent focus-border-transparent bg-amber-50">
+                  </div>
+                  @if (promotionDiscount) {
+                    <p class="mt-1 text-xs text-ts-accent font-semibold">Descuento: {{ promotionDiscount }}%</p>
+                  }
+                </div>
+                <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'admin.stock' | translate }}</label>
                   <input type="number" formControlName="stock" min="0" step="1" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus-border-transparent">
                 </div>
+              </div>
+              
+              <!-- Promotion Section -->
+              <div class="bg-gradient-to-br from-amber-50 to-yellow-50 border border-ts-accent/30 rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900">Promoción</h3>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" formControlName="isPromotion" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ts-accent/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ts-accent"></div>
+                    <span class="ml-3 text-sm font-medium text-gray-700">Activar promoción</span>
+                  </label>
+                </div>
+                
+                @if (productForm.get('isPromotion')?.value) {
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-900 mb-2">Etiqueta de promoción (ES)</label>
+                      <input type="text" formControlName="promotionLabel" placeholder="ej: Oferta, Novedad, Liquidación" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent bg-white">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-900 mb-2">Descuento (%)</label>
+                      <input type="number" formControlName="promotionDiscount" min="0" max="100" step="5" placeholder="ej: 20" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent bg-white">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-900 mb-2">Fecha inicio</label>
+                      <input type="date" formControlName="promotionStartDate" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent bg-white">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-900 mb-2">Fecha fin</label>
+                      <input type="date" formControlName="promotionEndDate" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent bg-white">
+                    </div>
+                  </div>
+                  
+                  <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Etiquetas por idioma</label>
+                    <div class="grid sm:grid-cols-2 gap-3" formGroupName="promotionLabelTranslations">
+                      @for (lang of languages; track lang.code) {
+                        <div>
+                          <label class="block text-xs font-semibold text-gray-700 mb-1">{{ lang.name }} ({{ lang.label }})</label>
+                          <input type="text" [formControlName]="lang.code" [placeholder]="'Etiqueta en ' + lang.name" class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white text-sm">
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
               </div>
             </section>
           }

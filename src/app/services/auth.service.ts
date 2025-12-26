@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
   user,
   User,
   updateProfile
@@ -59,14 +60,17 @@ export class AuthService {
     const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
+    // Ensure displayName has a value, use email prefix if not provided
+    const finalDisplayName = displayName?.trim() || email.split('@')[0];
+
     // Update profile
-    await updateProfile(user, { displayName });
+    await updateProfile(user, { displayName: finalDisplayName });
 
     // Create user document in Firestore
     await this.createUserProfile(user.uid, {
       uid: user.uid,
       email: email,
-      displayName: displayName,
+      displayName: finalDisplayName,
       company: company,
       phone: phone,
       role: 'client',
@@ -85,6 +89,11 @@ export class AuthService {
   // Sign out
   async signOutUser(): Promise<void> {
     await signOut(this.auth);
+  }
+
+  // Send password reset email
+  async sendPasswordReset(email: string): Promise<void> {
+    await sendPasswordResetEmail(this.auth, email);
   }
 
   // Create user profile in Firestore

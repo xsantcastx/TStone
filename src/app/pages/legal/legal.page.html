@@ -20,11 +20,11 @@
         <ul class="list-none mb-4">
           <li class="mb-2"><strong>{{ 'legal.notice.company.name' | translate }}:</strong> TopStone S.L.</li>
           <li class="mb-2"><strong>{{ 'legal.notice.company.cif' | translate }}:</strong> [CIF/NIF]</li>
-          <li class="mb-2"><strong>{{ 'legal.notice.company.address' | translate }}:</strong> [Dirección completa]</li>
-          <li class="mb-2"><strong>{{ 'legal.notice.company.city' | translate }}:</strong> [Ciudad, CP]</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.address' | translate }}:</strong> Ctra. Nules, km 1, Pol. Ind. Buris Art, 12530 Burriana - Castellon - Espana</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.city' | translate }}:</strong> Burriana, 12530 (Castellon)</li>
           <li class="mb-2"><strong>{{ 'legal.notice.company.country' | translate }}:</strong> España</li>
           <li class="mb-2"><strong>{{ 'legal.notice.company.email' | translate }}:</strong> info&#64;topstone.com</li>
-          <li class="mb-2"><strong>{{ 'legal.notice.company.phone' | translate }}:</strong> [Teléfono]</li>
+          <li class="mb-2"><strong>{{ 'legal.notice.company.phone' | translate }}:</strong> 682728044</li>
           <li class="mb-2"><strong>{{ 'legal.notice.company.registry' | translate }}:</strong> [Registro Mercantil]</li>
         </ul>
       </section>
@@ -120,6 +120,20 @@
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.notice.contact.title' | translate }}</h2>
         <p class="mb-4">{{ 'legal.notice.contact.description' | translate }}</p>
+        <div class="mb-4">
+          <p><strong>{{ 'contactPage.info.address_label' | translate }}:</strong> Ctra. Nules, km 1, Pol. Ind. Buris Art, 12530 Burriana - Castellon - Espana</p>
+          <p><strong>{{ 'contactPage.info.phone_label' | translate }}:</strong> 682728044</p>
+          <p><strong>{{ 'contactPage.info.email_label' | translate }}:</strong> info&#64;topstone.com</p>
+          <p class="mt-2"><strong>{{ 'contactPage.info.hours_label' | translate }}:</strong></p>
+          <ul class="list-disc pl-6 mb-4">
+            <li>{{ 'contactPage.info.monday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.tuesday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.wednesday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.thursday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.friday' | translate }}: 8:00 - 14:00h</li>
+            <li>{{ 'contactPage.info.saturday' | translate }}: {{ 'contactPage.info.closed' | translate }}</li>
+          </ul>
+        </div>
         <p>
           <a [routerLink]="['/contacto']" class="text-ts-bronze hover:underline">
             {{ 'legal.notice.contact.link' | translate }}

@@ -143,6 +143,20 @@
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4 text-ts-ink">{{ 'legal.terms.contact.title' | translate }}</h2>
         <p class="mb-4">{{ 'legal.terms.contact.description' | translate }}</p>
+        <div class="mb-4">
+          <p><strong>{{ 'contactPage.info.address_label' | translate }}:</strong> Ctra. Nules, km 1, Pol. Ind. Buris Art, 12530 Burriana - Castellon - Espana</p>
+          <p><strong>{{ 'contactPage.info.phone_label' | translate }}:</strong> 682728044</p>
+          <p><strong>{{ 'contactPage.info.email_label' | translate }}:</strong> info&#64;topstone.com</p>
+          <p class="mt-2"><strong>{{ 'contactPage.info.hours_label' | translate }}:</strong></p>
+          <ul class="list-disc pl-6 mb-4">
+            <li>{{ 'contactPage.info.monday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.tuesday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.wednesday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.thursday' | translate }}: 8:00 - 17:00h</li>
+            <li>{{ 'contactPage.info.friday' | translate }}: 8:00 - 14:00h</li>
+            <li>{{ 'contactPage.info.saturday' | translate }}: {{ 'contactPage.info.closed' | translate }}</li>
+          </ul>
+        </div>
         <p>
           <a [routerLink]="['/contacto']" class="text-ts-bronze hover:underline">
             {{ 'legal.terms.contact.link' | translate }}
