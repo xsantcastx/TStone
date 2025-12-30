@@ -13,6 +13,7 @@ export interface SocialMedia {
   instagram?: string;
   linkedin?: string;
   youtube?: string;
+  pinterest?: string;
 }
 
 export interface BusinessHours {
@@ -78,7 +79,8 @@ const DEFAULT_SETTINGS: AppSettings = {
     facebook: '',
     instagram: '',
     linkedin: '',
-    youtube: ''
+    youtube: '',
+    pinterest: ''
   },
   maintenanceMode: false,
   maintenanceMessage: 'Estamos realizando tareas de mantenimiento programado. Por favor, vuelve pronto o contacta con nuestro equipo de soporte si necesitas ayuda.',

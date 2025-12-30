@@ -326,6 +326,16 @@
                   placeholder="https://youtube.com/..."
                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
               </div>
+              <div>
+                <label class="block text-sm font-medium text-black mb-1">Pinterest</label>
+                <input
+                  type="url"
+                  [value]="settings()?.socialMedia?.pinterest"
+                  (input)="updateSocialMedia('pinterest', $any($event.target).value)"
+                  (blur)="formatSocialMediaUrl('pinterest', $any($event.target).value)"
+                  placeholder="https://pinterest.com/..."
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent focus:border-transparent text-black">
+              </div>
             </div>
           </div>
         </div>
