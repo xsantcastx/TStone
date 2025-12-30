@@ -88,6 +88,21 @@ import { SettingsService } from '../../../services/settings.service';
                   </svg>
                 </a>
               }
+              @if ((settings$ | async)?.socialMedia?.pinterest) {
+                <a
+                  [href]="(settings$ | async)?.socialMedia?.pinterest"
+                  target="_blank"
+                  rel="noopener"
+                  class="w-10 h-10 bg-ts-accent/20 rounded-full flex items-center justify-center text-ts-accent hover:bg-ts-accent hover:text-ts-bg transition-colors"
+                  aria-label="Pinterest"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 0a12 12 0 0 0-4.37 23.17c-.08-.72-.15-1.83.03-2.62.16-.71 1.05-4.46 1.05-4.46s-.27-.54-.27-1.33c0-1.25.73-2.18 1.63-2.18.77 0 1.14.58 1.14 1.27 0 .77-.49 1.93-.75 3-.21.9.45 1.63 1.34 1.63 1.61 0 2.84-1.7 2.84-4.14 0-2.17-1.56-3.68-3.79-3.68-2.58 0-4.09 1.93-4.09 3.93 0 .78.3 1.61.67 2.07.07.09.08.17.06.26-.07.28-.23.94-.26 1.07-.04.17-.13.21-.3.13-1.2-.56-1.95-2.31-1.95-3.72 0-2.86 2.08-5.49 5.99-5.49 3.14 0 5.58 2.24 5.58 5.23 0 3.12-1.97 5.63-4.7 5.63-.92 0-1.78-.48-2.07-.94 0 0-.45 1.73-.56 2.15-.2.78-.75 1.76-1.12 2.35A12 12 0 1 0 12 0z"
+                    />
+                  </svg>
+                </a>
+              }
             </div>
 
             <div class="mt-6 space-y-2 text-ts-ink-soft text-sm">
