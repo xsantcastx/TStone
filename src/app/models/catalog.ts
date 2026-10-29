@@ -203,3 +203,13 @@ export interface ProductFormData {
   seo?: Seo;
   active?: boolean;
 }
+
+// ===== Material Options (customizable "Material" dropdown) =====
+export interface MaterialOption {
+  id?: string;
+  name: string;
+  order?: number;
+  active: boolean;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+}

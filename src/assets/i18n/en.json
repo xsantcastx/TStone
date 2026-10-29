@@ -8,7 +8,8 @@
     "contact": "Contact",
     "cart": "Cart",
     "login": "Client Area",
-    "admin": "Admin"
+    "admin": "Admin",
+    "lumina": "LUMINA"
   },
   "hero": {
     "title": "Large Format Porcelain Surfaces",
@@ -19,7 +20,7 @@
     "why_preheading": "TopStone Excellence",
     "hero": {
       "tagline": "Technical ceramics from Castellón",
-      "heading": "Noble materials for walls and floors inspired by natural stone.",
+      "heading": "Technical surfaces from Castellón",
       "description": "At The Stone we select onyx, marbles and quartzites that combine beauty and durability. We design each collection for residential and contract projects seeking distinction.",
       "primaryCta": "See collections",
       "secondaryCta": "Request consultation",
@@ -71,7 +72,9 @@
       "material_all": "All materials",
       "search": "Search",
       "search_placeholder": "Product name...",
-      "clear": "Clear filters"
+      "clear": "Clear filters",
+      "article": "Article",
+      "article_all": "All articles"
     },
     "loading": "Loading products...",
     "results": "Showing {{filtered}} of {{total}} products",
@@ -111,7 +114,9 @@
     "dimensions": "Dimensions",
     "applications": "Applications",
     "description": "Description",
-    "filterBy": "Filter by"
+    "filterBy": "Filter by",
+    "material": "Material",
+    "videos": "Videos"
   },
   "gallery": {
     "title": "Project Gallery",
@@ -236,7 +241,7 @@
     },
     "table": {
       "thickness": "Thickness",
-      "pieces_per_pallet": "Pieces/Pallet",
+      "pieces_per_pallet": "Pieces per Pallet",
       "approx_weight": "Approx. Weight",
       "pallet_dimensions": "Pallet Dimensions",
       "volume": "Volume",
@@ -246,10 +251,8 @@
       "standard": "Standard",
       "surface_per_piece": "Surface per Piece",
       "weight_per_piece": "Approx. Weight per Piece",
-      "pieces_per_pallet": "Pieces per Pallet",
       "total_surface": "Total Surface",
       "total_weight": "Total Pallet Weight",
-      "pallet_dimensions": "Pallet Dimensions",
       "piece_info": "Information per Piece",
       "pallet_info": "Information per Pallet",
       "pieces": "pieces"
@@ -261,7 +264,9 @@
       "specifications": "Technical Specifications",
       "datasheets": "Datasheets",
       "planks": "Planks"
-    }
+    },
+    "marble_technical": "Technical Marble",
+    "marble_empty": "Technical Marble information will be available soon."
   },
   "client": {
     "title": "Client Area",
@@ -553,7 +558,22 @@
     "no_users_found": "No users found",
     "role_updated": "Role updated successfully",
     "user_enabled": "User enabled successfully",
-    "user_disabled": "User disabled successfully"
+    "user_disabled": "User disabled successfully",
+    "product_article": "Article",
+    "select_article": "Select article",
+    "product_material_option": "Material",
+    "select_material_option": "Select material",
+    "add_option": "Add",
+    "edit_option": "Edit",
+    "delete_option": "Delete",
+    "material_option_name": "Material name",
+    "save_option": "Save",
+    "videos": "Videos",
+    "video_title": "Video title (optional)",
+    "video_upload": "Upload video",
+    "video_url": "YouTube, Vimeo or mp4 URL",
+    "add_video": "Add",
+    "remove_video": "Remove"
   },
   "cart": {
     "title": "Interest Cart",
@@ -1015,5 +1035,24 @@
         "terms": "Terms of Service"
       }
     }
+  },
+  "lumina": {
+    "title": "LUMINA",
+    "subtitle": "Top Stone translucent sintered surface",
+    "open_pdf": "Open PDF",
+    "unavailable": "The LUMINA catalog is currently unavailable.",
+    "highlights_title": "Key features",
+    "highlights": {
+      "food_contact": "Suitable for food contact",
+      "through_body": "Full-body / through-body realism",
+      "large_formats": "Large formats",
+      "translucent": "Translucent effect for backlit projects",
+      "heat_resistance": "Heat resistance up to 220 °C",
+      "low_silica": "Low crystalline silica",
+      "impact": "Greater impact resistance",
+      "stain": "Stain resistance"
+    },
+    "finish": "Calacatta finish, 320×160 cm, 20 mm thick.",
+    "designs_title": "Designs"
   }
 }

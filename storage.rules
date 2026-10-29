@@ -24,6 +24,18 @@ service firebase.storage {
              request.resource.size < 500 * 1024 * 1024; // 500MB max for PDFs
     }
     
+    function isValidVideo() {
+      return request.resource.contentType.matches('video/.*') &&
+             request.resource.size < 200 * 1024 * 1024; // 200MB max
+    }
+
+    // Catalog preview images (generated from PDFs) - Admin can write, everyone can read
+    match /catalogs/previews/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
+    }
+
     // Catalog PDFs - Admin can write, everyone can read
     match /catalogs/{fileName} {
       allow read: if true;
@@ -31,6 +43,13 @@ service firebase.storage {
       allow delete: if isAdmin();
     }
     
+    // Product videos - Admin can write, everyone can read
+    match /products/videos/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidVideo();
+      allow delete: if isAdmin();
+    }
+
     // Product images - Admin can write, everyone can read
     // Supports both cover images (2 levels) and gallery images (deeper nesting)
     match /products/{grosor}/{allPaths=**} {

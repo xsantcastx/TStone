@@ -180,3 +180,120 @@ div:has(> #mega-products) {
     border-radius: 2px;
   }
 }
+
+/* LUMINA nav item — "light through translucent stone":
+   a light beam sweeps through gradient-filled letters, a soft backlight halo breathes behind them,
+   and a fine LED-like line glows underneath. Only background-position, opacity and transform animate. */
+.nav-lumina {
+  --lumina-base: #f3e3c3;
+  --lumina-peak: #ffffff;
+  --lumina-warm: #ffd38a;
+  --lumina-halo: rgba(255, 214, 150, 0.55);
+  --lumina-line: rgba(255, 221, 166, 0.95);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+  padding: 0.25rem 0.125rem;
+
+  // Backlight halo
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -0.6rem -1.1rem;
+    z-index: -1;
+    border-radius: 9999px;
+    background: radial-gradient(50% 60% at 50% 55%, var(--lumina-halo), transparent 70%);
+    filter: blur(6px);
+    opacity: 0.45;
+    transform: scale(0.92);
+    pointer-events: none;
+    animation: lumina-breathe 4.8s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+
+  // LED edge line
+  &::after {
+    content: '';
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -0.15rem;
+    height: 1px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, transparent, var(--lumina-line), transparent);
+    box-shadow: 0 0 8px 1px var(--lumina-halo);
+    opacity: 0.7;
+    transform: scaleX(0.6);
+    pointer-events: none;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+    animation: lumina-breathe 4.8s ease-in-out infinite;
+  }
+
+  &:hover::before,
+  &:focus-visible::before {
+    animation-play-state: paused;
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.nav-lumina__label {
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  padding-left: 0.22em; // balance the trailing letter-spacing
+  color: var(--lumina-base); // fallback where background-clip:text is unsupported
+  background: linear-gradient(100deg,
+      var(--lumina-base) 0%,
+      var(--lumina-base) 35%,
+      var(--lumina-warm) 45%,
+      var(--lumina-peak) 50%,
+      var(--lumina-warm) 55%,
+      var(--lumina-base) 65%,
+      var(--lumina-base) 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px var(--lumina-halo));
+  animation: lumina-sweep 6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+// Light backgrounds (scrolled navbar, mobile drawer): deeper gold so it stays readable
+.nav-lumina--light {
+  --lumina-base: #9c7637;
+  --lumina-peak: #f7e2b5;
+  --lumina-warm: #c8a96b;
+  --lumina-halo: rgba(214, 170, 90, 0.35);
+  --lumina-line: rgba(200, 160, 90, 0.9);
+}
+
+@keyframes lumina-sweep {
+  0%, 15% { background-position: 100% 0; }
+  65%, 100% { background-position: 0% 0; }
+}
+
+@keyframes lumina-breathe {
+  0%, 100% { opacity: 0.35; transform: scale(0.92); }
+  50% { opacity: 0.75; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-lumina::before,
+  .nav-lumina::after,
+  .nav-lumina__label {
+    animation: none;
+  }
+
+  .nav-lumina__label {
+    background-position: 50% 0;
+  }
+}

@@ -1,5 +1,6 @@
-import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, ChangeDetectorRef, OnInit, PLATFORM_ID, DestroyRef } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { CatalogService, Catalog } from '../../../services/catalog.service';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
@@ -11,9 +12,12 @@ import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/
   templateUrl: './catalogs-admin.page.html',
   styleUrls: ['./catalogs-admin.page.scss']
 })
-export class CatalogsAdminPage {
+export class CatalogsAdminPage implements OnInit {
   private catalogService = inject(CatalogService);
   private cdr = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
+  private previewAttempted = new Set<string>();
   
   catalogs$ = this.catalogService.catalogs$;
   isUploading = signal(false);
@@ -24,6 +28,29 @@ export class CatalogsAdminPage {
   catalogDescription = signal('');
   catalogVersion = signal('');
   selectedFile: File | null = null;
+
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    // Generate first-page previews for catalogs uploaded before previews existed
+    this.catalogs$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(catalogs => {
+      const missing = catalogs.filter(c => c.id && !c.previewUrl && !this.previewAttempted.has(c.id));
+      if (missing.length) this.generateMissingPreviews(missing);
+    });
+  }
+
+  private async generateMissingPreviews(catalogs: Catalog[]): Promise<void> {
+    for (const c of catalogs) {
+      this.previewAttempted.add(c.id!);
+      this.busyId.set(c.id!);
+      try {
+        await this.catalogService.generatePreview(c);
+      } catch (error) {
+        console.warn(`Could not auto-generate preview for "${c.name}":`, error);
+      }
+    }
+    this.busyId.set(null);
+    this.cdr.detectChanges();
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -130,6 +157,78 @@ export class CatalogsAdminPage {
       console.error('Error setting latest catalog:', error);
       this.cdr.detectChanges(); // Force UI update
       alert('Error al actualizar el catálogo');
+    }
+  }
+
+  selectedIds = signal<Set<string>>(new Set());
+  busyId = signal<string | null>(null);
+
+  isSelected(c: Catalog): boolean {
+    return this.selectedIds().has(c.id!);
+  }
+
+  toggleSelected(c: Catalog): void {
+    const next = new Set(this.selectedIds());
+    if (next.has(c.id!)) next.delete(c.id!); else next.add(c.id!);
+    this.selectedIds.set(next);
+  }
+
+  allSelected(list: Catalog[] | null): boolean {
+    return !!list && list.length > 0 && list.every(c => this.selectedIds().has(c.id!));
+  }
+
+  toggleAll(list: Catalog[] | null): void {
+    if (!list) return;
+    this.selectedIds.set(this.allSelected(list) ? new Set() : new Set(list.map(c => c.id!)));
+  }
+
+  isVisible(c: Catalog): boolean {
+    return c.isPublic !== false;
+  }
+
+  async setVisibilityBulk(isPublic: boolean): Promise<void> {
+    const ids = Array.from(this.selectedIds());
+    if (!ids.length) return;
+    try {
+      await this.catalogService.setVisibility(ids, isPublic);
+      this.selectedIds.set(new Set());
+    } catch (error) {
+      console.error('Error updating visibility:', error);
+      alert('Error al actualizar la visibilidad');
+    }
+    this.cdr.detectChanges();
+  }
+
+  async toggleVisibility(c: Catalog): Promise<void> {
+    try {
+      await this.catalogService.setVisibility([c.id!], !this.isVisible(c));
+    } catch (error) {
+      console.error('Error updating visibility:', error);
+      alert('Error al actualizar la visibilidad');
+    }
+    this.cdr.detectChanges();
+  }
+
+  async setAsLumina(c: Catalog): Promise<void> {
+    try {
+      await this.catalogService.setLuminaCatalog(c.id!);
+    } catch (error) {
+      console.error('Error setting LUMINA catalog:', error);
+      alert('Error al marcar el catálogo como LUMINA');
+    }
+    this.cdr.detectChanges();
+  }
+
+  async generatePreview(c: Catalog): Promise<void> {
+    this.busyId.set(c.id!);
+    try {
+      await this.catalogService.generatePreview(c);
+    } catch (error) {
+      console.error('Error generating preview:', error);
+      alert('No se pudo generar la vista previa');
+    } finally {
+      this.busyId.set(null);
+      this.cdr.detectChanges();
     }
   }
 

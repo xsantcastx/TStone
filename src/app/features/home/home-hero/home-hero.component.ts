@@ -23,7 +23,8 @@ import { SettingsService, HeroImage } from '../../../services/settings.service';
                 [src]="image.url" 
                 [alt]="image.alt"
                 class="w-full h-full object-cover"
-                loading="eager"
+                [attr.loading]="i === 0 ? 'eager' : 'lazy'"
+                [attr.fetchpriority]="i === 0 ? 'high' : null"
               />
             </div>
             <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
@@ -33,15 +34,9 @@ import { SettingsService, HeroImage } from '../../../services/settings.service';
       
       <!-- Hero content -->
       <div class="relative h-full flex flex-col items-start justify-end max-w-7xl mx-auto px-6 pb-16 z-10">
-        <p class="text-sm uppercase tracking-[0.3em] text-white/80 mb-4 animate-fade-in-up">
-          {{ 'home.hero.tagline' | translate }}
-        </p>
-        <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl tracking-tight text-white mb-4 animate-fade-in-up">
+        <h1 class="text-sm uppercase tracking-[0.3em] text-white/80 mb-4 animate-fade-in-up">
           {{ 'home.hero.heading' | translate }}
         </h1>
-        <p class="mt-4 max-w-xl text-lg text-white/90 leading-relaxed animate-fade-in-up animation-delay-200">
-          {{ 'home.hero.description' | translate }}
-        </p>
         <div class="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
           <a 
             routerLink="/productos" 
@@ -145,6 +140,7 @@ export class HomeHeroComponent implements OnInit, OnDestroy {
   }
 
   private startImageRotation(): void {
+    if (this.heroImages.length < 2) return;
     this.interval = setInterval(() => {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.heroImages.length;
     }, 6000); // Change image every 6 seconds

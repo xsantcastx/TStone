@@ -35,6 +35,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Material Options (customizable product "Material") - Public read, Admin write
+    match /materialOptions/{optionId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Size Groups - Public read, Admin write
     match /sizeGroups/{sizeGroupId} {
       allow read: if true;

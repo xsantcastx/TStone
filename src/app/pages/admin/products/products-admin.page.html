@@ -505,13 +505,19 @@
                 <p class="text-sm text-gray-500 mb-4">{{ 'admin.manual_selection_hint' | translate }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'admin.product_material' | translate }}</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'admin.product_article' | translate }}</label>
                     <select formControlName="materialId" (change)="selectedCatalogOption = null" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ts-accent focus:border-transparent text-gray-900 bg-white">
-                      <option value="" disabled>{{ 'admin.select_material' | translate }}</option>
+                      <option value="" disabled>{{ 'admin.select_article' | translate }}</option>
                       @for (material of materials; track material.id) {
                         <option [value]="material.id">{{ material.name }}</option>
                       }
                     </select>
+                  </div>
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'admin.product_material_option' | translate }}</label>
+                    <ts-material-tag-picker
+                      [selected]="productForm.get('materialOptionIds')?.value || []"
+                      (selectedChange)="productForm.patchValue({ materialOptionIds: $event })" />
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'admin.product_category' | translate }}</label>
@@ -753,6 +759,35 @@
                   [productGrosor]="currentProductGrosor"
                   (mediaIdsChange)="onGalleryMediaIdsChange($event)"
                 ></app-gallery-uploader>
+              </div>
+              <div class="border border-gray-200 rounded-2xl p-6 space-y-4">
+                <h3 class="text-lg font-semibold text-ts-bg">{{ 'admin.videos' | translate }}</h3>
+                <input type="text" [(ngModel)]="newVideoTitle" [ngModelOptions]="{standalone: true}" [placeholder]="'admin.video_title' | translate" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1">{{ 'admin.video_upload' | translate }} (mp4, webm, mov)</label>
+                  <input type="file" multiple accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" (change)="onVideoFileSelected($event)" [disabled]="isUploadingVideo">
+                  @if (isUploadingVideo) {
+                    <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-ts-accent" [style.width.%]="videoUploadProgress"></div></div>
+                    <p class="text-xs text-gray-500 mt-1 truncate">{{ videoUploadLabel }} — {{ videoUploadProgress }}%</p>
+                  }
+                </div>
+                <div class="flex gap-2">
+                  <input type="url" [(ngModel)]="newVideoUrl" [ngModelOptions]="{standalone: true}" (keydown.enter)="$event.preventDefault(); addVideoUrl()" [placeholder]="'admin.video_url' | translate" class="flex-1 min-w-0 px-4 py-2 border border-gray-300 rounded-xl">
+                  <button type="button" (click)="addVideoUrl()" class="shrink-0 px-4 py-2 bg-ts-accent text-black rounded-xl text-sm font-medium">{{ 'admin.add_video' | translate }}</button>
+                </div>
+                @if (videoError) {
+                  <p class="text-sm text-red-600">{{ videoError }}</p>
+                }
+                @if (productVideos.length) {
+                  <ul class="divide-y divide-gray-200 border border-gray-200 rounded-xl">
+                    @for (v of productVideos; track $index) {
+                      <li class="flex items-center justify-between gap-3 px-4 py-2 text-sm">
+                        <span class="truncate"><span class="uppercase text-xs text-gray-500 mr-2">{{ v.type }}</span>{{ v.title || v.url }}</span>
+                        <button type="button" (click)="removeVideo($index)" class="text-red-600 hover:underline shrink-0">{{ 'admin.remove_video' | translate }}</button>
+                      </li>
+                    }
+                  </ul>
+                }
               </div>
             </section>
           }

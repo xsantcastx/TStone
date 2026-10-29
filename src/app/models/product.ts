@@ -23,7 +23,10 @@ export interface Product {
   active?: boolean;        // Is product active/visible
   status?: 'draft' | 'published' | 'archived';
   categoryId?: string;     // Reference to category document
-  materialId?: string;     // Reference to material document
+  materialId?: string;     // Reference to material document (displayed as "Artículo")
+  materialOptionIds?: string[]; // References to materialOptions documents (customizable "Material" tags)
+  materialOptionId?: string;    // Legacy single-select value; read via MaterialOptionService.idsOf()
+  videos?: ProductVideo[]; // Product videos (uploaded or external URL)
   search_name?: string;    // Lowercase name for search (auto-generated)
   variantMode?: 'embedded' | 'referenced';
   variants?: ProductVariant[];
@@ -52,6 +55,13 @@ export interface Product {
   promotionEndDate?: Date | Timestamp;   // When promotion ends
   createdAt?: Timestamp;   // Creation timestamp
   updatedAt?: Timestamp;   // Last update timestamp
+}
+
+export interface ProductVideo {
+  type: 'upload' | 'url';
+  url: string;
+  storagePath?: string;
+  title?: string;
 }
 
 export interface ProductVariant {

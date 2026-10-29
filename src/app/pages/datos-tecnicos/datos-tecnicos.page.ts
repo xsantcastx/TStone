@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { DatosTecnicosData } from '../../core/services/data.service';
+import { DatosTecnicosData, CustomTechSection, resolveTechSectionOrder } from '../../core/services/data.service';
 import { ImageLightboxComponent } from '../../shared/components/image-lightbox/image-lightbox.component';
 import { CatalogDownloadComponent } from '../../shared/components/catalog-download/catalog-download.component';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
@@ -31,6 +31,7 @@ export class DatosTecnicosPageComponent implements OnInit {
   
   acordeonesAbiertos: { [key: string]: boolean } = {
     especificaciones: true, // Start with specifications open
+    marmolTecnico: false,
     acabados: false,
     promocion: false,
     fichas: false,
@@ -237,6 +238,54 @@ export class DatosTecnicosPageComponent implements OnInit {
       key,
       value: this.getLocalizedText(translations?.[key], value)
     }));
+  }
+
+  // Mármol Técnico helpers
+  getMarmolEntries(): Array<{key: string, value: string}> {
+    const marmol = this.datosTecnicos?.marmolTecnico;
+    if (!marmol?.especificaciones) return [];
+    return this.getObjectEntries(marmol.especificaciones, marmol.especificacionesTranslations);
+  }
+
+  get customSections(): CustomTechSection[] {
+    return (this.datosTecnicos?.customSections || [])
+      .filter(s => (s.title?.trim() || s.items?.length) && !this.isHidden(this.customKey(s)));
+  }
+
+  /** CSS order for a section (admin tab key), so blocks and nav pills follow the admin's saved order */
+  orderOf(key: string): number {
+    return resolveTechSectionOrder(this.datosTecnicos).indexOf(key);
+  }
+
+  /** Sections the admin has hidden (not published yet) */
+  isHidden(key: string): boolean {
+    return (this.datosTecnicos?.hiddenSections || []).includes(key);
+  }
+
+  customKey(section: CustomTechSection): string {
+    return `custom:${section.id}`;
+  }
+
+  getCustomTitle(section: CustomTechSection): string {
+    return this.getLocalizedText(section.titleTranslations, section.title || '');
+  }
+
+  getCustomDescription(section: CustomTechSection): string {
+    return this.getLocalizedText(section.descripcionTranslations, section.descripcion || '');
+  }
+
+  getCustomItems(section: CustomTechSection): Array<{ label: string; value: string }> {
+    return (section.items || [])
+      .filter(item => item.label?.trim() || item.value?.trim())
+      .map(item => ({
+        label: this.getLocalizedText(item.labelTranslations, item.label || ''),
+        value: this.getLocalizedText(item.valueTranslations, item.value || '')
+      }));
+  }
+
+  getMarmolDescription(): string {
+    const marmol = this.datosTecnicos?.marmolTecnico;
+    return marmol ? this.getLocalizedText(marmol.descripcionTranslations, marmol.descripcion || '') : '';
   }
 
   // Check if any accordion is open

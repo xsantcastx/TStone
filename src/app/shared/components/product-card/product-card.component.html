@@ -8,7 +8,16 @@
            [alt]="product.name" 
            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
            loading="lazy"/>
-      
+
+      <!-- Material Tags -->
+      @if (materialNames.length) {
+        <div class="absolute top-3 left-3 right-3 flex flex-wrap gap-1.5 pointer-events-none">
+          @for (name of materialNames; track name) {
+            <span class="px-3 py-1 rounded-full bg-black/70 text-white text-[11px] font-semibold uppercase tracking-wider shadow-md backdrop-blur-sm">{{ name }}</span>
+          }
+        </div>
+      }
+
       <!-- Promotion Badge -->
       @if (showPromotionBadge && isPromotionActive()) {
         <div class="absolute top-3 right-3 bg-ts-accent text-black px-4 py-2 rounded-lg font-bold shadow-lg backdrop-blur-sm">

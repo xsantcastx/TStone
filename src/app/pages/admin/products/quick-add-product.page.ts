@@ -7,11 +7,13 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { CategoryService } from '../../../services/category.service';
+import { MaterialOptionService } from '../../../services/material-option.service';
+import { MaterialTagPickerComponent } from '../../../shared/components/material-tag-picker/material-tag-picker.component';
 import { MaterialService } from '../../../services/material.service';
 import { StorageService } from '../../../services/storage.service';
 import { MediaService } from '../../../services/media.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
-import { Product, LanguageCode, TranslatedTextMap } from '../../../models/product';
+import { Product, LanguageCode, TranslatedTextMap, ProductVideo } from '../../../models/product';
 import { Category, Material } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
@@ -20,7 +22,7 @@ import { LanguageService, Language } from '../../../core/services/language.servi
 @Component({
   selector: 'app-quick-add-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, AdminSidebarComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, AdminSidebarComponent, MaterialTagPickerComponent],
   templateUrl: './quick-add-product.page.html',
   styleUrl: './quick-add-product.page.scss'
 })
@@ -40,6 +42,15 @@ export class QuickAddProductComponent implements OnInit {
 
   categories: Category[] = [];
   materials: Material[] = [];
+
+  // Videos
+  productVideos: ProductVideo[] = [];
+  newVideoUrl = '';
+  newVideoTitle = '';
+  videoUploadProgress = 0;
+  videoUploadLabel = '';
+  isUploadingVideo = false;
+  videoError = '';
   filteredMaterials: Material[] = [];
 
   productForm: FormGroup;
@@ -94,6 +105,7 @@ export class QuickAddProductComponent implements OnInit {
       descriptionTranslations: this.createTranslationFormGroup(),
       categoryId: ['', Validators.required],
       materialId: ['', Validators.required],
+      materialOptionIds: [[] as string[]],
       price: [0, [Validators.required, Validators.min(0)]],
       promotionPrice: ['', [Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
@@ -168,12 +180,15 @@ export class QuickAddProductComponent implements OnInit {
         return;
       }
 
+      this.productVideos = [...(product.videos || [])];
+
       // Populate form with product data
       this.productForm.patchValue({
         title: product.name || '',
         status: product.status || 'draft',
         categoryId: product.categoryId || '',
         materialId: product.materialId || '',
+        materialOptionIds: MaterialOptionService.idsOf(product),
         price: product.price || 0,
         stock: product.stock || 0,
         sku: product.sku || '',
@@ -434,6 +449,75 @@ export class QuickAddProductComponent implements OnInit {
     return this.getPrimaryTranslation(translations, fallback);
   }
 
+  addVideoUrl() {
+    const url = this.newVideoUrl.trim();
+    if (!/^https?:\/\//i.test(url)) {
+      this.videoError = 'URL inválida';
+      return;
+    }
+    this.videoError = '';
+    this.productVideos = [...this.productVideos, { type: 'url', url, title: this.newVideoTitle.trim() || undefined }];
+    this.newVideoUrl = '';
+    this.newVideoTitle = '';
+  }
+
+  async onVideoFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files || []);
+    input.value = '';
+    if (!files.length) return;
+    const isVideo = (f: File) => /^video\/(mp4|webm|quicktime)$/.test(f.type) || /\.(mp4|webm|mov)$/i.test(f.name);
+    const rejected = files.filter(f => !isVideo(f) || f.size > 200 * 1024 * 1024);
+    const accepted = files.filter(f => !rejected.includes(f));
+    this.videoError = rejected.length
+      ? `No se subieron (formato no soportado o más de 200MB): ${rejected.map(f => f.name).join(', ')}`
+      : '';
+    if (!accepted.length) return;
+
+    // Typed title only applies when uploading a single file; otherwise use each file name
+    const typedTitle = accepted.length === 1 ? this.newVideoTitle.trim() : '';
+    this.isUploadingVideo = true;
+    for (const [index, file] of accepted.entries()) {
+      this.videoUploadLabel = accepted.length > 1 ? `${index + 1}/${accepted.length} · ${file.name}` : file.name;
+      this.videoUploadProgress = 0;
+      this.cdr.detectChanges();
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const storagePath = `products/videos/${this.editingProductId || Date.now()}-${Date.now()}-${safeName}`;
+      const title = typedTitle || file.name.replace(/\.[^.]+$/, '');
+      try {
+        const url = await this.uploadVideoFile(file, storagePath);
+        this.productVideos = [...this.productVideos, { type: 'upload', url, storagePath, title }];
+      } catch {
+        this.videoError = `Error al subir el vídeo: ${file.name}`;
+      }
+    }
+    this.newVideoTitle = '';
+    this.isUploadingVideo = false;
+    this.videoUploadLabel = '';
+    this.cdr.detectChanges();
+  }
+
+  private uploadVideoFile(file: File, storagePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.storageService.uploadFile(file, storagePath).subscribe({
+        next: (p) => {
+          this.videoUploadProgress = Math.round(p.progress);
+          this.cdr.detectChanges();
+          if (p.downloadURL) resolve(p.downloadURL);
+        },
+        error: reject
+      });
+    });
+  }
+
+  removeVideo(index: number) {
+    const video = this.productVideos[index];
+    this.productVideos = this.productVideos.filter((_, i) => i !== index);
+    if (video?.type === 'upload' && video.storagePath) {
+      this.storageService.deleteFile(video.url).catch(() => {});
+    }
+  }
+
   setActiveDescriptionLanguage(lang: Language) {
     this.activeDescriptionLang = lang;
     this.updateSEOPreview();
@@ -590,6 +674,7 @@ export class QuickAddProductComponent implements OnInit {
         descriptionTranslations: Object.keys(descriptionTranslations).length ? descriptionTranslations : undefined,
         categoryId: formValue.categoryId,
         materialId: formValue.materialId,
+        materialOptionIds: formValue.materialOptionIds || [],
         price: parseFloat(formValue.price) || 0,
         stock: parseInt(formValue.stock) || 0,
         sku: formValue.sku || '',
@@ -607,6 +692,7 @@ export class QuickAddProductComponent implements OnInit {
         coverImage: coverImageId,
         imageUrl: coverImageUrl,
         galleryImageIds: galleryMediaIds.length > 0 ? galleryMediaIds : undefined,
+        videos: this.productVideos,
         seo: {
           title: defaultSeoTitle || formValue.title,
           metaDescription: defaultSeoMeta || defaultDescription || '',

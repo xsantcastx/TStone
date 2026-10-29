@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { SettingsService } from '../../../services/settings.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConsentService } from '../../../services/consent.service';
@@ -12,6 +13,7 @@ import { ConsentService } from '../../../services/consent.service';
 })
 export class CookieBannerComponent implements OnInit {
   private consentService = inject(ConsentService);
+  settings$ = inject(SettingsService).settings$;
   
   showBanner = false;
   showSettings = false;

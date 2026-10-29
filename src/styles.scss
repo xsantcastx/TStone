@@ -62,9 +62,10 @@ a:hover {
     color: #1a1a1a;
   }
 
-  .body-dark button,
-  .body-dark input[type="button"],
-  .body-dark input[type="submit"] {
+  /* :where() keeps specificity low so text-* utilities on buttons still win */
+  :where(.body-dark) button,
+  :where(.body-dark) input[type="button"],
+  :where(.body-dark) input[type="submit"] {
     color: #1a1a1a;
   }
 
@@ -558,11 +559,9 @@ select:focus {
   border-color: var(--ts-accent);
 }
 
-/* Ensure button text is readable */
+/* Ensure button text is readable on solid colored backgrounds (not light tints like bg-red-50 or hover: variants) */
 button.bg-ts-accent,
-button[class*="bg-blue"],
-button[class*="bg-red"],
-button[class*="bg-green"] {
+button:is(.bg-blue-500, .bg-blue-600, .bg-blue-700, .bg-red-500, .bg-red-600, .bg-red-700, .bg-green-500, .bg-green-600, .bg-green-700) {
   color: white !important;
 }
 

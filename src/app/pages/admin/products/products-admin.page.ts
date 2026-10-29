@@ -7,10 +7,12 @@ import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { CategoryService } from '../../../services/category.service';
 import { MaterialService } from '../../../services/material.service';
+import { MaterialOptionService } from '../../../services/material-option.service';
+import { MaterialTagPickerComponent } from '../../../shared/components/material-tag-picker/material-tag-picker.component';
 import { StorageService } from '../../../services/storage.service';
 import { MediaService } from '../../../services/media.service';
 import { ProductTranslationMigrationService } from '../../../services/product-translation-migration.service';
-import { LanguageCode, Product, TranslatedTextMap } from '../../../models/product';
+import { LanguageCode, Product, ProductVideo, TranslatedTextMap } from '../../../models/product';
 import { Category, Material, TemplateComposition } from '../../../models/catalog';
 import { MediaCreateInput, MEDIA_VALIDATION } from '../../../models/media';
 import { GalleryUploaderComponent } from '../../../shared/components/gallery-uploader/gallery-uploader.component';
@@ -29,7 +31,7 @@ interface CatalogOption {
 @Component({
   selector: 'app-products-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, TranslateModule, GalleryUploaderComponent, AdminSidebarComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, TranslateModule, GalleryUploaderComponent, AdminSidebarComponent, MaterialTagPickerComponent],
   templateUrl: './products-admin.page.html',
   styleUrl: './products-admin.page.scss'
 })
@@ -56,6 +58,16 @@ export class ProductsAdminComponent implements OnInit {
   products: Product[] = [];
   categories: Category[] = [];
   materials: Material[] = [];
+
+
+  // Videos
+  productVideos: ProductVideo[] = [];
+  newVideoUrl = '';
+  newVideoTitle = '';
+  videoUploadProgress = 0;
+  videoUploadLabel = '';
+  isUploadingVideo = false;
+  videoError = '';
 
   catalogOptions: CatalogOption[] = [];
   filteredCatalogOptions: CatalogOption[] = [];
@@ -132,6 +144,7 @@ export class ProductsAdminComponent implements OnInit {
       name: ['', [Validators.required, Validators.minLength(3)]],
       categoryId: ['', [Validators.required]],
       materialId: ['', [Validators.required]],
+      materialOptionIds: [[] as string[]],
       descriptionTranslations: this.createTranslationFormGroup(),
       seoTitleTranslations: this.createTranslationFormGroup(),
       seoMetaTranslations: this.createTranslationFormGroup(),
@@ -233,6 +246,76 @@ export class ProductsAdminComponent implements OnInit {
     } catch (error) {
       console.error('Error loading master data:', error);
       this.errorMessage = 'Failed to load categories/materials. Please run seed first.';
+    }
+  }
+
+  // ===== Videos =====
+  addVideoUrl() {
+    const url = this.newVideoUrl.trim();
+    if (!/^https?:\/\//i.test(url)) {
+      this.videoError = 'URL inválida';
+      return;
+    }
+    this.videoError = '';
+    this.productVideos = [...this.productVideos, { type: 'url', url, title: this.newVideoTitle.trim() || undefined }];
+    this.newVideoUrl = '';
+    this.newVideoTitle = '';
+  }
+
+  async onVideoFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files || []);
+    input.value = '';
+    if (!files.length) return;
+    const isVideo = (f: File) => /^video\/(mp4|webm|quicktime)$/.test(f.type) || /\.(mp4|webm|mov)$/i.test(f.name);
+    const rejected = files.filter(f => !isVideo(f) || f.size > 200 * 1024 * 1024);
+    const accepted = files.filter(f => !rejected.includes(f));
+    this.videoError = rejected.length
+      ? `No se subieron (formato no soportado o más de 200MB): ${rejected.map(f => f.name).join(', ')}`
+      : '';
+    if (!accepted.length) return;
+
+    // Typed title only applies when uploading a single file; otherwise use each file name
+    const typedTitle = accepted.length === 1 ? this.newVideoTitle.trim() : '';
+    this.isUploadingVideo = true;
+    for (const [index, file] of accepted.entries()) {
+      this.videoUploadLabel = accepted.length > 1 ? `${index + 1}/${accepted.length} · ${file.name}` : file.name;
+      this.videoUploadProgress = 0;
+      this.cdr.detectChanges();
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const storagePath = `products/videos/${this.selectedProduct?.id || Date.now()}-${Date.now()}-${safeName}`;
+      const title = typedTitle || file.name.replace(/\.[^.]+$/, '');
+      try {
+        const url = await this.uploadVideoFile(file, storagePath);
+        this.productVideos = [...this.productVideos, { type: 'upload', url, storagePath, title }];
+      } catch {
+        this.videoError = `Error al subir el vídeo: ${file.name}`;
+      }
+    }
+    this.newVideoTitle = '';
+    this.isUploadingVideo = false;
+    this.videoUploadLabel = '';
+    this.cdr.detectChanges();
+  }
+
+  private uploadVideoFile(file: File, storagePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.storageService.uploadFile(file, storagePath).subscribe({
+        next: (p) => {
+          this.videoUploadProgress = Math.round(p.progress);
+          this.cdr.detectChanges();
+          if (p.downloadURL) resolve(p.downloadURL);
+        },
+        error: reject
+      });
+    });
+  }
+
+  removeVideo(index: number) {
+    const video = this.productVideos[index];
+    this.productVideos = this.productVideos.filter((_, i) => i !== index);
+    if (video?.type === 'upload' && video.storagePath) {
+      this.storageService.deleteFile(video.url).catch(() => {});
     }
   }
 
@@ -707,6 +790,8 @@ export class ProductsAdminComponent implements OnInit {
     this.catalogSearchTerm = '';
     this.applyCatalogFilter('');
     this.currentStep = 1;
+    this.productVideos = [];
+    this.videoError = '';
 
     
 
@@ -717,6 +802,8 @@ export class ProductsAdminComponent implements OnInit {
       categoryId: '',
 
       materialId: '',
+
+      materialOptionIds: [],
 
       descriptionTranslations: this.buildTranslationResetValue(),
 
@@ -765,6 +852,8 @@ export class ProductsAdminComponent implements OnInit {
     
     const usageStr = product.specs?.usage?.join(', ') || 'Cocinas, Baños, Fachadas';
     
+    this.productVideos = [...(product.videos || [])];
+    this.videoError = '';
     this.productForm.patchValue({
 
       name: product.name,
@@ -772,6 +861,8 @@ export class ProductsAdminComponent implements OnInit {
       categoryId: product.categoryId || '',
 
       materialId: product.materialId || '',
+
+      materialOptionIds: MaterialOptionService.idsOf(product),
 
       price: product.price || '',
 
@@ -820,6 +911,10 @@ export class ProductsAdminComponent implements OnInit {
     }
     this.selectedCoverFile = null;
     this.coverPreview = null;
+    this.productVideos = [];
+    this.newVideoUrl = '';
+    this.newVideoTitle = '';
+    this.videoError = '';
     this.galleryFiles = [];
     this.galleryMediaIds = [];
     this.uploadProgress = 0;
@@ -1023,6 +1118,8 @@ export class ProductsAdminComponent implements OnInit {
         slug,
         categoryId: formData.categoryId,
         materialId: formData.materialId,
+        materialOptionIds: formData.materialOptionIds || [],
+        videos: this.productVideos,
         status,
         description: defaultDescription || '',
         descriptionTranslations: Object.keys(descriptionTranslations).length ? descriptionTranslations : undefined,

@@ -8,7 +8,8 @@
     "contact": "Contact",
     "cart": "Panier",
     "login": "Espace Client",
-    "admin": "Admin"
+    "admin": "Admin",
+    "lumina": "LUMINA"
   },
   "hero": {
     "title": "Surfaces en Porcelaine Grand Format",
@@ -19,7 +20,7 @@
     "why_preheading": "Excellence TopStone",
     "hero": {
       "tagline": "Céramique technique depuis Castellón",
-      "heading": "Des matériaux nobles pour murs et sols inspirés de la pierre naturelle.",
+      "heading": "Surfaces techniques depuis Castellón",
       "description": "Chez The Stone, nous sélectionnons des onyx, marbres et quartzites qui allient beauté et résistance. Nous concevons chaque collection pour des projets résidentiels et contract exigeants.",
       "primaryCta": "Voir les collections",
       "secondaryCta": "Demander un conseil",
@@ -71,7 +72,9 @@
       "material_all": "Tous les matériaux",
       "search": "Rechercher",
       "search_placeholder": "Nom du produit...",
-      "clear": "Réinitialiser les filtres"
+      "clear": "Réinitialiser les filtres",
+      "article": "Article",
+      "article_all": "Tous les articles"
     },
     "loading": "Chargement des produits...",
     "results": "Affichage de {{filtered}} sur {{total}} produits",
@@ -111,7 +114,9 @@
     "dimensions": "Dimensions",
     "applications": "Applications",
     "description": "Description",
-    "filterBy": "Filtrer par"
+    "filterBy": "Filtrer par",
+    "material": "Matériau",
+    "videos": "Vidéos"
   },
   "gallery": {
     "title": "Galerie de Projets",
@@ -236,7 +241,7 @@
     },
     "table": {
       "thickness": "Épaisseur",
-      "pieces_per_pallet": "Pièces/Palette",
+      "pieces_per_pallet": "Pièces par Palette",
       "approx_weight": "Poids Approx.",
       "pallet_dimensions": "Dimensions Palette",
       "volume": "Volume",
@@ -246,10 +251,8 @@
       "standard": "Norme",
       "surface_per_piece": "Surface par Pièce",
       "weight_per_piece": "Poids Approx. par Pièce",
-      "pieces_per_pallet": "Pièces par Palette",
       "total_surface": "Surface Totale",
       "total_weight": "Poids Total Palette",
-      "pallet_dimensions": "Dimensions Palette",
       "piece_info": "Informations par Pièce",
       "pallet_info": "Informations par Palette",
       "pieces": "pièces"
@@ -261,7 +264,9 @@
       "specifications": "Spécifications Techniques",
       "datasheets": "Fiches Techniques",
       "planks": "Planches"
-    }
+    },
+    "marble_technical": "Marbre Technique",
+    "marble_empty": "Les informations sur le Marbre Technique seront bientôt disponibles."
   },
   "client": {
     "title": "Espace Client",
@@ -303,8 +308,10 @@
     "order": "Commande",
     "order_number": "Numéro de Commande",
     "order_date": "Date",
-    "order_status": "Statut",    "order_total": "Total",
-    "order_message": "Message de la commande",    "quantity": "Quantité",
+    "order_status": "Statut",
+    "order_total": "Total",
+    "order_message": "Message de la commande",
+    "quantity": "Quantité",
     "tracking": "Suivi",
     "shipping_address": "Adresse de Livraison",
     "all_orders": "Toutes",
@@ -464,7 +471,22 @@
     "tags_placeholder": "ambiance, onyx, intérieur",
     "tags_hint": "Mots-clés séparés par des virgules pour le filtrage et la recherche.",
     "related_products": "Produits associés",
-    "related_products_empty": "Aucun produit publié pour le moment."
+    "related_products_empty": "Aucun produit publié pour le moment.",
+    "product_article": "Article",
+    "select_article": "Sélectionner l'article",
+    "product_material_option": "Matériau",
+    "select_material_option": "Sélectionner le matériau",
+    "add_option": "Ajouter",
+    "edit_option": "Modifier",
+    "delete_option": "Supprimer",
+    "material_option_name": "Nom du matériau",
+    "save_option": "Enregistrer",
+    "videos": "Vidéos",
+    "video_title": "Titre de la vidéo (facultatif)",
+    "video_upload": "Téléverser une vidéo",
+    "video_url": "URL YouTube, Vimeo ou mp4",
+    "add_video": "Ajouter",
+    "remove_video": "Retirer"
   },
   "cart": {
     "title": "Panier d'Intérêt",
@@ -487,7 +509,8 @@
     "download": "Télécharger",
     "item": "article",
     "items": "articles"
-  },  "promotions": {
+  },
+  "promotions": {
     "tag": "Offres Spéciales",
     "title": "Promotions",
     "subtitle": "Découvrez nos offres spéciales sur les surfaces en porcelaine de haute qualité",
@@ -500,7 +523,8 @@
     "newsletter_title": "Voulez-vous recevoir nos offres?",
     "newsletter_description": "Contactez-nous pour recevoir des informations sur nos promotions exclusives et nos lancements de produits.",
     "contact_us": "Nous Contacter"
-  },  "footer": {
+  },
+  "footer": {
     "default_site_name": "TopStone",
     "default_tagline": "Des surfaces en grès cérame grand format qui subliment chaque projet grâce au design, à la résistance et à la polyvalence.",
     "default_email": "info@topstone.com",
@@ -924,5 +948,24 @@
         "terms": "Conditions de Service"
       }
     }
+  },
+  "lumina": {
+    "title": "LUMINA",
+    "subtitle": "Surface frittée translucide Top Stone",
+    "open_pdf": "Ouvrir le PDF",
+    "unavailable": "Le catalogue LUMINA n'est pas disponible pour le moment.",
+    "highlights_title": "Caractéristiques principales",
+    "highlights": {
+      "food_contact": "Apte au contact alimentaire",
+      "through_body": "Réalisme dans toute la masse",
+      "large_formats": "Grands formats",
+      "translucent": "Effet translucide pour projets rétroéclairés",
+      "heat_resistance": "Résistance à la chaleur jusqu'à 220 °C",
+      "low_silica": "Faible teneur en silice cristalline",
+      "impact": "Meilleure résistance aux chocs",
+      "stain": "Résistance aux taches"
+    },
+    "finish": "Finition Calacatta, 320×160 cm, 20 mm d'épaisseur.",
+    "designs_title": "Designs"
   }
 }

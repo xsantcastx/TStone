@@ -1,49 +1,34 @@
-@if (latestCatalog$ | async; as catalog) {
-  <!-- Primary Variant - Full Card -->
-  @if (variant === 'primary') {
-    <div class="catalog-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-      <div class="flex items-start gap-4">
-        <!-- PDF Icon -->
-        <div class="flex-shrink-0">
-          <div class="w-16 h-16 bg-red-500 rounded-lg flex items-center justify-center text-white shadow-md">
-            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div class="flex-1">
-          <h3 class="text-lg font-bold text-gray-900 mb-1">
-            Catálogo de Productos
-          </h3>
-          @if (showDescription && catalog.description) {
-            <p class="text-sm text-gray-600 mb-2">{{ catalog.description }}</p>
-          }
-          <div class="flex items-center gap-3 text-sm text-gray-500 mb-3">
-            @if (catalog.version) {
-              <span class="font-medium">{{ catalog.version }}</span>
-            }
-            <span>•</span>
-            <span>{{ formatFileSize(catalog.fileSize) }} PDF</span>
-          </div>
-          
-          <a
-            [href]="catalog.fileUrl"
-            target="_blank"
-            download
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md hover:shadow-lg"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Descargar Catálogo
+@if (variant === 'primary') {
+  @if (publicCatalogs$ | async; as catalogs) {
+    @if (catalogs.length > 0) {
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        @for (catalog of catalogs; track catalog.id) {
+          <a [href]="catalog.fileUrl" target="_blank" rel="noopener"
+             class="catalog-card group block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+            <div class="aspect-[3/4] bg-gray-100 flex items-center justify-center overflow-hidden">
+              @if (catalog.previewUrl) {
+                <img [src]="catalog.previewUrl" [alt]="catalog.name" loading="lazy"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              } @else {
+                <div class="w-16 h-16 bg-red-500 rounded-lg flex items-center justify-center text-white shadow-md">
+                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              }
+            </div>
+            <div class="p-3">
+              <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">{{ catalog.name }}</h3>
+              <p class="text-xs text-gray-500 mt-1">PDF · {{ formatFileSize(catalog.fileSize) }}</p>
+            </div>
           </a>
-        </div>
+        }
       </div>
-    </div>
+    }
   }
+}
 
+@if (latestCatalog$ | async; as catalog) {
   <!-- Secondary Variant - Compact Card -->
   @if (variant === 'secondary') {
     <div class="catalog-card-secondary bg-white border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 transition-colors">

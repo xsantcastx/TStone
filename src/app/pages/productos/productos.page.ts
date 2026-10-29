@@ -8,6 +8,7 @@ import { ProductsService } from '../../services/products.service';
 import { MediaService } from '../../services/media.service';
 import { CategoryService } from '../../services/category.service';
 import { MaterialService } from '../../services/material.service';
+import { MaterialOptionService } from '../../services/material-option.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService, UserProfile } from '../../services/auth.service';
 import { PricingService } from '../../services/pricing.service';
@@ -30,6 +31,7 @@ export class ProductosPageComponent implements OnInit {
   private mediaService = inject(MediaService);
   private categoryService = inject(CategoryService);
   private materialService = inject(MaterialService);
+  private materialOptionService = inject(MaterialOptionService);
   private cartService = inject(CartService);
   private authService = inject(AuthService);
   private pricingService = inject(PricingService);
@@ -51,6 +53,7 @@ export class ProductosPageComponent implements OnInit {
   // Filter options
   categories: Category[] = [];
   materials: Material[] = [];
+  materialOptionNames = new Map<string, string>();
   selectedCategoryId = '';
   selectedMaterialId = '';
   searchTerm = '';
@@ -62,6 +65,11 @@ export class ProductosPageComponent implements OnInit {
     // Load filter options and products in parallel
     if (isPlatformBrowser(this.platformId)) {
       console.log('🚀 Productos page initializing...');
+
+      this.materialOptionService.getNameMap().then(names => {
+        this.materialOptionNames = names;
+        this.cdr.detectChanges();
+      });
       
       // Subscribe to user profile for personalized pricing
       this.authService.userProfile$.subscribe(profile => {
@@ -311,5 +319,11 @@ export class ProductosPageComponent implements OnInit {
     if (value instanceof Date) return value;
     if (value instanceof Timestamp) return value.toDate();
     return null;
+  }
+
+  getMaterialOptionNames(producto: Product): string[] {
+    return MaterialOptionService.idsOf(producto)
+      .map(id => this.materialOptionNames.get(id))
+      .filter((name): name is string => !!name);
   }
 }

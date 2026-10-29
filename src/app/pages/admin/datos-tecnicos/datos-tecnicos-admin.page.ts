@@ -9,7 +9,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ImageOptimizationService } from '../../../services/image-optimization.service';
 import { DatosTecnicosTranslationService } from '../../../services/datos-tecnicos-translation.service';
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
-import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento, TestResult, PromocionMarketing } from '../../../core/services/data.service';
+import { DatosTecnicosData, AcabadoSuperficie, FichaTecnica, PackingInfo, AcabadoBorde, FijacionesFachada, Mantenimiento, TestResult, PromocionMarketing, MarmolTecnicoData, CustomTechSection, CustomTechItem, resolveTechSectionOrder } from '../../../core/services/data.service';
 import { LanguageService, Language } from '../../../core/services/language.service';
 import { LanguageCode, TranslatedTextMap } from '../../../models/product';
 
@@ -55,9 +55,11 @@ export class DatosTecnicosAdminComponent implements OnInit {
   isSaving = signal(false);
   successMessage = signal('');
   errorMessage = signal('');
-  activeTab = signal<'specs' | 'acabados' | 'fichas' | 'packing' | 'bordes' | 'fachada' | 'mantenimiento' | 'tests' | 'promocion'>('specs');
+  // Built-in tab keys, or 'custom:<sectionId>' for admin-created sections
+  activeTab = signal<string>('specs');
 
   // Editing states
+  editingMarmolSpec: { key: string; value: string } = { key: '', value: '' };
   editingSpec: { key: string; value: string } = { key: '', value: '' };
   editingVentaja = '';
   editingProducto = '';
@@ -185,6 +187,241 @@ export class DatosTecnicosAdminComponent implements OnInit {
   getSpecEntries(): Array<{key: string, value: string}> {
     return Object.entries(this.datosTecnicos().especificacionesTecnicas)
       .map(([key, value]) => ({ key, value }));
+  }
+
+  // Mármol Técnico
+  // ===== Custom sections (admin-created tabs) =====
+  get customSections(): CustomTechSection[] {
+    return this.datosTecnicos().customSections || [];
+  }
+
+  private setCustomSections(sections: CustomTechSection[]): void {
+    this.datosTecnicos.set({ ...this.datosTecnicos(), customSections: sections });
+  }
+
+  private patchCustomSection(id: string, patch: Partial<CustomTechSection>): void {
+    this.setCustomSections(this.customSections.map(s => s.id === id ? { ...s, ...patch } : s));
+  }
+
+  addCustomSection(): void {
+    const id = `sec-${Date.now().toString(36)}`;
+    this.setCustomSections([
+      ...this.customSections,
+      { id, title: 'Nueva sección', titleTranslations: {}, descripcion: '', descripcionTranslations: {}, items: [] }
+    ]);
+    this.activeTab.set(`custom:${id}`);
+  }
+
+  removeCustomSection(section: CustomTechSection): void {
+    if (!confirm(`¿Eliminar la sección "${section.title}"? Se aplicará al guardar.`)) return;
+    this.setCustomSections(this.customSections.filter(s => s.id !== section.id));
+    this.activeTab.set('specs');
+  }
+
+  // ===== Tab order (drag & drop or arrows) — applies to built-in and custom sections =====
+  draggingTab: string | null = null;
+
+  get sectionOrder(): string[] {
+    return resolveTechSectionOrder(this.datosTecnicos());
+  }
+
+  tabOrder(key: string): number {
+    return this.sectionOrder.indexOf(key);
+  }
+
+  private setSectionOrder(order: string[]): void {
+    this.datosTecnicos.set({ ...this.datosTecnicos(), sectionOrder: order });
+  }
+
+  moveTab(key: string, delta: number): void {
+    const order = this.sectionOrder;
+    const from = order.indexOf(key);
+    const to = from + delta;
+    if (from < 0 || to < 0 || to >= order.length) return;
+    [order[from], order[to]] = [order[to], order[from]];
+    this.setSectionOrder(order);
+  }
+
+  isTabHidden(key: string): boolean {
+    return (this.datosTecnicos().hiddenSections || []).includes(key);
+  }
+
+  toggleTabHidden(key: string): void {
+    const hidden = this.datosTecnicos().hiddenSections || [];
+    this.datosTecnicos.set({
+      ...this.datosTecnicos(),
+      hiddenSections: hidden.includes(key) ? hidden.filter(k => k !== key) : [...hidden, key]
+    });
+  }
+
+  moveTabToStart(key: string): void {
+    this.setSectionOrder([key, ...this.sectionOrder.filter(k => k !== key)]);
+  }
+
+  onTabDragStart(key: string, event: DragEvent): void {
+    this.draggingTab = key;
+    event.dataTransfer?.setData('text/plain', key);
+    if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+  }
+
+  // Where the dragged tab would land: before or after the hovered tab (left/right half)
+  dropTarget: { key: string; after: boolean } | null = null;
+
+  onTabDragOver(key: string, event: DragEvent): void {
+    if (!this.draggingTab) return;
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    if (key === this.draggingTab) {
+      this.dropTarget = null;
+      return;
+    }
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const after = event.clientX > rect.left + rect.width / 2;
+    if (this.dropTarget?.key !== key || this.dropTarget.after !== after) {
+      this.dropTarget = { key, after };
+    }
+  }
+
+  onTabDragLeave(key: string, event: DragEvent): void {
+    const related = event.relatedTarget as Node | null;
+    if (related && (event.currentTarget as HTMLElement).contains(related)) return;
+    if (this.dropTarget?.key === key) this.dropTarget = null;
+  }
+
+  onTabDragEnd(): void {
+    this.draggingTab = null;
+    this.dropTarget = null;
+  }
+
+  isDropIndicator(key: string, after: boolean): boolean {
+    return this.dropTarget?.key === key && this.dropTarget.after === after;
+  }
+
+  onTabDrop(targetKey: string, event: DragEvent): void {
+    event.preventDefault();
+    const key = this.draggingTab;
+    const after = this.dropTarget?.key === targetKey ? this.dropTarget.after : false;
+    this.onTabDragEnd();
+    if (!key || key === targetKey) return;
+    const order = this.sectionOrder.filter(k => k !== key);
+    order.splice(order.indexOf(targetKey) + (after ? 1 : 0), 0, key);
+    this.setSectionOrder(order);
+  }
+
+
+  updateCustomSectionText(id: string, field: 'title' | 'descripcion', value: string): void {
+    this.patchCustomSection(id, { [field]: value });
+  }
+
+  updateCustomSectionTranslation(section: CustomTechSection, field: 'titleTranslations' | 'descripcionTranslations', lang: Language, value: string): void {
+    const translations: TranslatedTextMap = { ...(section[field] || {}) };
+    if (value.trim()) {
+      translations[lang as LanguageCode] = value;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    this.patchCustomSection(section.id, { [field]: translations });
+  }
+
+  addCustomItem(section: CustomTechSection): void {
+    this.patchCustomSection(section.id, {
+      items: [...section.items, { label: '', labelTranslations: {}, value: '', valueTranslations: {} }]
+    });
+  }
+
+  removeCustomItem(section: CustomTechSection, index: number): void {
+    this.patchCustomSection(section.id, { items: section.items.filter((_, i) => i !== index) });
+  }
+
+  updateCustomItem(section: CustomTechSection, index: number, field: 'label' | 'value', value: string): void {
+    this.patchCustomSection(section.id, {
+      items: section.items.map((item, i) => i === index ? { ...item, [field]: value } : item)
+    });
+  }
+
+  updateCustomItemTranslation(section: CustomTechSection, index: number, field: 'labelTranslations' | 'valueTranslations', lang: Language, value: string): void {
+    this.patchCustomSection(section.id, {
+      items: section.items.map((item, i) => {
+        if (i !== index) return item;
+        const translations: TranslatedTextMap = { ...(item[field] || {}) };
+        if (value.trim()) {
+          translations[lang as LanguageCode] = value;
+        } else {
+          delete translations[lang as LanguageCode];
+        }
+        return { ...item, [field]: translations } as CustomTechItem;
+      })
+    });
+  }
+
+  private getMarmol(): MarmolTecnicoData {
+    return this.datosTecnicos().marmolTecnico || { descripcion: '', descripcionTranslations: {}, especificaciones: {}, especificacionesTranslations: {} };
+  }
+
+  private setMarmol(marmol: MarmolTecnicoData): void {
+    this.datosTecnicos.set({ ...this.datosTecnicos(), marmolTecnico: marmol });
+  }
+
+  getMarmolEntries(): Array<{key: string, value: string}> {
+    return Object.entries(this.getMarmol().especificaciones || {}).map(([key, value]) => ({ key, value }));
+  }
+
+  addMarmolSpec(): void {
+    if (!this.editingMarmolSpec.key || !this.editingMarmolSpec.value) return;
+    const marmol = this.getMarmol();
+    this.setMarmol({
+      ...marmol,
+      especificaciones: { ...(marmol.especificaciones || {}), [this.editingMarmolSpec.key]: this.editingMarmolSpec.value }
+    });
+    this.editingMarmolSpec = { key: '', value: '' };
+  }
+
+  removeMarmolSpec(key: string): void {
+    const marmol = this.getMarmol();
+    const specs = { ...(marmol.especificaciones || {}) };
+    delete specs[key];
+    const translations = { ...(marmol.especificacionesTranslations || {}) };
+    delete translations[key];
+    this.setMarmol({ ...marmol, especificaciones: specs, especificacionesTranslations: translations });
+  }
+
+  updateMarmolSpec(key: string, value: string): void {
+    const marmol = this.getMarmol();
+    this.setMarmol({ ...marmol, especificaciones: { ...(marmol.especificaciones || {}), [key]: value } });
+  }
+
+  updateMarmolSpecTranslation(key: string, lang: Language, value: string): void {
+    const marmol = this.getMarmol();
+    const all = { ...(marmol.especificacionesTranslations || {}) };
+    const translations: TranslatedTextMap = { ...(all[key] || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    if (Object.keys(translations).length > 0) {
+      all[key] = translations;
+    } else {
+      delete all[key];
+    }
+    this.setMarmol({ ...marmol, especificacionesTranslations: all });
+  }
+
+  updateMarmolDescripcion(value: string): void {
+    this.setMarmol({ ...this.getMarmol(), descripcion: value });
+  }
+
+  updateMarmolDescripcionTranslation(lang: Language, value: string): void {
+    const marmol = this.getMarmol();
+    const translations: TranslatedTextMap = { ...(marmol.descripcionTranslations || {}) };
+    const trimmed = value.trim();
+    if (trimmed) {
+      translations[lang as LanguageCode] = trimmed;
+    } else {
+      delete translations[lang as LanguageCode];
+    }
+    this.setMarmol({ ...marmol, descripcionTranslations: translations });
   }
 
   // Acabados Superficie

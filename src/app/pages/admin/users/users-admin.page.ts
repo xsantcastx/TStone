@@ -164,14 +164,21 @@ export class UsersAdminComponent implements OnInit {
       : 'inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 border border-green-200';
   }
 
+  /** Display name with stray "undefined"/"null" tokens (from missing first/last names) removed. */
+  getUserDisplayName(user: UserProfile): string {
+    const cleaned = (user.displayName || '')
+      .split(/\s+/)
+      .filter(part => part && part !== 'undefined' && part !== 'null')
+      .join(' ');
+    return cleaned || (user.email || '').split('@')[0];
+  }
+
   getUserInitials(user: UserProfile): string {
-    const name = user.displayName && user.displayName !== 'undefined' ? user.displayName : user.email.split('@')[0];
-    
-    const parts = name.split(' ');
+    const parts = this.getUserDisplayName(user).split(' ').filter(Boolean);
     if (parts.length >= 2) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return name.substring(0, 2).toUpperCase();
+    return (parts[0] || '?').substring(0, 2).toUpperCase();
   }
 
   formatDate(timestamp: any): string {

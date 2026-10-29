@@ -9,6 +9,7 @@ import { ProductFirestoreService, FirestoreProduct } from '../../../services/pro
 import { SettingsService } from '../../../services/settings.service';
 import { LanguageSelectorComponent } from '../../../shared/components/language-selector/language-selector.component';
 import { CartButtonComponent } from '../../../shared/components/cart-button/cart-button.component';
+import { CatalogService } from '../../../services/catalog.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -26,6 +27,9 @@ export class NavbarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly productService = inject(ProductFirestoreService);
   private readonly settingsService = inject(SettingsService);
+  private readonly catalogService = inject(CatalogService);
+
+  lumina$ = this.catalogService.luminaCatalog$;
   
   scrolled = false;
   mobileOpen = false;

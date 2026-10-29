@@ -4,13 +4,10 @@
 <!-- Colecciones por Grosor -->
 <section class="py-20 lg:py-28 bg-ts-paper">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-16">
+    <div class="text-center mb-12">
       <h2 class="font-serif text-4xl lg:text-5xl text-ts-bg mb-4">
         {{ 'home.collections.title' | translate }}
       </h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        {{ 'home.collections.subtitle' | translate }}
-      </p>
     </div>
 
     <!-- 12mm Collection -->
@@ -42,11 +39,10 @@
                 <img [src]="producto.imageUrl || producto.coverImage || 'assets/placeholder.jpg'" 
                      [alt]="producto.name"
                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     loading="lazy"/>
+                     loading="lazy" decoding="async"/>
               </div>
               <div class="p-6">
-                <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.name}}</h4>
-                <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
+                <h4 class="font-serif text-xl mb-3 text-ts-bg">{{producto.name}}</h4>
                 <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                    class="text-ts-accent hover:underline font-medium">
                   {{ 'home.collections.view_details' | translate }} &rarr;
@@ -88,11 +84,10 @@
                 <img [src]="producto.imageUrl || producto.coverImage || 'assets/placeholder.jpg'" 
                      [alt]="producto.name"
                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     loading="lazy"/>
+                     loading="lazy" decoding="async"/>
               </div>
               <div class="p-6">
-                <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.name}}</h4>
-                <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
+                <h4 class="font-serif text-xl mb-3 text-ts-bg">{{producto.name}}</h4>
                 <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                    class="text-ts-accent hover:underline font-medium">
                   {{ 'home.collections.view_details' | translate }} &rarr;
@@ -134,11 +129,10 @@
                 <img [src]="producto.imageUrl || producto.coverImage || 'assets/placeholder.jpg'" 
                      [alt]="producto.name"
                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     loading="lazy"/>
+                     loading="lazy" decoding="async"/>
               </div>
               <div class="p-6">
-                <h4 class="font-serif text-xl mb-2 text-ts-bg">{{producto.name}}</h4>
-                <p class="text-sm text-gray-600 mb-4">{{producto.size}} · {{producto.grosor}}</p>
+                <h4 class="font-serif text-xl mb-3 text-ts-bg">{{producto.name}}</h4>
                 <a [routerLink]="['/productos', producto.grosor, producto.slug]" 
                    class="text-ts-accent hover:underline font-medium">
                   {{ 'home.collections.view_details' | translate }} &rarr;
@@ -157,49 +151,34 @@
 <section class="py-20 lg:py-28 body-dark">
   <div class="max-w-6xl mx-auto px-6">
     <div class="text-center mb-14">
-      <p class="uppercase text-xs tracking-[0.3em] text-ts-accent mb-3">
-        {{ 'home.why_preheading' | translate }}
-      </p>
       <h2 class="font-serif text-4xl md:text-5xl text-ts-ink mb-4">
         {{ 'home.why.title' | translate }}
       </h2>
-      <p class="text-lg text-ts-ink-soft max-w-3xl mx-auto">
-        {{ 'home.why.subtitle' | translate }}
-      </p>
     </div>
     <div class="grid md:grid-cols-3 gap-8">
       <article class="p-8 bg-white/5 rounded-3xl border border-white/10 shadow-sm hover:-translate-y-1 transition-all">
         <div class="w-12 h-12 rounded-full bg-ts-accent/20 text-ts-accent flex items-center justify-center text-lg font-semibold mb-5">
           01
         </div>
-        <h3 class="text-2xl font-serif text-ts-ink mb-3">
+        <h3 class="text-2xl font-serif text-ts-ink">
           {{ 'home.why.cards.premium.title' | translate }}
         </h3>
-        <p class="text-ts-ink-soft leading-relaxed">
-          {{ 'home.why.cards.premium.body' | translate }}
-        </p>
       </article>
       <article class="p-8 bg-white/5 rounded-3xl border border-white/10 shadow-sm hover:-translate-y-1 transition-all">
         <div class="w-12 h-12 rounded-full bg-ts-accent/20 text-ts-accent flex items-center justify-center text-lg font-semibold mb-5">
           02
         </div>
-        <h3 class="text-2xl font-serif text-ts-ink mb-3">
+        <h3 class="text-2xl font-serif text-ts-ink">
           {{ 'home.why.cards.resistance.title' | translate }}
         </h3>
-        <p class="text-ts-ink-soft leading-relaxed">
-          {{ 'home.why.cards.resistance.body' | translate }}
-        </p>
       </article>
       <article class="p-8 bg-white/5 rounded-3xl border border-white/10 shadow-sm hover:-translate-y-1 transition-all">
         <div class="w-12 h-12 rounded-full bg-ts-accent/20 text-ts-accent flex items-center justify-center text-lg font-semibold mb-5">
           03
         </div>
-        <h3 class="text-2xl font-serif text-ts-ink mb-3">
+        <h3 class="text-2xl font-serif text-ts-ink">
           {{ 'home.why.cards.versatility.title' | translate }}
         </h3>
-        <p class="text-ts-ink-soft leading-relaxed">
-          {{ 'home.why.cards.versatility.body' | translate }}
-        </p>
       </article>
     </div>
   </div>
@@ -208,38 +187,32 @@
 <!-- CTA Sections -->
 <section class="py-20 lg:py-28 bg-ts-paper">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <!-- CTA Galería -->
-      <div class="relative rounded-2xl overflow-hidden group">
-        <img [src]="galleryImage1?.url || 'assets/Bathroom.jpeg'" 
-             [alt]="getLocalizedAlt(galleryImage1, ('home.gallery.projects_alt' | translate))"
-             class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"/>
-        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-          <div class="text-center text-white">
-            <h3 class="font-serif text-3xl mb-4">{{ 'home.gallery.projects_title' | translate }}</h3>
-            <a routerLink="/galeria" 
-               class="inline-block px-8 py-4 bg-white text-ts-bg rounded-full font-semibold hover:bg-gray-100 transition-colors">
-              {{ 'home.gallery.projects_button' | translate }}
-            </a>
-          </div>
+    <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
+      <!-- Galería -->
+      <a routerLink="/galeria" class="group block">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100">
+          <img [src]="galleryImage1?.url || 'assets/Bathroom.jpeg'"
+               [alt]="getLocalizedAlt(galleryImage1, ('home.gallery.projects_alt' | translate))"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+               loading="lazy" decoding="async"/>
         </div>
-      </div>
-      
-      <!-- CTA Contacto -->
-      <div class="relative rounded-2xl overflow-hidden group">
-        <img [src]="galleryImage2?.url || 'assets/Bathroom2.jpeg'" 
-             [alt]="getLocalizedAlt(galleryImage2, ('home.gallery.contact_alt' | translate))"
-             class="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"/>
-        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-          <div class="text-center text-white">
-            <h3 class="font-serif text-3xl mb-4">{{ 'home.gallery.contact_title' | translate }}</h3>
-            <a routerLink="/contacto" 
-               class="inline-block px-8 py-4 bg-ts-accent text-ts-bg rounded-full font-semibold hover:bg-ts-accent/90 transition-colors">
-              {{ 'home.gallery.contact_button' | translate }}
-            </a>
-          </div>
+        <span class="mt-4 inline-block text-ts-accent font-medium group-hover:underline">
+          {{ 'home.gallery.projects_button' | translate }} &rarr;
+        </span>
+      </a>
+
+      <!-- Contacto -->
+      <a routerLink="/contacto" class="group block">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100">
+          <img [src]="galleryImage2?.url || 'assets/Bathroom2.jpeg'"
+               [alt]="getLocalizedAlt(galleryImage2, ('home.gallery.contact_alt' | translate))"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+               loading="lazy" decoding="async"/>
         </div>
-      </div>
+        <span class="mt-4 inline-block text-ts-accent font-medium group-hover:underline">
+          {{ 'home.gallery.contact_button' | translate }} &rarr;
+        </span>
+      </a>
     </div>
   </div>
 </section>

@@ -1,1 +1,65 @@
-// Component-specific styles if needed
+// Drag & drop indicator for reordering tabs
+.tab-strip > button {
+  position: relative;
+}
+
+// Sections hidden from the public site
+.tab-strip > button.tab-hidden {
+  opacity: 0.55;
+  border-style: dashed !important;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.tab-strip.is-dragging > button {
+  cursor: grabbing;
+}
+
+.tab-strip > button.drop-before::before,
+.tab-strip > button.drop-after::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 4px;
+  border-radius: 9999px;
+  background: var(--ts-accent, #c8a96b);
+  box-shadow: 0 0 0 3px rgba(200, 169, 107, 0.25);
+  pointer-events: none;
+  animation: drop-indicator-pulse 1s ease-in-out infinite;
+}
+
+.tab-strip > button.drop-before::after,
+.tab-strip > button.drop-after::after {
+  content: 'Soltar aquí';
+  position: absolute;
+  top: -1.6rem;
+  transform: translateX(-50%);
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--ts-accent, #c8a96b);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.2rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+// The gap between tabs is 0.5rem, so center the line in it
+.tab-strip > button.drop-before::before { left: calc(-0.25rem - 4px); }
+.tab-strip > button.drop-before::after  { left: calc(-0.25rem - 2px); }
+.tab-strip > button.drop-after::before  { right: calc(-0.25rem - 4px); }
+.tab-strip > button.drop-after::after   { left: calc(100% + 0.25rem + 2px); }
+
+@keyframes drop-indicator-pulse {
+  50% { box-shadow: 0 0 0 5px rgba(200, 169, 107, 0.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-strip > button.drop-before::before,
+  .tab-strip > button.drop-after::before {
+    animation: none;
+  }
+}

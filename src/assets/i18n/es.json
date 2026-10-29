@@ -8,7 +8,8 @@
     "contact": "Contacto",
     "cart": "Carrito",
     "login": "Área Cliente",
-    "admin": "Admin"
+    "admin": "Admin",
+    "lumina": "LUMINA"
   },
   "hero": {
     "title": "Superficies Porcelánicas de Gran Formato",
@@ -19,7 +20,7 @@
     "why_preheading": "Excelencia cerámica",
     "hero": {
       "tagline": "Cerámica técnica desde Castellón",
-      "heading": "Materiales nobles para paredes y suelos inspirados en la piedra natural.",
+      "heading": "Superficies técnicas desde Castellón",
       "description": "En The Stone seleccionamos ónix, mármoles y cuarcitas que combinan belleza y resistencia. Diseñamos cada colección para proyectos residenciales y contract que buscan distinción.",
       "primaryCta": "Ver colecciones",
       "secondaryCta": "Solicitar asesoramiento",
@@ -71,7 +72,9 @@
       "material_all": "Todos los materiales",
       "search": "Buscar",
       "search_placeholder": "Nombre del producto...",
-      "clear": "Limpiar filtros"
+      "clear": "Limpiar filtros",
+      "article": "Artículo",
+      "article_all": "Todos los artículos"
     },
     "loading": "Cargando productos...",
     "results": "Mostrando {{filtered}} de {{total}} productos",
@@ -111,7 +114,9 @@
     "dimensions": "Dimensiones",
     "applications": "Aplicaciones",
     "description": "Descripción",
-    "filterBy": "Filtrar por"
+    "filterBy": "Filtrar por",
+    "material": "Material",
+    "videos": "Vídeos"
   },
   "gallery": {
     "title": "Galería de Proyectos",
@@ -236,7 +241,7 @@
     },
     "table": {
       "thickness": "Grosor",
-      "pieces_per_pallet": "Piezas/Pallet",
+      "pieces_per_pallet": "Piezas por Pallet",
       "approx_weight": "Peso Aprox.",
       "pallet_dimensions": "Dimensiones Pallet",
       "volume": "Volumen",
@@ -246,10 +251,8 @@
       "standard": "Norma",
       "surface_per_piece": "Superficie por Pieza",
       "weight_per_piece": "Peso Aprox. por Pieza",
-      "pieces_per_pallet": "Piezas por Pallet",
       "total_surface": "Superficie Total",
       "total_weight": "Peso Total Pallet",
-      "pallet_dimensions": "Dimensiones Pallet",
       "piece_info": "Información por Pieza",
       "pallet_info": "Información por Pallet",
       "pieces": "piezas"
@@ -261,7 +264,9 @@
       "specifications": "Especificaciones Técnicas",
       "datasheets": "Fichas Técnicas",
       "planks": "Tablones"
-    }
+    },
+    "marble_technical": "Mármol Técnico",
+    "marble_empty": "La información de Mármol Técnico estará disponible próximamente."
   },
   "client": {
     "title": "Área de Cliente",
@@ -594,7 +599,22 @@
     "no_users_found": "No se encontraron usuarios",
     "role_updated": "Rol actualizado exitosamente",
     "user_enabled": "Usuario habilitado exitosamente",
-    "user_disabled": "Usuario deshabilitado exitosamente"
+    "user_disabled": "Usuario deshabilitado exitosamente",
+    "product_article": "Artículo",
+    "select_article": "Seleccionar artículo",
+    "product_material_option": "Material",
+    "select_material_option": "Seleccionar material",
+    "add_option": "Añadir",
+    "edit_option": "Editar",
+    "delete_option": "Eliminar",
+    "material_option_name": "Nombre del material",
+    "save_option": "Guardar",
+    "videos": "Vídeos",
+    "video_title": "Título del vídeo (opcional)",
+    "video_upload": "Subir vídeo",
+    "video_url": "URL de YouTube, Vimeo o mp4",
+    "add_video": "Añadir",
+    "remove_video": "Quitar"
   },
   "cart": {
     "title": "Carrito de Interés",
@@ -1056,5 +1076,24 @@
         "terms": "Términos de Servicio"
       }
     }
+  },
+  "lumina": {
+    "title": "LUMINA",
+    "subtitle": "Superficie sinterizada translúcida de Top Stone",
+    "open_pdf": "Abrir PDF",
+    "unavailable": "El catálogo LUMINA no está disponible por el momento.",
+    "highlights_title": "Características destacadas",
+    "highlights": {
+      "food_contact": "Apto para contacto alimentario",
+      "through_body": "Realismo en toda la masa (full-body)",
+      "large_formats": "Grandes formatos",
+      "translucent": "Efecto translúcido para proyectos retroiluminados",
+      "heat_resistance": "Resistencia al calor hasta 220 °C",
+      "low_silica": "Bajo contenido en sílice cristalina",
+      "impact": "Mayor resistencia al impacto",
+      "stain": "Resistencia a las manchas"
+    },
+    "finish": "Acabado Calacatta, 320×160 cm, 20 mm de espesor.",
+    "designs_title": "Diseños"
   }
 }

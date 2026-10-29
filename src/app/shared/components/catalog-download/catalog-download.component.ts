@@ -15,6 +15,7 @@ export class CatalogDownloadComponent {
   @Input() variant: 'primary' | 'secondary' | 'minimal' = 'primary';
   @Input() showDescription = true;
   
+  publicCatalogs$ = this.catalogService.publicCatalogs$;
   latestCatalog$ = this.catalogService.latestCatalog$;
 
   formatFileSize(bytes: number): string {

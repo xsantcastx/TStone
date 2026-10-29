@@ -34,9 +34,14 @@ export const routes: Routes = [
     title: 'TopStone | Datos Técnicos'
   },
   {
+    path: 'lumina',
+    loadComponent: () => import('./pages/lumina/lumina.page').then(m => m.LuminaPageComponent),
+    title: 'TopStone | LUMINA'
+  },
+  {
     path: 'promociones',
-    loadComponent: () => import('./pages/promociones/promociones.page').then(m => m.PromocionesPageComponent),
-    title: 'TopStone | Promociones'
+    redirectTo: 'lumina',
+    pathMatch: 'full'
   },
   {
     path: 'contacto',

@@ -8,7 +8,8 @@
     "contact": "Contatto",
     "cart": "Carrello",
     "login": "Area Cliente",
-    "admin": "Admin"
+    "admin": "Admin",
+    "lumina": "LUMINA"
   },
   "hero": {
     "title": "Superfici in Porcellana di Grande Formato",
@@ -19,7 +20,7 @@
     "why_preheading": "Eccellenza TopStone",
     "hero": {
       "tagline": "Ceramica tecnica da Castellón",
-      "heading": "Materiali nobili per pareti e pavimenti ispirati alla pietra naturale.",
+      "heading": "Superfici tecniche da Castellón",
       "description": "In The Stone selezioniamo onici, marmi e quarziti che uniscono bellezza e resistenza. Progettiamo ogni collezione per progetti residenziali e contract che cercano distinzione.",
       "primaryCta": "Vedi le collezioni",
       "secondaryCta": "Richiedi consulenza",
@@ -71,7 +72,9 @@
       "material_all": "Tutti i materiali",
       "search": "Cerca",
       "search_placeholder": "Nome del prodotto...",
-      "clear": "Pulisci filtri"
+      "clear": "Pulisci filtri",
+      "article": "Articolo",
+      "article_all": "Tutti gli articoli"
     },
     "loading": "Caricamento prodotti...",
     "results": "Mostrati {{filtered}} di {{total}} prodotti",
@@ -111,7 +114,9 @@
     "dimensions": "Dimensioni",
     "applications": "Applicazioni",
     "description": "Descrizione",
-    "filterBy": "Filtra per"
+    "filterBy": "Filtra per",
+    "material": "Materiale",
+    "videos": "Video"
   },
   "gallery": {
     "title": "Galleria di Progetti",
@@ -236,7 +241,7 @@
     },
     "table": {
       "thickness": "Spessore",
-      "pieces_per_pallet": "Pezzi/Pallet",
+      "pieces_per_pallet": "Pezzi per Pallet",
       "approx_weight": "Peso Approx.",
       "pallet_dimensions": "Dimensioni Pallet",
       "volume": "Volume",
@@ -246,10 +251,8 @@
       "standard": "Norma",
       "surface_per_piece": "Superficie per Pezzo",
       "weight_per_piece": "Peso Approx. per Pezzo",
-      "pieces_per_pallet": "Pezzi per Pallet",
       "total_surface": "Superficie Totale",
       "total_weight": "Peso Totale Pallet",
-      "pallet_dimensions": "Dimensioni Pallet",
       "piece_info": "Informazioni per Pezzo",
       "pallet_info": "Informazioni per Pallet",
       "pieces": "pezzi"
@@ -261,7 +264,9 @@
       "specifications": "Specifiche Tecniche",
       "datasheets": "Schede Tecniche",
       "planks": "Tavole"
-    }
+    },
+    "marble_technical": "Marmo Tecnico",
+    "marble_empty": "Le informazioni sul Marmo Tecnico saranno presto disponibili."
   },
   "client": {
     "title": "Area Cliente",
@@ -303,8 +308,10 @@
     "order": "Ordine",
     "order_number": "Numero Ordine",
     "order_date": "Data",
-    "order_status": "Stato",    "order_total": "Totale",
-    "order_message": "Messaggio dell'ordine",    "quantity": "Quantità",
+    "order_status": "Stato",
+    "order_total": "Totale",
+    "order_message": "Messaggio dell'ordine",
+    "quantity": "Quantità",
     "tracking": "Tracciamento",
     "shipping_address": "Indirizzo di Spedizione",
     "all_orders": "Tutti",
@@ -464,7 +471,22 @@
     "tags_placeholder": "ambiente, onice, interno",
     "tags_hint": "Parole chiave separate da virgole per filtri e ricerca.",
     "related_products": "Prodotti correlati",
-    "related_products_empty": "Non ci sono ancora prodotti pubblicati."
+    "related_products_empty": "Non ci sono ancora prodotti pubblicati.",
+    "product_article": "Articolo",
+    "select_article": "Seleziona articolo",
+    "product_material_option": "Materiale",
+    "select_material_option": "Seleziona materiale",
+    "add_option": "Aggiungi",
+    "edit_option": "Modifica",
+    "delete_option": "Elimina",
+    "material_option_name": "Nome del materiale",
+    "save_option": "Salva",
+    "videos": "Video",
+    "video_title": "Titolo del video (facoltativo)",
+    "video_upload": "Carica video",
+    "video_url": "URL YouTube, Vimeo o mp4",
+    "add_video": "Aggiungi",
+    "remove_video": "Rimuovi"
   },
   "cart": {
     "title": "Carrello di Interesse",
@@ -487,7 +509,8 @@
     "download": "Scarica",
     "item": "articolo",
     "items": "articoli"
-  },  "promotions": {
+  },
+  "promotions": {
     "tag": "Offerte Speciali",
     "title": "Promozioni",
     "subtitle": "Scopri le nostre offerte speciali su superfici in porcellana di alta qualità",
@@ -500,7 +523,8 @@
     "newsletter_title": "Vuoi ricevere le nostre offerte?",
     "newsletter_description": "Contattaci per ricevere informazioni sulle nostre promozioni esclusive e sui lanci di prodotti.",
     "contact_us": "Contattaci"
-  },  "footer": {
+  },
+  "footer": {
     "default_site_name": "TopStone",
     "default_tagline": "Superfici in gres porcellanato di grande formato che valorizzano ogni progetto con design, resistenza e versatilità.",
     "default_email": "info@topstone.com",
@@ -924,5 +948,24 @@
         "terms": "Condizioni di Servizio"
       }
     }
+  },
+  "lumina": {
+    "title": "LUMINA",
+    "subtitle": "Superficie sinterizzata traslucida Top Stone",
+    "open_pdf": "Apri PDF",
+    "unavailable": "Il catalogo LUMINA non è al momento disponibile.",
+    "highlights_title": "Caratteristiche principali",
+    "highlights": {
+      "food_contact": "Idoneo al contatto alimentare",
+      "through_body": "Realismo a tutta massa",
+      "large_formats": "Grandi formati",
+      "translucent": "Effetto traslucido per progetti retroilluminati",
+      "heat_resistance": "Resistenza al calore fino a 220 °C",
+      "low_silica": "Basso contenuto di silice cristallina",
+      "impact": "Maggiore resistenza agli urti",
+      "stain": "Resistenza alle macchie"
+    },
+    "finish": "Finitura Calacatta, 320×160 cm, spessore 20 mm.",
+    "designs_title": "Design"
   }
 }

@@ -36,6 +36,7 @@
         <div class="flex flex-wrap gap-3">
           <button 
             (click)="openAccordionExclusive('especificaciones')"
+            [style.order]="orderOf('specs')" [style.display]="isHidden('specs') ? 'none' : null"
             [class.bg-ts-accent]="acordeonesAbiertos['especificaciones']"
             [class.border-ts-accent]="acordeonesAbiertos['especificaciones']"
             [class.bg-white]="!acordeonesAbiertos['especificaciones']"
@@ -47,7 +48,21 @@
             {{ 'technical.specifications' | translate }}
           </button>
           <button 
+            (click)="openAccordionExclusive('marmolTecnico')"
+            [style.order]="orderOf('marmol')" [style.display]="isHidden('marmol') ? 'none' : null"
+            [class.bg-ts-accent]="acordeonesAbiertos['marmolTecnico']"
+            [class.border-ts-accent]="acordeonesAbiertos['marmolTecnico']"
+            [class.bg-white]="!acordeonesAbiertos['marmolTecnico']"
+            [class.border-gray-300]="!acordeonesAbiertos['marmolTecnico']"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            {{ 'technical.marble_technical' | translate }}
+          </button>
+          <button 
             (click)="openAccordionExclusive('acabados')"
+            [style.order]="orderOf('acabados')" [style.display]="isHidden('acabados') ? 'none' : null"
             [class.bg-ts-accent]="acordeonesAbiertos['acabados']"
             [class.border-ts-accent]="acordeonesAbiertos['acabados']"
             [class.bg-white]="!acordeonesAbiertos['acabados']"
@@ -61,6 +76,7 @@
           @if (datosTecnicos.promocionMarketing && datosTecnicos.promocionMarketing.length > 0) {
             <button 
               (click)="openAccordionExclusive('promocion')"
+            [style.order]="orderOf('promocion')" [style.display]="isHidden('promocion') ? 'none' : null"
               [class.bg-ts-accent]="acordeonesAbiertos['promocion']"
               [class.border-ts-accent]="acordeonesAbiertos['promocion']"
               [class.bg-white]="!acordeonesAbiertos['promocion']"
@@ -75,6 +91,7 @@
           <!-- Datasheets button removed -->
           <button 
             (click)="openAccordionExclusive('packing')"
+            [style.order]="orderOf('packing')" [style.display]="isHidden('packing') ? 'none' : null"
             [class.bg-ts-accent]="acordeonesAbiertos['packing']"
             [class.border-ts-accent]="acordeonesAbiertos['packing']"
             [class.bg-white]="!acordeonesAbiertos['packing']"
@@ -87,6 +104,7 @@
           </button>
           <button 
             (click)="openAccordionExclusive('bordes')"
+            [style.order]="orderOf('bordes')" [style.display]="isHidden('bordes') ? 'none' : null"
             [class.bg-ts-accent]="acordeonesAbiertos['bordes']"
             [class.border-ts-accent]="acordeonesAbiertos['bordes']"
             [class.bg-white]="!acordeonesAbiertos['bordes']"
@@ -99,6 +117,7 @@
           </button>
           <button 
             (click)="openAccordionExclusive('fijaciones')"
+            [style.order]="orderOf('fachada')" [style.display]="isHidden('fachada') ? 'none' : null"
             [class.bg-ts-accent]="acordeonesAbiertos['fijaciones']"
             [class.border-ts-accent]="acordeonesAbiertos['fijaciones']"
             [class.bg-white]="!acordeonesAbiertos['fijaciones']"
@@ -111,6 +130,7 @@
           </button>
           <button 
             (click)="openAccordionExclusive('mantenimiento')"
+            [style.order]="orderOf('mantenimiento')" [style.display]="isHidden('mantenimiento') ? 'none' : null"
             [class.bg-ts-accent]="acordeonesAbiertos['mantenimiento']"
             [class.border-ts-accent]="acordeonesAbiertos['mantenimiento']"
             [class.bg-white]="!acordeonesAbiertos['mantenimiento']"
@@ -122,11 +142,28 @@
             </svg>
             {{ 'technical.maintenance' | translate }}
           </button>
+          @for (section of customSections; track section.id) {
+            <button
+              (click)="openAccordionExclusive(customKey(section))"
+              [style.order]="orderOf(customKey(section))"
+              [class.bg-ts-accent]="acordeonesAbiertos[customKey(section)]"
+              [class.border-ts-accent]="acordeonesAbiertos[customKey(section)]"
+              [class.bg-white]="!acordeonesAbiertos[customKey(section)]"
+              [class.border-gray-300]="!acordeonesAbiertos[customKey(section)]"
+              class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 border flex items-center gap-2 text-black">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+              </svg>
+              {{ getCustomTitle(section) }}
+            </button>
+          }
         </div>
       </div>
-    
+
+      <!-- Sections: CSS order follows the admin-defined sectionOrder -->
+      <div class="flex flex-col">
       <!-- 1. Especificaciones Técnicas -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+      <div [style.order]="orderOf('specs')" [style.display]="isHidden('specs') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
         <button 
           (click)="toggleAcordeon('especificaciones')"
           class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -160,8 +197,50 @@
         }
       </div>
 
+      <!-- 1b. Mármol Técnico (directly below Porcelánico / Especificaciones) -->
+      <div [style.order]="orderOf('marmol')" [style.display]="isHidden('marmol') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+        <button 
+          (click)="toggleAcordeon('marmolTecnico')"
+          class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-ts-accent/10 rounded-full flex items-center justify-center group-hover:bg-ts-accent/20 transition-colors">
+              <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h2 class="font-serif text-2xl text-black">{{ 'technical.marble_technical' | translate }}</h2>
+          </div>
+          <svg 
+            class="w-6 h-6 transition-transform duration-300"
+            [class.rotate-180]="acordeonesAbiertos['marmolTecnico']"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        @if (acordeonesAbiertos['marmolTecnico']) {
+          <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
+            @if (getMarmolDescription()) {
+              <p class="mt-6 text-gray-700 leading-relaxed">{{ getMarmolDescription() }}</p>
+            }
+            @if (getMarmolEntries().length > 0) {
+              <div class="grid md:grid-cols-2 gap-4 mt-6">
+                @for (item of getMarmolEntries(); track item.key) {
+                  <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <span class="font-medium text-gray-800">{{ 'technical.specs.' + item.key | translate }}:</span>
+                    <span class="text-ts-accent font-semibold">{{item.value}}</span>
+                  </div>
+                }
+              </div>
+            } @else if (!getMarmolDescription()) {
+              <p class="mt-6 text-center text-gray-500 py-6">{{ 'technical.marble_empty' | translate }}</p>
+            }
+          </div>
+        }
+      </div>
+
       <!-- 2. Acabados de Superficie -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+      <div [style.order]="orderOf('acabados')" [style.display]="isHidden('acabados') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
         <button 
           (click)="toggleAcordeon('acabados')"
           class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -209,7 +288,7 @@
 
       <!-- 3. Promoción y Marketing -->
       @if (datosTecnicos.promocionMarketing && datosTecnicos.promocionMarketing.length > 0) {
-        <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+        <div [style.order]="orderOf('promocion')" [style.display]="isHidden('promocion') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
           <button 
             (click)="toggleAcordeon('promocion')"
             class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -259,7 +338,7 @@
       <!-- 3. Fichas Técnicas - REMOVED -->
 
       <!-- 4. Información de Embalaje -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+      <div [style.order]="orderOf('packing')" [style.display]="isHidden('packing') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
         <button 
           (click)="toggleAcordeon('packing')"
           class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -349,7 +428,7 @@
       </div>
 
       <!-- 5. Acabados de Bordes -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+      <div [style.order]="orderOf('bordes')" [style.display]="isHidden('bordes') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
         <button 
           (click)="toggleAcordeon('bordes')"
           class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -396,7 +475,7 @@
       </div>
 
       <!-- 6. Fijaciones para Fachada -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+      <div [style.order]="orderOf('fachada')" [style.display]="isHidden('fachada') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
         <button 
           (click)="toggleAcordeon('fijaciones')"
           class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -462,7 +541,7 @@
       </div>
 
       <!-- 7. Mantenimiento -->
-      <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+      <div [style.order]="orderOf('mantenimiento')" [style.display]="isHidden('mantenimiento') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
         <button 
           (click)="toggleAcordeon('mantenimiento')"
           class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -559,7 +638,7 @@
 
       <!-- 8. Tests de Producto -->
       @if (datosTecnicos.testResults && datosTecnicos.testResults.length > 0) {
-        <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+        <div [style.order]="orderOf('tests')" [style.display]="isHidden('tests') ? 'none' : null" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
           <button 
             (click)="toggleAcordeon('testResults')"
             class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
@@ -608,6 +687,49 @@
         </div>
       }
 
+      <!-- Custom sections (created by admins) -->
+      @for (section of customSections; track section.id) {
+        <div [style.order]="orderOf(customKey(section))" class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300">
+          <button
+            (click)="toggleAcordeon(customKey(section))"
+            class="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-all duration-300 group">
+            <div class="flex items-center gap-4 min-w-0">
+              <div class="w-12 h-12 shrink-0 bg-ts-accent/10 rounded-full flex items-center justify-center group-hover:bg-ts-accent/20 transition-colors">
+                <svg class="w-6 h-6 text-ts-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                </svg>
+              </div>
+              <h2 class="font-serif text-2xl text-black truncate">{{ getCustomTitle(section) }}</h2>
+            </div>
+            <svg
+              class="w-6 h-6 shrink-0 transition-transform duration-300"
+              [class.rotate-180]="acordeonesAbiertos[customKey(section)]"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          @if (acordeonesAbiertos[customKey(section)]) {
+            <div class="px-6 pb-6 border-t border-gray-100 animate-fade-in">
+              @if (getCustomDescription(section)) {
+                <p class="mt-6 text-gray-700 leading-relaxed whitespace-pre-line">{{ getCustomDescription(section) }}</p>
+              }
+              @if (getCustomItems(section).length > 0) {
+                <div class="grid md:grid-cols-2 gap-4 mt-6">
+                  @for (item of getCustomItems(section); track $index) {
+                    <div class="flex justify-between items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200 min-w-0">
+                      <span class="font-medium text-gray-800 min-w-0 break-words">{{ item.label }}</span>
+                      <span class="text-ts-accent font-semibold text-right break-words">{{ item.value }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      </div>
     </div>
   </section>
 }

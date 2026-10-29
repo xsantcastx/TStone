@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["http://localhost:4200", "https://tstone-e1de6.web.app", "https://tstone-e1de6.firebaseapp.com"],
+    "method": ["GET", "HEAD"],
+    "maxAgeSeconds": 3600
+  }
+]

@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-ts-paper">
+  <div class="max-w-5xl mx-auto px-6 py-20 lg:py-28">
+    <h1 class="font-serif text-5xl lg:text-6xl text-ts-bg text-center mb-4">{{ 'lumina.title' | translate }}</h1>
+    <p class="text-xl text-neutral-600 text-center max-w-3xl mx-auto mb-12">{{ 'lumina.subtitle' | translate }}</p>
+
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+      <div class="text-center">
+        @if (lumina$ | async; as catalog) {
+          <a [href]="catalog.fileUrl" target="_blank" rel="noopener" class="block">
+            @if (catalog.previewUrl) {
+              <img [src]="catalog.previewUrl" [alt]="catalog.name" class="w-full max-w-sm mx-auto rounded-xl shadow-lg" />
+            } @else {
+              <div class="w-full max-w-sm mx-auto aspect-[3/4] rounded-xl bg-gray-100 flex items-center justify-center text-gray-500">PDF</div>
+            }
+          </a>
+          <a [href]="catalog.fileUrl" target="_blank" rel="noopener"
+             class="inline-flex mt-6 px-6 py-3 bg-ts-accent text-white rounded-xl font-semibold shadow-md hover:opacity-90 transition">
+            {{ 'lumina.open_pdf' | translate }}
+          </a>
+        } @else {
+          <p class="text-neutral-500">{{ 'lumina.unavailable' | translate }}</p>
+        }
+      </div>
+
+      <div>
+        <h2 class="font-serif text-2xl text-ts-bg mb-4">{{ 'lumina.highlights_title' | translate }}</h2>
+        <ul class="space-y-2 text-neutral-700">
+          @for (key of highlightKeys; track key) {
+            <li class="flex gap-2"><span class="text-ts-accent">&#10003;</span> {{ 'lumina.highlights.' + key | translate }}</li>
+          }
+        </ul>
+        <p class="mt-6 text-neutral-700">{{ 'lumina.finish' | translate }}</p>
+        <h3 class="font-semibold mt-6 mb-2 text-ts-bg">{{ 'lumina.designs_title' | translate }}</h3>
+        <div class="flex flex-wrap gap-2">
+          @for (d of designs; track d) {
+            <span class="px-3 py-1 rounded-full bg-white border border-gray-200 text-sm">{{ d }}</span>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

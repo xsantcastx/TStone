@@ -45,10 +45,17 @@
           {{ 'nav.products' | translate }}
         </a>
 
-        <a routerLink="/promociones" routerLinkActive="text-ts-accent" 
-           class="hover:text-ts-accent transition-colors">
-          {{ 'nav.promotions' | translate }}
-        </a>
+        @if (lumina$ | async; as lumina) {
+          <a [href]="lumina.fileUrl" target="_blank" rel="noopener"
+             class="nav-lumina" [class.nav-lumina--light]="scrolled">
+            <span class="nav-lumina__label">{{ 'nav.lumina' | translate }}</span>
+          </a>
+        } @else {
+          <a routerLink="/lumina" routerLinkActive="text-ts-accent"
+             class="nav-lumina" [class.nav-lumina--light]="scrolled">
+            <span class="nav-lumina__label">{{ 'nav.lumina' | translate }}</span>
+          </a>
+        }
 
         <a routerLink="/galeria" routerLinkActive="text-ts-accent" 
            class="hover:text-ts-accent transition-colors">
@@ -293,10 +300,17 @@
         </div>
       </details>
       
-      <a routerLink="/promociones" (click)="closeMobile()" 
-         class="text-lg font-medium hover:text-ts-accent transition-colors">
-        {{ 'nav.promotions' | translate }}
-      </a>
+      @if (lumina$ | async; as lumina) {
+        <a [href]="lumina.fileUrl" target="_blank" rel="noopener" (click)="closeMobile()"
+           class="nav-lumina nav-lumina--light text-lg font-medium">
+          <span class="nav-lumina__label">{{ 'nav.lumina' | translate }}</span>
+        </a>
+      } @else {
+        <a routerLink="/lumina" (click)="closeMobile()"
+           class="nav-lumina nav-lumina--light text-lg font-medium">
+          <span class="nav-lumina__label">{{ 'nav.lumina' | translate }}</span>
+        </a>
+      }
       
       <a routerLink="/galeria" (click)="closeMobile()" 
          class="text-lg font-medium hover:text-ts-accent transition-colors">

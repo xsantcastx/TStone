@@ -42,9 +42,21 @@
     <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
       
       <!-- Tabs -->
-      <div class="flex gap-2 mb-6 border-b border-gray-200 overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0">
+      <div class="tab-strip flex flex-wrap gap-2 mb-3 border-b border-gray-200 pb-2 pt-6 [&>button]:cursor-grab" [class.is-dragging]="draggingTab">
         <button
           (click)="activeTab.set('specs')"
+          [style.order]="tabOrder('specs')"
+          draggable="true"
+          (dragstart)="onTabDragStart('specs', $event)"
+          (dragover)="onTabDragOver('specs', $event)"
+          (dragleave)="onTabDragLeave('specs', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('specs', $event)"
+          [class.opacity-40]="draggingTab === 'specs'"
+          [class.drop-before]="isDropIndicator('specs', false)"
+          [class.drop-after]="isDropIndicator('specs', true)"
+          [class.tab-hidden]="isTabHidden('specs')"
+          [attr.title]="isTabHidden('specs') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'specs'"
           [class.text-white]="activeTab() === 'specs'"
           [class.bg-ts-accent]="activeTab() === 'specs'"
@@ -55,7 +67,42 @@
           Especificaciones
         </button>
         <button
+          (click)="activeTab.set('marmol')"
+          [style.order]="tabOrder('marmol')"
+          draggable="true"
+          (dragstart)="onTabDragStart('marmol', $event)"
+          (dragover)="onTabDragOver('marmol', $event)"
+          (dragleave)="onTabDragLeave('marmol', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('marmol', $event)"
+          [class.opacity-40]="draggingTab === 'marmol'"
+          [class.drop-before]="isDropIndicator('marmol', false)"
+          [class.drop-after]="isDropIndicator('marmol', true)"
+          [class.tab-hidden]="isTabHidden('marmol')"
+          [attr.title]="isTabHidden('marmol') ? 'Oculta en la web' : null"
+          [class.border-ts-accent]="activeTab() === 'marmol'"
+          [class.text-white]="activeTab() === 'marmol'"
+          [class.bg-ts-accent]="activeTab() === 'marmol'"
+          [class.bg-white]="activeTab() !== 'marmol'"
+          [class.border-gray-300]="activeTab() !== 'marmol'"
+          [style.color]="activeTab() !== 'marmol' ? '#000000 !important' : ''"
+          class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
+          Mármol Técnico
+        </button>
+        <button
           (click)="activeTab.set('acabados')"
+          [style.order]="tabOrder('acabados')"
+          draggable="true"
+          (dragstart)="onTabDragStart('acabados', $event)"
+          (dragover)="onTabDragOver('acabados', $event)"
+          (dragleave)="onTabDragLeave('acabados', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('acabados', $event)"
+          [class.opacity-40]="draggingTab === 'acabados'"
+          [class.drop-before]="isDropIndicator('acabados', false)"
+          [class.drop-after]="isDropIndicator('acabados', true)"
+          [class.tab-hidden]="isTabHidden('acabados')"
+          [attr.title]="isTabHidden('acabados') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'acabados'"
           [class.text-white]="activeTab() === 'acabados'"
           [class.bg-ts-accent]="activeTab() === 'acabados'"
@@ -67,6 +114,18 @@
         </button>
         <button
           (click)="activeTab.set('fichas')"
+          [style.order]="tabOrder('fichas')"
+          draggable="true"
+          (dragstart)="onTabDragStart('fichas', $event)"
+          (dragover)="onTabDragOver('fichas', $event)"
+          (dragleave)="onTabDragLeave('fichas', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('fichas', $event)"
+          [class.opacity-40]="draggingTab === 'fichas'"
+          [class.drop-before]="isDropIndicator('fichas', false)"
+          [class.drop-after]="isDropIndicator('fichas', true)"
+          [class.tab-hidden]="isTabHidden('fichas')"
+          [attr.title]="isTabHidden('fichas') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'fichas'"
           [class.text-white]="activeTab() === 'fichas'"
           [class.bg-ts-accent]="activeTab() === 'fichas'"
@@ -78,6 +137,18 @@
         </button>
         <button
           (click)="activeTab.set('packing')"
+          [style.order]="tabOrder('packing')"
+          draggable="true"
+          (dragstart)="onTabDragStart('packing', $event)"
+          (dragover)="onTabDragOver('packing', $event)"
+          (dragleave)="onTabDragLeave('packing', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('packing', $event)"
+          [class.opacity-40]="draggingTab === 'packing'"
+          [class.drop-before]="isDropIndicator('packing', false)"
+          [class.drop-after]="isDropIndicator('packing', true)"
+          [class.tab-hidden]="isTabHidden('packing')"
+          [attr.title]="isTabHidden('packing') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'packing'"
           [class.text-white]="activeTab() === 'packing'"
           [class.bg-ts-accent]="activeTab() === 'packing'"
@@ -89,6 +160,18 @@
         </button>
         <button
           (click)="activeTab.set('bordes')"
+          [style.order]="tabOrder('bordes')"
+          draggable="true"
+          (dragstart)="onTabDragStart('bordes', $event)"
+          (dragover)="onTabDragOver('bordes', $event)"
+          (dragleave)="onTabDragLeave('bordes', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('bordes', $event)"
+          [class.opacity-40]="draggingTab === 'bordes'"
+          [class.drop-before]="isDropIndicator('bordes', false)"
+          [class.drop-after]="isDropIndicator('bordes', true)"
+          [class.tab-hidden]="isTabHidden('bordes')"
+          [attr.title]="isTabHidden('bordes') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'bordes'"
           [class.text-white]="activeTab() === 'bordes'"
           [class.bg-ts-accent]="activeTab() === 'bordes'"
@@ -100,6 +183,18 @@
         </button>
         <button
           (click)="activeTab.set('fachada')"
+          [style.order]="tabOrder('fachada')"
+          draggable="true"
+          (dragstart)="onTabDragStart('fachada', $event)"
+          (dragover)="onTabDragOver('fachada', $event)"
+          (dragleave)="onTabDragLeave('fachada', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('fachada', $event)"
+          [class.opacity-40]="draggingTab === 'fachada'"
+          [class.drop-before]="isDropIndicator('fachada', false)"
+          [class.drop-after]="isDropIndicator('fachada', true)"
+          [class.tab-hidden]="isTabHidden('fachada')"
+          [attr.title]="isTabHidden('fachada') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'fachada'"
           [class.text-white]="activeTab() === 'fachada'"
           [class.bg-ts-accent]="activeTab() === 'fachada'"
@@ -111,6 +206,18 @@
         </button>
         <button
           (click)="activeTab.set('mantenimiento')"
+          [style.order]="tabOrder('mantenimiento')"
+          draggable="true"
+          (dragstart)="onTabDragStart('mantenimiento', $event)"
+          (dragover)="onTabDragOver('mantenimiento', $event)"
+          (dragleave)="onTabDragLeave('mantenimiento', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('mantenimiento', $event)"
+          [class.opacity-40]="draggingTab === 'mantenimiento'"
+          [class.drop-before]="isDropIndicator('mantenimiento', false)"
+          [class.drop-after]="isDropIndicator('mantenimiento', true)"
+          [class.tab-hidden]="isTabHidden('mantenimiento')"
+          [attr.title]="isTabHidden('mantenimiento') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'mantenimiento'"
           [class.text-white]="activeTab() === 'mantenimiento'"
           [class.bg-ts-accent]="activeTab() === 'mantenimiento'"
@@ -122,6 +229,18 @@
         </button>
         <button
           (click)="activeTab.set('tests')"
+          [style.order]="tabOrder('tests')"
+          draggable="true"
+          (dragstart)="onTabDragStart('tests', $event)"
+          (dragover)="onTabDragOver('tests', $event)"
+          (dragleave)="onTabDragLeave('tests', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('tests', $event)"
+          [class.opacity-40]="draggingTab === 'tests'"
+          [class.drop-before]="isDropIndicator('tests', false)"
+          [class.drop-after]="isDropIndicator('tests', true)"
+          [class.tab-hidden]="isTabHidden('tests')"
+          [attr.title]="isTabHidden('tests') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'tests'"
           [class.text-white]="activeTab() === 'tests'"
           [class.bg-ts-accent]="activeTab() === 'tests'"
@@ -133,6 +252,18 @@
         </button>
         <button
           (click)="activeTab.set('promocion')"
+          [style.order]="tabOrder('promocion')"
+          draggable="true"
+          (dragstart)="onTabDragStart('promocion', $event)"
+          (dragover)="onTabDragOver('promocion', $event)"
+          (dragleave)="onTabDragLeave('promocion', $event)"
+          (dragend)="onTabDragEnd()"
+          (drop)="onTabDrop('promocion', $event)"
+          [class.opacity-40]="draggingTab === 'promocion'"
+          [class.drop-before]="isDropIndicator('promocion', false)"
+          [class.drop-after]="isDropIndicator('promocion', true)"
+          [class.tab-hidden]="isTabHidden('promocion')"
+          [attr.title]="isTabHidden('promocion') ? 'Oculta en la web' : null"
           [class.border-ts-accent]="activeTab() === 'promocion'"
           [class.text-white]="activeTab() === 'promocion'"
           [class.bg-ts-accent]="activeTab() === 'promocion'"
@@ -142,6 +273,53 @@
           class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm">
           Promoción
         </button>
+        @for (section of customSections; track section.id) {
+          <button
+            (click)="activeTab.set('custom:' + section.id)"
+            [style.order]="tabOrder('custom:' + section.id)"
+            draggable="true"
+            (dragstart)="onTabDragStart('custom:' + section.id, $event)"
+            (dragover)="onTabDragOver('custom:' + section.id, $event)"
+            (dragleave)="onTabDragLeave('custom:' + section.id, $event)"
+            (dragend)="onTabDragEnd()"
+            (drop)="onTabDrop('custom:' + section.id, $event)"
+            [class.opacity-40]="draggingTab === 'custom:' + section.id"
+            [class.drop-before]="isDropIndicator('custom:' + section.id, false)"
+            [class.drop-after]="isDropIndicator('custom:' + section.id, true)"
+            [class.tab-hidden]="isTabHidden('custom:' + section.id)"
+            [attr.title]="isTabHidden('custom:' + section.id) ? 'Oculta en la web' : null"
+            [class.border-ts-accent]="activeTab() === 'custom:' + section.id"
+            [class.text-white]="activeTab() === 'custom:' + section.id"
+            [class.bg-ts-accent]="activeTab() === 'custom:' + section.id"
+            [class.bg-white]="activeTab() !== 'custom:' + section.id"
+            [class.border-gray-300]="activeTab() !== 'custom:' + section.id"
+            [style.color]="activeTab() !== 'custom:' + section.id ? '#000000 !important' : ''"
+            class="px-3 sm:px-4 py-3 font-bold border-2 rounded-t-lg transition-colors whitespace-nowrap text-sm max-w-[16rem] truncate">
+            {{ section.title || 'Sin título' }}
+          </button>
+        }
+        <button
+          (click)="addCustomSection()"
+          style="order: 9999"
+          title="Añadir nueva sección"
+          class="px-4 py-3 font-bold border-2 border-dashed border-ts-accent text-ts-accent bg-white rounded-t-lg hover:bg-ts-accent/10 transition-colors whitespace-nowrap text-sm">
+          + Nueva sección
+        </button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mb-6 text-sm text-gray-600">
+        <button type="button" (click)="toggleTabHidden(activeTab())"
+          [class]="isTabHidden(activeTab()) ? 'px-3 py-1.5 rounded-lg font-medium border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100' : 'px-3 py-1.5 rounded-lg font-medium border border-green-300 bg-green-50 text-green-800 hover:bg-green-100'">
+          {{ isTabHidden(activeTab()) ? 'Oculta en la web — Mostrar' : 'Visible en la web — Ocultar' }}
+        </button>
+        <span class="hidden sm:inline text-gray-300">|</span>
+        <span>Orden de la pestaña activa:</span>
+        <button type="button" (click)="moveTabToStart(activeTab())" [disabled]="tabOrder(activeTab()) === 0"
+          class="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-40">Al principio</button>
+        <button type="button" (click)="moveTab(activeTab(), -1)" [disabled]="tabOrder(activeTab()) === 0"
+          class="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-40">Izquierda</button>
+        <button type="button" (click)="moveTab(activeTab(), 1)" [disabled]="tabOrder(activeTab()) === sectionOrder.length - 1"
+          class="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-40">Derecha</button>
+        <span class="text-xs text-gray-500">También puedes arrastrar las pestañas. El orden y la visibilidad se aplican en la web al pulsar «Guardar».</span>
       </div>
 
       <!-- Especificaciones Tab -->
@@ -226,6 +404,107 @@
             }
             @empty {
               <p class="text-center text-gray-500 py-8">No hay especificaciones configuradas</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Mármol Técnico Tab -->
+      @if (activeTab() === 'marmol') {
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-serif font-bold text-black">Mármol Técnico</h2>
+          </div>
+
+          <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
+            <label class="block text-sm font-medium text-black">Descripción</label>
+            <textarea
+              rows="3"
+              [value]="datosTecnicos().marmolTecnico?.descripcion || ''"
+              (input)="updateMarmolDescripcion($any($event.target).value)"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+            <div class="grid sm:grid-cols-2 gap-3">
+              @for (lang of languages; track lang.code) {
+                <div class="space-y-1">
+                  <span class="text-[10px] font-semibold text-gray-600">{{ lang.name }} ({{ lang.label }})</span>
+                  <textarea
+                    rows="2"
+                    [value]="datosTecnicos().marmolTecnico?.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? (datosTecnicos().marmolTecnico?.descripcion || '') : '')"
+                    (input)="updateMarmolDescripcionTranslation(lang.code, $any($event.target).value)"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+            <h3 class="font-medium text-black mb-3">Añadir Especificación</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                [(ngModel)]="editingMarmolSpec.key"
+                placeholder="Clave (ej: absorcionAgua)"
+                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+              <input
+                type="text"
+                [(ngModel)]="editingMarmolSpec.value"
+                placeholder="Valor (ej: ≤ 0,5%)"
+                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+            </div>
+            <button
+              (click)="addMarmolSpec()"
+              [disabled]="!editingMarmolSpec.key || !editingMarmolSpec.value"
+              class="mt-3 px-4 py-2 bg-ts-accent text-white rounded-lg hover:bg-ts-accent/90 disabled:opacity-50 disabled:cursor-not-allowed">
+              Añadir
+            </button>
+          </div>
+
+          <div class="space-y-3">
+            @for (spec of getMarmolEntries(); track spec.key) {
+              <div class="flex items-start gap-3 p-4 bg-white border border-gray-200 rounded-lg">
+                <div class="flex-1 space-y-3">
+                  <div class="grid md:grid-cols-2 gap-3">
+                    <div>
+                      <label class="text-sm text-gray-600 font-medium">Clave</label>
+                      <p class="text-black">{{ spec.key }}</p>
+                    </div>
+                    <div>
+                      <label class="text-sm text-gray-600 font-medium">Valor</label>
+                      <input
+                        type="text"
+                        [value]="spec.value"
+                        (input)="updateMarmolSpec(spec.key, $any($event.target).value)"
+                        class="w-full px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-ts-accent text-black">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="text-xs font-semibold text-gray-700">Valor por idioma</label>
+                    <div class="grid sm:grid-cols-2 gap-3 mt-2">
+                      @for (lang of languages; track lang.code) {
+                        <div class="space-y-1">
+                          <span class="text-[10px] font-semibold text-gray-600">{{ lang.name }} ({{ lang.label }})</span>
+                          <input
+                            type="text"
+                            [value]="datosTecnicos().marmolTecnico?.especificacionesTranslations?.[spec.key]?.[lang.code] || (lang.code === defaultLanguage ? spec.value : '')"
+                            (input)="updateMarmolSpecTranslation(spec.key, lang.code, $any($event.target).value)"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"
+                            placeholder="Valor en {{ lang.name }}">
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <button
+                  (click)="removeMarmolSpec(spec.key)"
+                  class="p-2 text-red-600 hover:bg-red-50 rounded-lg mt-1">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+            }
+            @empty {
+              <p class="text-center text-gray-500 py-8">No hay especificaciones de mármol técnico configuradas</p>
             }
           </div>
         </div>
@@ -1014,6 +1293,108 @@
       }
 
       <!-- Promoción y Marketing Tab -->
+      <!-- Custom (admin-created) sections -->
+      @for (section of customSections; track section.id) {
+        @if (activeTab() === 'custom:' + section.id) {
+          <div>
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+              <h2 class="text-xl font-serif font-bold text-black min-w-0 truncate">{{ section.title || 'Sin título' }}</h2>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" (click)="removeCustomSection(section)"
+                  class="px-3 py-2 text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50">Eliminar sección</button>
+              </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
+              <label class="block text-sm font-medium text-black">Título de la sección</label>
+              <input type="text" [value]="section.title"
+                (input)="updateCustomSectionText(section.id, 'title', $any($event.target).value)"
+                class="w-full min-w-0 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+              <div class="grid sm:grid-cols-2 gap-3">
+                @for (lang of languages; track lang.code) {
+                  <div class="space-y-1 min-w-0">
+                    <span class="text-[10px] font-semibold text-gray-600">{{ lang.name }} ({{ lang.label }})</span>
+                    <input type="text"
+                      [value]="section.titleTranslations?.[lang.code] || (lang.code === defaultLanguage ? section.title : '')"
+                      (input)="updateCustomSectionTranslation(section, 'titleTranslations', lang.code, $any($event.target).value)"
+                      class="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
+              <label class="block text-sm font-medium text-black">Descripción (opcional)</label>
+              <textarea rows="3" [value]="section.descripcion || ''"
+                (input)="updateCustomSectionText(section.id, 'descripcion', $any($event.target).value)"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+              <div class="grid sm:grid-cols-2 gap-3">
+                @for (lang of languages; track lang.code) {
+                  <div class="space-y-1 min-w-0">
+                    <span class="text-[10px] font-semibold text-gray-600">{{ lang.name }} ({{ lang.label }})</span>
+                    <textarea rows="2"
+                      [value]="section.descripcionTranslations?.[lang.code] || (lang.code === defaultLanguage ? (section.descripcion || '') : '')"
+                      (input)="updateCustomSectionTranslation(section, 'descripcionTranslations', lang.code, $any($event.target).value)"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black"></textarea>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-medium text-black">Filas ({{ section.items.length }})</h3>
+              <button type="button" (click)="addCustomItem(section)"
+                class="px-4 py-2 bg-ts-accent text-white rounded-lg hover:bg-ts-accent/90 text-sm font-medium">+ Añadir fila</button>
+            </div>
+            <div class="space-y-3">
+              @for (item of section.items; track $index; let j = $index) {
+                <div class="p-4 bg-white border border-gray-200 rounded-lg space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="flex-1 min-w-0 grid md:grid-cols-2 gap-3">
+                      <div class="min-w-0">
+                        <label class="text-sm text-gray-600 font-medium">Nombre</label>
+                        <input type="text" [value]="item.label" placeholder="Ej: Absorción de agua"
+                          (input)="updateCustomItem(section, j, 'label', $any($event.target).value)"
+                          class="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                      </div>
+                      <div class="min-w-0">
+                        <label class="text-sm text-gray-600 font-medium">Valor</label>
+                        <input type="text" [value]="item.value" placeholder="Ej: ≤ 0,5%"
+                          (input)="updateCustomItem(section, j, 'value', $any($event.target).value)"
+                          class="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                      </div>
+                    </div>
+                    <button type="button" (click)="removeCustomItem(section, j)" title="Quitar fila"
+                      class="shrink-0 mt-6 px-3 py-2 text-sm border border-red-300 text-red-600 rounded-lg hover:bg-red-50">Quitar</button>
+                  </div>
+                  <details class="group">
+                    <summary class="cursor-pointer text-xs font-semibold text-gray-700">Traducciones</summary>
+                    <div class="grid sm:grid-cols-2 gap-3 mt-3">
+                      @for (lang of languages; track lang.code) {
+                        <div class="space-y-1 min-w-0">
+                          <span class="text-[10px] font-semibold text-gray-600">{{ lang.name }} ({{ lang.label }})</span>
+                          <input type="text" placeholder="Nombre en {{ lang.name }}"
+                            [value]="item.labelTranslations?.[lang.code] || (lang.code === defaultLanguage ? item.label : '')"
+                            (input)="updateCustomItemTranslation(section, j, 'labelTranslations', lang.code, $any($event.target).value)"
+                            class="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                          <input type="text" placeholder="Valor en {{ lang.name }}"
+                            [value]="item.valueTranslations?.[lang.code] || (lang.code === defaultLanguage ? item.value : '')"
+                            (input)="updateCustomItemTranslation(section, j, 'valueTranslations', lang.code, $any($event.target).value)"
+                            class="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ts-accent text-black">
+                        </div>
+                      }
+                    </div>
+                  </details>
+                </div>
+              } @empty {
+                <p class="text-center text-gray-500 py-6 border border-dashed border-gray-300 rounded-lg">Sin filas todavía. Pulsa «+ Añadir fila».</p>
+              }
+            </div>
+            <p class="mt-6 text-xs text-gray-500">Los cambios se publican al pulsar «Guardar».</p>
+          </div>
+        }
+      }
+
       @if (activeTab() === 'promocion') {
         <div>
           <div class="flex items-center justify-between mb-6">

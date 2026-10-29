@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy, PLATFORM_ID, inject, ChangeDetectorRef } 
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Title, Meta } from '@angular/platform-browser';
+import { Title, Meta, DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ProductsService } from '../../../services/products.service';
+import { MaterialOptionService } from '../../../services/material-option.service';
 import { MediaService } from '../../../services/media.service';
 import { CartService } from '../../../services/cart.service';
 import { Product, TranslatedTextMap } from '../../../models/product';
@@ -11,6 +12,20 @@ import { Media } from '../../../models/media';
 import { ImageLightboxComponent } from '../../../shared/components/image-lightbox/image-lightbox.component';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
+
+const DEFAULT_VIDEO_ASPECT = 16 / 9;
+
+interface VideoItem {
+  kind: 'file' | 'embed';
+  src: string;
+  embedUrl?: SafeResourceUrl;
+  thumbUrl?: string; // poster for the gallery strip (YouTube only; files use their first frame)
+  title?: string;
+  aspect: number; // width / height
+}
+
+/** One entry in the product gallery: a photo or a video */
+type GallerySlide = { kind: 'image'; media: Media } | { kind: 'video'; video: VideoItem };
 
 @Component({
   selector: 'app-detalle',
@@ -28,6 +43,8 @@ export class DetalleComponent implements OnInit, OnDestroy {
   private titleService = inject(Title);
   private metaService = inject(Meta);
   private cdr = inject(ChangeDetectorRef);
+  private sanitizer = inject(DomSanitizer);
+  private materialOptionService = inject(MaterialOptionService);
   private languageService = inject(LanguageService);
   private languageSub?: Subscription;
   
@@ -37,15 +54,16 @@ export class DetalleComponent implements OnInit, OnDestroy {
   nextProduct: Product | undefined;
   coverImage: Media | undefined;
   galleryImages: Media[] = [];
-  allProductImages: Media[] = [];
-  currentImageIndex = 0;
-  currentDisplayImage: Media | undefined;
+  slides: GallerySlide[] = [];
+  currentSlideIndex = 0;
   grosor = '';
   loading = true;
   lightboxOpen = false;
   currentLightboxImage = '';
   currentLightboxAlt = '';
   localizedDescription = '';
+  materialOptionNames: string[] = [];
+  videoItems: VideoItem[] = [];
 
   async ngOnInit() {
     this.grosor = this.route.snapshot.paramMap.get('grosor') || '';
@@ -86,6 +104,8 @@ export class DetalleComponent implements OnInit, OnDestroy {
         
         if (this.producto) {
           this.localizedDescription = this.getLocalizedText(this.producto.descriptionTranslations, this.producto.description || '');
+          this.videoItems = this.buildVideoItems(this.producto);
+          this.materialOptionNames = await this.materialOptionService.namesFor(this.producto);
           // Load cover image
           if (this.producto.coverImage) {
             const isMediaId = !this.producto.coverImage.includes('http');
@@ -100,14 +120,13 @@ export class DetalleComponent implements OnInit, OnDestroy {
           this.galleryImages = await this.mediaService.getMediaByIds(this.producto.galleryImageIds);
           }
           
-          // Build all product images array (cover + gallery)
-          this.allProductImages = [];
-          if (this.coverImage) {
-            this.allProductImages.push(this.coverImage);
-          }
-          this.allProductImages = [...this.allProductImages, ...this.galleryImages];
-          this.currentImageIndex = 0;
-          this.currentDisplayImage = this.allProductImages[0];
+          // Gallery slides: cover + gallery photos, then videos
+          const images = [...(this.coverImage ? [this.coverImage] : []), ...this.galleryImages];
+          this.slides = [
+            ...images.map(media => ({ kind: 'image' as const, media })),
+            ...this.videoItems.map(video => ({ kind: 'video' as const, video }))
+          ];
+          this.currentSlideIndex = 0;
           
           // Update page title and meta tags
           this.updateSEO();
@@ -132,6 +151,59 @@ export class DetalleComponent implements OnInit, OnDestroy {
       // Basic SSR fallback
       this.loading = false;
     }
+  }
+
+  private buildVideoItems(product: Product): VideoItem[] {
+    const items: VideoItem[] = [];
+    for (const v of product.videos || []) {
+      if (!v?.url) continue;
+      if (v.type === 'upload') {
+        items.push({ kind: 'file', src: v.url, title: v.title, aspect: DEFAULT_VIDEO_ASPECT });
+        continue;
+      }
+      const embed = this.toEmbedUrl(v.url);
+      if (embed) {
+        // Only known hosts (YouTube/Vimeo) are trusted for the iframe
+        // YouTube Shorts are vertical; other embeds don't expose their size, so assume 16:9
+        const aspect = /youtube\.com\/shorts\//i.test(v.url) ? 9 / 16 : DEFAULT_VIDEO_ASPECT;
+        const youtubeId = embed.match(/youtube\.com\/embed\/([\w-]+)/)?.[1];
+        const thumbUrl = youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : undefined;
+        items.push({ kind: 'embed', src: embed, embedUrl: this.sanitizer.bypassSecurityTrustResourceUrl(embed), thumbUrl, title: v.title, aspect });
+      } else if (/^https?:\/\//i.test(v.url)) {
+        items.push({ kind: 'file', src: v.url, title: v.title, aspect: DEFAULT_VIDEO_ASPECT });
+      }
+    }
+    return items;
+  }
+
+  /** Use the file's real dimensions once known, so vertical and horizontal videos keep their shape */
+  onVideoMetadata(video: VideoItem, event: Event): void {
+    const el = event.target as HTMLVideoElement;
+    if (el.videoWidth && el.videoHeight) {
+      video.aspect = el.videoWidth / el.videoHeight;
+    }
+  }
+
+  private toEmbedUrl(raw: string): string | null {
+    try {
+      const u = new URL(raw);
+      const host = u.hostname.replace(/^www\./, '');
+      if (host === 'youtu.be') {
+        const id = u.pathname.slice(1).split('/')[0];
+        return /^[\w-]{6,}$/.test(id) ? `https://www.youtube.com/embed/${id}` : null;
+      }
+      if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+        let id = u.searchParams.get('v');
+        const m = u.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]+)/);
+        if (!id && m) id = m[1];
+        return id && /^[\w-]{6,}$/.test(id) ? `https://www.youtube.com/embed/${id}` : null;
+      }
+      if (host === 'vimeo.com' || host === 'player.vimeo.com') {
+        const m = u.pathname.match(/(\d{5,})/);
+        return m ? `https://player.vimeo.com/video/${m[1]}` : null;
+      }
+    } catch { /* invalid URL */ }
+    return null;
   }
 
   private async loadProductosRelacionados(todosLosProductos: Product[]) {
@@ -288,20 +360,22 @@ export class DetalleComponent implements OnInit, OnDestroy {
     this.lightboxOpen = !!this.currentLightboxImage;
   }
 
+  get currentSlide(): GallerySlide | undefined {
+    return this.slides[this.currentSlideIndex];
+  }
+
+  selectSlide(index: number) {
+    if (index >= 0 && index < this.slides.length) this.currentSlideIndex = index;
+  }
+
   nextGalleryImage() {
-    if (this.allProductImages.length <= 1) return;
-    
-    this.currentImageIndex = (this.currentImageIndex + 1) % this.allProductImages.length;
-    this.currentDisplayImage = this.allProductImages[this.currentImageIndex];
+    if (this.slides.length <= 1) return;
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.slides.length;
   }
 
   previousGalleryImage() {
-    if (this.allProductImages.length <= 1) return;
-    
-    this.currentImageIndex = this.currentImageIndex === 0 
-      ? this.allProductImages.length - 1 
-      : this.currentImageIndex - 1;
-    this.currentDisplayImage = this.allProductImages[this.currentImageIndex];
+    if (this.slides.length <= 1) return;
+    this.currentSlideIndex = (this.currentSlideIndex - 1 + this.slides.length) % this.slides.length;
   }
 
   addToCart() {

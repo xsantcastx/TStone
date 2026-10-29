@@ -108,6 +108,30 @@ export interface TestResult {
   norma?: string;
 }
 
+export interface MarmolTecnicoData {
+  descripcion?: string;
+  descripcionTranslations?: TranslatedTextMap;
+  especificaciones: Record<string, string>;
+  especificacionesTranslations?: Record<string, TranslatedTextMap>;
+}
+
+export interface CustomTechItem {
+  label: string;
+  labelTranslations?: TranslatedTextMap;
+  value: string;
+  valueTranslations?: TranslatedTextMap;
+}
+
+/** Admin-created extra section on the Datos Técnicos page */
+export interface CustomTechSection {
+  id: string;
+  title: string;
+  titleTranslations?: TranslatedTextMap;
+  descripcion?: string;
+  descripcionTranslations?: TranslatedTextMap;
+  items: CustomTechItem[];
+}
+
 export interface DatosTecnicosData {
   acabadosSuperficie: AcabadoSuperficie[];
   fichasTecnicas: FichaTecnica[];
@@ -121,7 +145,22 @@ export interface DatosTecnicosData {
   mantenimiento: Mantenimiento;
   testResults: TestResult[];
   promocionMarketing: PromocionMarketing[];
+  marmolTecnico?: MarmolTecnicoData;
+  customSections?: CustomTechSection[];
+  sectionOrder?: string[];   // Display order of all sections (admin tab keys)
+  hiddenSections?: string[]; // Sections not published on the public page yet (admin tab keys)
 }
+
+/** Default order of Datos Técnicos sections (admin tab keys). Custom sections use 'custom:<id>'. */
+export const DEFAULT_TECH_SECTION_ORDER = ['specs', 'marmol', 'acabados', 'fichas', 'packing', 'bordes', 'fachada', 'mantenimiento', 'tests', 'promocion'];
+
+/** Saved order with unknown keys dropped and any missing sections appended in default order. */
+export function resolveTechSectionOrder(data: Pick<DatosTecnicosData, 'sectionOrder' | 'customSections'> | null | undefined): string[] {
+  const all = [...DEFAULT_TECH_SECTION_ORDER, ...(data?.customSections || []).map(s => `custom:${s.id}`)];
+  const saved = (data?.sectionOrder || []).filter(key => all.includes(key));
+  return [...saved, ...all.filter(key => !saved.includes(key))];
+}
+
 
 @Injectable({
   providedIn: 'root'

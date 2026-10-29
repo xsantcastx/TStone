@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,6 +7,7 @@ import { Product, LanguageCode } from '../../../models/product';
 import { FirestoreProduct } from '../../../services/product-firestore.service';
 import { CartService } from '../../../services/cart.service';
 import { LanguageService } from '../../../core/services/language.service';
+import { MaterialOptionService } from '../../../services/material-option.service';
 
 @Component({
   standalone: true,
@@ -15,18 +16,27 @@ import { LanguageService } from '../../../core/services/language.service';
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss']
 })
-export class ProductCardComponent {
+export class ProductCardComponent implements OnChanges {
   @Input() product!: Product | FirestoreProduct;
   @Input() viewMode: 'grid' | 'list' = 'grid';
   @Input() grosorPath?: string; // e.g., "12mm" for routing
   @Input() showPromotionBadge = false;
   
   adding = false;
+  materialNames: string[] = [];
+
+  private materialOptionService = inject(MaterialOptionService);
+  private cdr = inject(ChangeDetectorRef);
   
   constructor(
     private cart: CartService,
     private languageService: LanguageService
   ) {}
+
+  async ngOnChanges() {
+    this.materialNames = await this.materialOptionService.namesFor(this.product as Product);
+    this.cdr.markForCheck();
+  }
 
   add() {
     this.adding = true;
